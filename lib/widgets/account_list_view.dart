@@ -20,10 +20,13 @@ class _AccountListViewState extends State<AccountListView> {
   @override
   Widget build(BuildContext context) {
     int length = widget.accountList?.length ?? 1;
-    return ListView.builder(
-      itemCount: 1,
-      itemBuilder: (BuildContext context, int index) =>
-          _buildList(widget.accountList, widget.currentAccount),
+    return Flexible(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: 1,
+        itemBuilder: (BuildContext context, int index) =>
+            _buildList(widget.accountList, widget.currentAccount),
+      ),
     );
   }
 
