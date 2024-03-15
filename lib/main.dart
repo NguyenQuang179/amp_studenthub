@@ -1,6 +1,7 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/account.dart';
 import 'package:amp_studenthub/screens/home_screen.dart';
+import 'package:amp_studenthub/screens/profile_input_1_screen.dart';
 import 'package:amp_studenthub/screens/switch_account_screen.dart';
 import 'package:amp_studenthub/widgets/account_card.dart';
 import 'package:amp_studenthub/widgets/account_list_view.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       title: 'StudentHub',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(Brightness.light),
-      home: const SwitchAccountScreen(),
+      home: const ProfileInput1(),
     );
   }
 }
