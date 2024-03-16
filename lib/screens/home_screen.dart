@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                         flex: 1,
                         child: Container(
                             width: double.infinity,
-                            padding: EdgeInsets.symmetric(vertical: 24),
+                            padding: const EdgeInsets.symmetric(vertical: 24),
                             child: RichText(
                                 text: const TextSpan(
                               style: TextStyle(

@@ -2,6 +2,7 @@ import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class CompanyDashboardScreen extends StatelessWidget {
   const CompanyDashboardScreen({super.key});
@@ -87,7 +88,7 @@ class CompanyDashboardScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 48,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () => GoRouter.of(context).push('/postJob'),
                     style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
@@ -97,13 +98,16 @@ class CompanyDashboardScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                            margin: EdgeInsets.only(right: 16),
-                            child: const Icon(Icons.add)),
-                        const Text(
-                          'Post new job',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500),
+                          margin: EdgeInsets.only(left: 16),
+                          child: const Text(
+                            'Post new job',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w500),
+                          ),
                         ),
+                        Container(
+                            margin: EdgeInsets.only(left: 16),
+                            child: const Icon(Icons.add)),
                       ],
                     ),
                   )),
