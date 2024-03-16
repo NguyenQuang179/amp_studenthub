@@ -148,7 +148,7 @@ class HomeScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             Container(
-                              margin: EdgeInsets.only(bottom: 16),
+                              margin: const EdgeInsets.only(bottom: 16),
                               alignment: Alignment.centerLeft,
                               child: const Text(
                                 "Join with us as:",
