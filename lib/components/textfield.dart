@@ -32,7 +32,7 @@ class Textfield extends StatelessWidget {
               borderSide: BorderSide(color: Constant.secondaryColor),
             ),
             labelText: hintText,
-            fillColor: Constant.tetriaryColor,
+            fillColor: Constant.backgroundWithOpacity,
             filled: true,
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

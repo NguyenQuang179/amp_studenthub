@@ -1,8 +1,6 @@
 import 'package:amp_studenthub/components/button.dart';
-import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 class SignUpStepOne extends StatelessWidget {
   SignUpStepOne({super.key});

@@ -73,8 +73,8 @@ class SignupStepTwo extends StatelessWidget {
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Checkbox(value: false, onChanged: null),
-                const Text(
+                Checkbox(value: false, onChanged: null),
+                Text(
                   'I have read & accept the Terms & Conditions',
                   style: TextStyle(
                     color: Constant.secondaryColor,

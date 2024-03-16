@@ -1,9 +1,5 @@
 import 'package:amp_studenthub/configs/constant.dart';
-import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
 import 'package:amp_studenthub/screens/navigation_menu.dart';
-import 'package:amp_studenthub/screens/login_page.dart';
-import 'package:amp_studenthub/screens/signup_step1.dart';
-import 'package:amp_studenthub/screens/signup_step2.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,7 +33,7 @@ class MyApp extends StatelessWidget {
       title: 'StudentHub',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(Brightness.light),
-      home: NavigationMenu(),
+      home: const NavigationMenu(),
     );
   }
 }
