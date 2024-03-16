@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                         flex: 1,
                         child: Container(
                             width: double.infinity,
-                            padding: EdgeInsets.symmetric(vertical: 24),
+                            padding: const EdgeInsets.symmetric(vertical: 24),
                             child: RichText(
                                 text: const TextSpan(
                               style: TextStyle(
@@ -148,7 +148,7 @@ class HomeScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             Container(
-                              margin: EdgeInsets.only(bottom: 16),
+                              margin: const EdgeInsets.only(bottom: 16),
                               alignment: Alignment.centerLeft,
                               child: const Text(
                                 "Join with us as:",

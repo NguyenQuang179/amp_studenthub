@@ -97,7 +97,7 @@ class CompanyDashboardScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                            margin: EdgeInsets.only(right: 16),
+                            margin: const EdgeInsets.only(right: 16),
                             child: const Icon(Icons.add)),
                         const Text(
                           'Post new job',
