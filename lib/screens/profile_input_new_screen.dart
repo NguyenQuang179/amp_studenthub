@@ -4,14 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class ProfileInput1 extends StatefulWidget {
-  const ProfileInput1({super.key});
+class ProfileInputNew extends StatefulWidget {
+  const ProfileInputNew({super.key});
 
   @override
-  State<ProfileInput1> createState() => _ProfileInput1State();
+  State<ProfileInputNew> createState() => _ProfileInputNewState();
 }
 
-class _ProfileInput1State extends State<ProfileInput1> {
+class _ProfileInputNewState extends State<ProfileInputNew> {
   Map<String, int> option = {
     'It\'s just me': 1,
     '2-9 employees': 2,
