@@ -1,10 +1,12 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/screens/navigation_menu.dart';
+import 'package:amp_studenthub/screens/post_job_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 ThemeData _buildTheme(brightness) {
@@ -24,15 +26,25 @@ ThemeData _buildTheme(brightness) {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  final GoRouter _router = GoRouter(routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const NavigationMenu(),
+    ),
+    GoRoute(
+      path: '/postJob',
+      builder: (context, state) => PostJobScreen(),
+    )
+  ]);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: _router,
       title: 'StudentHub',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(Brightness.light),
-      home: const NavigationMenu(),
     );
   }
 }
