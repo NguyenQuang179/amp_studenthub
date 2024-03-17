@@ -12,12 +12,22 @@ class ProjectListFiltered extends StatefulWidget {
   State<ProjectListFiltered> createState() => _ProjectListFilteredState();
 }
 
+enum ProjectLength { option1, option2, option3, option4 }
+
 class _ProjectListFilteredState extends State<ProjectListFiltered> {
   onClick(context) {
     GoRouter.of(context).push('/projectDetail');
   }
 
-  String? selectedOption;
+  ProjectLength? selectedOption = ProjectLength.option1;
+
+  onLengthSelected(value, setState) {
+    print('selected');
+    setState(() {
+      print(selectedOption);
+      selectedOption = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,70 +77,150 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                             foregroundColor: Constant.onPrimaryColor),
                         onPressed: () => showModalBottomSheet(
                             context: context,
+                            isScrollControlled: true,
                             builder: (BuildContext context) {
-                              return SizedBox(
-                                  height: 800,
-                                  child: Column(children: [
-                                    Text("Filter By"),
-                                    Divider(),
-                                    Text("Project Length"),
-                                    RadioListTile(
-                                      title: Text('Option 1'),
-                                      value: 'Option 1',
-                                      groupValue: selectedOption,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedOption = value as String?;
-                                        });
-                                      },
+                              return StatefulBuilder(
+                                  builder: (context, setState) {
+                                return SingleChildScrollView(
+                                    child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom),
+                                  child: SizedBox(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0),
+                                      child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              child: Text("Filter By",
+                                                  style:
+                                                      TextStyle(fontSize: 20),
+                                                  textAlign: TextAlign.center),
+                                            ),
+                                            Divider(),
+                                            Text(
+                                              "Project Length",
+                                            ),
+                                            RadioListTile<ProjectLength>(
+                                              title: Text('Option 1'),
+                                              value: ProjectLength.option1,
+                                              groupValue: selectedOption,
+                                              onChanged: (value) {
+                                                onLengthSelected(
+                                                    value, setState);
+                                              },
+                                            ),
+                                            RadioListTile<ProjectLength>(
+                                              title: Text('Option 2'),
+                                              value: ProjectLength.option2,
+                                              groupValue: selectedOption,
+                                              onChanged: (value) {
+                                                onLengthSelected(
+                                                    value, setState);
+                                              },
+                                            ),
+                                            RadioListTile<ProjectLength>(
+                                                title: Text('Option 3'),
+                                                value: ProjectLength.option3,
+                                                groupValue: selectedOption,
+                                                onChanged: (value) {
+                                                  onLengthSelected(
+                                                      value, setState);
+                                                }),
+                                            RadioListTile<ProjectLength>(
+                                              title: Text('Option 4'),
+                                              value: ProjectLength.option4,
+                                              groupValue: selectedOption,
+                                              onChanged: (value) {
+                                                onLengthSelected(
+                                                    value, setState);
+                                              },
+                                            ),
+                                            Text("Student needed"),
+                                            TextField(
+                                                decoration: new InputDecoration(
+                                                    labelText:
+                                                        "Enter your number"),
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                inputFormatters: <TextInputFormatter>[
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly
+                                                ]),
+                                            Text("Proposals less than"),
+                                            TextField(
+                                                decoration: new InputDecoration(
+                                                    labelText:
+                                                        "Enter your number"),
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                inputFormatters: <TextInputFormatter>[
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly
+                                                ]),
+                                            Container(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(20.0),
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: ElevatedButton(
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Constant
+                                                                            .primaryColor),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Constant
+                                                                            .onPrimaryColor)),
+                                                        onPressed: () {},
+                                                        child:
+                                                            const Text("Apply"),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      width: 16,
+                                                    ),
+                                                    Expanded(
+                                                      child: ElevatedButton(
+                                                        style: ButtonStyle(
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Constant
+                                                                            .onPrimaryColor),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Constant
+                                                                            .primaryColor)),
+                                                        onPressed: () =>
+                                                            GoRouter.of(context)
+                                                                .pop('/'),
+                                                        child: const Text(
+                                                            "Clear Filter"),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ]),
                                     ),
-                                    RadioListTile(
-                                      title: Text('Option 2'),
-                                      value: 'Option 2',
-                                      groupValue: selectedOption,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedOption = value as String?;
-                                        });
-                                      },
-                                    ),
-                                    RadioListTile(
-                                      title: Text('Option 3'),
-                                      value: 'Option 3',
-                                      groupValue: selectedOption,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedOption = value as String?;
-                                        });
-                                      },
-                                    ),
-                                    RadioListTile(
-                                      title: Text('Option 4'),
-                                      value: 'Option 4',
-                                      groupValue: selectedOption,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedOption = value as String?;
-                                        });
-                                      },
-                                    ),
-                                    Text("Student needed"),
-                                    TextField(
-                                        decoration: new InputDecoration(
-                                            labelText: "Enter your number"),
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: <TextInputFormatter>[
-                                          FilteringTextInputFormatter.digitsOnly
-                                        ]),
-                                    Text("Proposals less than"),
-                                    TextField(
-                                        decoration: new InputDecoration(
-                                            labelText: "Enter your number"),
-                                        keyboardType: TextInputType.number,
-                                        inputFormatters: <TextInputFormatter>[
-                                          FilteringTextInputFormatter.digitsOnly
-                                        ]),
-                                  ]));
+                                  ),
+                                ));
+                              });
                             }),
                         icon: const Icon(Icons.filter_alt)),
                   )

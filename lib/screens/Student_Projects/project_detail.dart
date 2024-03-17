@@ -77,11 +77,15 @@ class ProjectDetail extends StatelessWidget {
               Spacer(),
               // Second item with no flexible space
               Container(
-                color: Colors.red,
                 child: Row(
                   children: [
                     Expanded(
                       child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Constant.primaryColor),
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                                Constant.onPrimaryColor)),
                         onPressed: () {},
                         child: const Text("Apply"),
                       ),
@@ -91,12 +95,22 @@ class ProjectDetail extends StatelessWidget {
                     ),
                     Expanded(
                       child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Constant.onPrimaryColor),
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                                Constant.primaryColor)),
                         onPressed: () {},
                         child: const Text("Save"),
                       ),
                     ),
                     Expanded(
                       child: ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Constant.onPrimaryColor),
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                                Constant.primaryColor)),
                         onPressed: () => GoRouter.of(context).pop('/'),
                         child: const Text("Return"),
                       ),
