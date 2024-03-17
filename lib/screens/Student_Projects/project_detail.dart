@@ -1,23 +1,23 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ProjectDetail extends StatelessWidget {
-  final String projectDate;
-  final String projectPosition;
-  final String projectExpectation;
-  final String projectDuration;
-  final int projectStudentNeeded;
-  final int projectProposalNums;
-
-  const ProjectDetail(
-      {super.key,
-      required this.projectDate,
-      required this.projectPosition,
-      required this.projectExpectation,
-      required this.projectDuration,
-      required this.projectStudentNeeded,
-      required this.projectProposalNums});
-
+  final String jobTitle;
+  final String jobDuration;
+  final String jobCreatedDate;
+  final int jobStudentNeeded;
+  final int jobProposalNums;
+  final String jobExpectation;
+  const ProjectDetail({
+    super.key,
+    required this.jobTitle,
+    required this.jobDuration,
+    required this.jobCreatedDate,
+    required this.jobStudentNeeded,
+    required this.jobProposalNums,
+    required this.jobExpectation,
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +36,7 @@ class ProjectDetail extends StatelessWidget {
                 style: const TextStyle(
                     fontSize: 20, color: Constant.secondaryColor),
               ),
-              Text(projectPosition,
+              Text(jobTitle,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontSize: 30, color: Constant.primaryColor)),
@@ -44,9 +44,9 @@ class ProjectDetail extends StatelessWidget {
                 color: Constant.primaryColor,
               ),
               Text("Students are expecting:"),
-              Text("- $projectExpectation"),
-              Text("- $projectExpectation"),
-              Text("- $projectExpectation"),
+              Text("- $jobExpectation"),
+              Text("- $jobExpectation"),
+              Text("- $jobExpectation"),
               Divider(
                 color: Constant.primaryColor,
               ),
@@ -54,22 +54,56 @@ class ProjectDetail extends StatelessWidget {
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                       fontSize: 20, color: Constant.primaryColor)),
-              Text("- $projectDate"),
+              Text("- $jobCreatedDate"),
               Text("Duration:",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                       fontSize: 20, color: Constant.primaryColor)),
-              Text("- $projectDuration"),
+              Text("- $jobDuration"),
               Text("Available Slots:",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                       fontSize: 20, color: Constant.primaryColor)),
-              Text("- $projectStudentNeeded Students"),
+              Text("- $jobStudentNeeded Students"),
               Text("Total Slots:",
                   textAlign: TextAlign.left,
                   style: const TextStyle(
                       fontSize: 20, color: Constant.primaryColor)),
-              Text("- $projectProposalNums Students"),
+              Text("- $jobProposalNums Students"),
+              const SizedBox(
+                height: 40,
+              ),
+              // Spacer to create flexible space between items
+              Spacer(),
+              // Second item with no flexible space
+              Container(
+                color: Colors.red,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Apply"),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Save"),
+                      ),
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => GoRouter.of(context).pop('/'),
+                        child: const Text("Return"),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
