@@ -1,12 +1,21 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/utilities/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-class CompanyDashboardScreen extends StatelessWidget {
+class CompanyDashboardScreen extends StatefulWidget {
   const CompanyDashboardScreen({super.key});
 
+  @override
+  State<CompanyDashboardScreen> createState() => _CompanyDashboardScreenState();
+}
+
+class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
+  Set<DashboardFilterOptions> selectedFilterOptions = {
+    DashboardFilterOptions.all
+  };
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +56,7 @@ class CompanyDashboardScreen extends StatelessWidget {
                 children: [
                   Container(
                       width: double.infinity,
-                      margin: const EdgeInsets.only(bottom: 32),
+                      margin: const EdgeInsets.only(bottom: 16),
                       child: const Text(
                         "Your Jobs: ",
                         style: TextStyle(
@@ -55,6 +64,58 @@ class CompanyDashboardScreen extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             color: Constant.primaryColor),
                       )),
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: Constant.backgroundColor,
+                    ),
+                    child: Row(children: [
+                      Expanded(
+                        flex: 1,
+                        child: SegmentedButton<DashboardFilterOptions>(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.selected)) {
+                                    return Constant.primaryColor;
+                                  }
+                                  return Constant.backgroundColor;
+                                },
+                              ),
+                              foregroundColor:
+                                  MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.selected)) {
+                                    return Constant.onPrimaryColor;
+                                  }
+                                  return Constant.textColor;
+                                },
+                              ),
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12))),
+                              textStyle: MaterialStatePropertyAll(TextStyle(
+                                fontSize: 16,
+                              ))),
+                          segments: const <ButtonSegment<
+                              DashboardFilterOptions>>[
+                            ButtonSegment<DashboardFilterOptions>(
+                                value: DashboardFilterOptions.all,
+                                label: Text("All")),
+                            ButtonSegment<DashboardFilterOptions>(
+                                value: DashboardFilterOptions.working,
+                                label: Text("Working")),
+                            ButtonSegment<DashboardFilterOptions>(
+                                value: DashboardFilterOptions.archived,
+                                label: Text("Archived")),
+                          ],
+                          selected: selectedFilterOptions,
+                          onSelectionChanged:
+                              (Set<DashboardFilterOptions> newSelection) {},
+                        ),
+                      )
+                    ]),
+                  ),
                   Expanded(
                     child: Column(
                       children: [
