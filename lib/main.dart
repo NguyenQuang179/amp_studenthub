@@ -1,4 +1,5 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/screens/Message/message_detail.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_detail.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list_filtered.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list_saved.dart';
@@ -57,7 +58,15 @@ class MyApp extends StatelessWidget {
     GoRoute(
       path: '/projectListFiltered',
       builder: (context, state) => const ProjectListFiltered(),
-    )
+    ),
+    GoRoute(
+      path: '/messageList',
+      builder: (context, state) => const ProjectListFiltered(),
+    ),
+    GoRoute(
+      path: '/messageDetail',
+      builder: (context, state) => const MessageDetail(),
+    ),
   ]);
 
   @override

@@ -1,4 +1,5 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/screens/Message/message_list.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list.dart';
 import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class _NavigationMenuState extends State<NavigationMenu> {
   final screens = [
     const ProjectList(),
     const CompanyDashboardScreen(),
-    Container(color: Colors.pink),
+    const MessageList(),
     Container(color: Colors.yellow)
   ];
 
