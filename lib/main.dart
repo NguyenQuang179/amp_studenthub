@@ -1,4 +1,5 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/screens/job_details_screen.dart';
 import 'package:amp_studenthub/screens/navigation_menu.dart';
 import 'package:amp_studenthub/screens/post_job_screen.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,10 @@ class MyApp extends StatelessWidget {
     GoRoute(
       path: '/postJob',
       builder: (context, state) => PostJobScreen(),
+    ),
+    GoRoute(
+      path: '/jobDetails',
+      builder: (context, state) => JobDetailsScreen(),
     )
   ]);
 

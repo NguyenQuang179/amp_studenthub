@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class PostJobScreen extends StatefulWidget {
-  PostJobScreen({super.key});
+  const PostJobScreen({super.key});
 
   @override
   State<PostJobScreen> createState() => _PostJobScreenState();
@@ -33,7 +33,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
                   ),
                 ),
                 Container(
-                  decoration: BoxDecoration(),
+                  decoration: const BoxDecoration(),
                   child: RichText(
                     text: const TextSpan(
                         style: TextStyle(
@@ -52,7 +52,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 16, bottom: 32),
+                  margin: const EdgeInsets.only(top: 16, bottom: 32),
                   child: TextFormField(
                       controller: jobTitleController,
                       decoration: InputDecoration(
@@ -80,7 +80,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
         Step(
             state: currentStep > 1 ? StepState.complete : StepState.indexed,
             isActive: currentStep >= 1,
-            title: Text(""),
+            title: const Text(""),
             content: Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +90,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                   ),
                   Container(
-                    decoration: BoxDecoration(),
+                    decoration: const BoxDecoration(),
                     child: RichText(
                       text: const TextSpan(
                           style: TextStyle(
@@ -106,7 +106,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
                     ),
                   ),
                   Container(
-                      margin: EdgeInsets.symmetric(vertical: 16),
+                      margin: const EdgeInsets.symmetric(vertical: 16),
                       child: const Text(
                         "1. How long will your project take?",
                         style: TextStyle(
@@ -175,7 +175,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
         Step(
             state: currentStep > 2 ? StepState.complete : StepState.indexed,
             isActive: currentStep >= 2,
-            title: Text(""),
+            title: const Text(""),
             content: Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,11 +201,11 @@ class _PostJobScreenState extends State<PostJobScreen> {
                       ),
                       Container(
                           margin: const EdgeInsets.only(bottom: 8, left: 16),
-                          child: Text(
+                          child: const Text(
                               "\u2022 The skills required for your project.")),
                       Container(
                           margin: const EdgeInsets.only(bottom: 8, left: 16),
-                          child: Text("\u2022 Detail about your project"))
+                          child: const Text("\u2022 Detail about your project"))
                     ],
                   ),
                   Container(
@@ -239,7 +239,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
             )),
         Step(
             isActive: currentStep >= 3,
-            title: Text(""),
+            title: const Text(""),
             content: Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,7 +253,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 16),
+                    margin: const EdgeInsets.only(bottom: 16),
                     child: Text(
                       jobTitleController.text,
                       style: const TextStyle(
@@ -263,19 +263,19 @@ class _PostJobScreenState extends State<PostJobScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 8),
+                    margin: const EdgeInsets.only(bottom: 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: 8),
+                          margin: const EdgeInsets.only(right: 8),
                           child: const FaIcon(
                             FontAwesomeIcons.clock,
                             size: 16,
                           ),
                         ),
                         Text(
-                          'Project scope: ${selectedTimelineOption}',
+                          'Project scope: $selectedTimelineOption',
                           style: const TextStyle(
                               color: Constant.textColor, fontSize: 16),
                         ),
@@ -283,12 +283,12 @@ class _PostJobScreenState extends State<PostJobScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 8),
+                    margin: const EdgeInsets.only(bottom: 8),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(right: 8),
+                          margin: const EdgeInsets.only(right: 8),
                           child: const FaIcon(
                             FontAwesomeIcons.user,
                             size: 16,
@@ -303,15 +303,16 @@ class _PostJobScreenState extends State<PostJobScreen> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(bottom: 8),
-                    child: Text(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: const Text(
                       "Description: ",
                       style: TextStyle(color: Constant.textColor, fontSize: 16),
                     ),
                   ),
                   Text(descriptionController.text,
                       textAlign: TextAlign.justify,
-                      style: TextStyle(color: Constant.textColor, fontSize: 16))
+                      style: const TextStyle(
+                          color: Constant.textColor, fontSize: 16))
                 ],
               ),
             ))
@@ -363,7 +364,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
                   Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(
-                          bottom: 16, left: 32, right: 32),
+                          bottom: 16, left: 24, right: 24),
                       child: const Text(
                         "Post New Job:",
                         style: TextStyle(
