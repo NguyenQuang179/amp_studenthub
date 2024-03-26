@@ -1,4 +1,5 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/screens/job_details_screen.dart';
 import 'package:amp_studenthub/screens/Message/message_detail.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_detail.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list_filtered.dart';
@@ -38,7 +39,11 @@ class MyApp extends StatelessWidget {
     ),
     GoRoute(
       path: '/postJob',
-      builder: (context, state) => PostJobScreen(),
+      builder: (context, state) => const PostJobScreen(),
+    ),
+    GoRoute(
+      path: '/jobDetails',
+      builder: (context, state) => const JobDetailsScreen(),
     ),
     GoRoute(
       path: '/projectDetail',

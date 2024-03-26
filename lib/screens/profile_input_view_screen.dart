@@ -1,8 +1,5 @@
 import 'package:amp_studenthub/configs/constant.dart';
-import 'package:amp_studenthub/screens/input_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ProfileInputView extends StatefulWidget {
   const ProfileInputView({super.key});
