@@ -1,5 +1,9 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/screens/job_details_screen.dart';
+import 'package:amp_studenthub/screens/Message/message_detail.dart';
+import 'package:amp_studenthub/screens/Student_Projects/project_detail.dart';
+import 'package:amp_studenthub/screens/Student_Projects/project_list_filtered.dart';
+import 'package:amp_studenthub/screens/Student_Projects/project_list_saved.dart';
 import 'package:amp_studenthub/screens/navigation_menu.dart';
 import 'package:amp_studenthub/screens/post_job_screen.dart';
 import 'package:flutter/material.dart';
@@ -35,12 +39,39 @@ class MyApp extends StatelessWidget {
     ),
     GoRoute(
       path: '/postJob',
-      builder: (context, state) => PostJobScreen(),
+      builder: (context, state) => const PostJobScreen(),
     ),
     GoRoute(
       path: '/jobDetails',
-      builder: (context, state) => JobDetailsScreen(),
-    )
+      builder: (context, state) => const JobDetailsScreen(),
+    ),
+    GoRoute(
+      path: '/projectDetail',
+      builder: (context, state) => const ProjectDetail(
+        jobTitle: 'Front-End Developer (React JS)',
+        jobCreatedDate: '16/03/2024',
+        jobDuration: '1-3 months',
+        jobStudentNeeded: 5,
+        jobProposalNums: 10,
+        jobExpectation: 'React JS, HTML, CSS, JavaScript',
+      ),
+    ),
+    GoRoute(
+      path: '/projectListSaved',
+      builder: (context, state) => const ProjectListSaved(),
+    ),
+    GoRoute(
+      path: '/projectListFiltered',
+      builder: (context, state) => const ProjectListFiltered(),
+    ),
+    GoRoute(
+      path: '/messageList',
+      builder: (context, state) => const ProjectListFiltered(),
+    ),
+    GoRoute(
+      path: '/messageDetail',
+      builder: (context, state) => const MessageDetail(),
+    ),
   ]);
 
   @override
