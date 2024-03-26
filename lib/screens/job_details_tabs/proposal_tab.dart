@@ -1,8 +1,6 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/student_proposal.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class ProposalTab extends StatefulWidget {
@@ -40,7 +38,7 @@ class _ProposalTabState extends State<ProposalTab> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               Expanded(
@@ -51,7 +49,6 @@ class _ProposalTabState extends State<ProposalTab> {
                     children: [
                       Expanded(
                         child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 16),
                           child: ListView.builder(
                               physics: const ClampingScrollPhysics(),
                               itemCount: studentProposals.length,
