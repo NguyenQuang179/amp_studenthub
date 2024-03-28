@@ -1,5 +1,6 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/job.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/utilities/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -180,7 +181,8 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                     Job job = allJobs[index];
                                     return InkWell(
                                       onTap: () => GoRouter.of(context)
-                                          .push('/jobDetails'),
+                                          .pushNamed(RouteConstants
+                                              .companyProjectDetails),
                                       child: Container(
                                         margin: const EdgeInsets.symmetric(
                                             vertical: 8),

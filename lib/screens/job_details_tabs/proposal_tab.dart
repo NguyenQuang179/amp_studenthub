@@ -1,5 +1,6 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/student_proposal.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,8 +57,8 @@ class _ProposalTabState extends State<ProposalTab> {
                                 StudentProposal proposal =
                                     studentProposals[index];
                                 return InkWell(
-                                  onTap: () =>
-                                      GoRouter.of(context).push('/jobDetails'),
+                                  onTap: () => GoRouter.of(context).pushNamed(
+                                      RouteConstants.companyProjectDetails),
                                   child: Container(
                                     margin:
                                         const EdgeInsets.symmetric(vertical: 8),
