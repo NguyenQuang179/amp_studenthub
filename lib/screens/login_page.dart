@@ -2,6 +2,7 @@ import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 class LoginPage extends StatelessWidget {
@@ -23,98 +24,109 @@ class LoginPage extends StatelessWidget {
         body: SafeArea(
           child: Center(
               child: Column(children: [
-            const SizedBox(
-              height: 50,
-            ),
-            //logo
-            const Text(
-              'StudentHub',
-              style: TextStyle(
-                  color: Constant.primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            const Text(
-              'SIGN IN',
-              style: TextStyle(
-                  color: Constant.secondaryColor,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 40),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            //username texfield
-            Textfield(
-                controller: usernameController,
-                hintText: 'Username',
-                obscureText: false),
-            const SizedBox(
-              height: 20,
-            ),
-            //password textfield
-            Textfield(
-                controller: passwordController,
-                hintText: 'Password',
-                obscureText: true),
-            const SizedBox(
-              height: 40,
-            ),
-            ClipPath(
-              clipper:
-                  OvalTopBorderClipper(), // Custom clipper for rounded cone
-              child: Container(
-                width: 500,
-                height: MediaQuery.of(context).size.height * 0.6,
-                color: Constant.primaryColor,
-                child: Center(
-                    child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 60,
-                    ),
-                    //sign in button
-                    Button(onTap: signIn, text: 'Sign In'),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    //forgot password?
-                    const Text(
-                      'Forgot Password?',
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  //logo
+                  Container(
+                    margin: const EdgeInsets.only(top: 32),
+                    child: const Text(
+                      'StudentHub',
                       style: TextStyle(
-                        color: Constant.onPrimaryColor,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
-                      ),
+                          color: Constant.primaryColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28),
                     ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    //not a member? register
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      const Text('New to StudentsHub?',
-                          style: TextStyle(color: Constant.onPrimaryColor)),
-                      const SizedBox(width: 20),
+                  ),
+                  Expanded(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                              color: Constant.onPrimaryColor, width: 2),
+                        margin: const EdgeInsets.only(bottom: 24),
+                        child: const Text(
+                          'SIGN IN',
+                          style: TextStyle(
+                              color: Constant.secondaryColor,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 32),
                         ),
-                        child: const Text('Join Now',
-                            style: TextStyle(
-                                color: Constant.onPrimaryColor,
-                                fontWeight: FontWeight.normal)),
-                      )
-                    ]),
-                  ],
-                )),
+                      ),
+                      //username texfield
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        child: Textfield(
+                            controller: usernameController,
+                            hintText: 'Username',
+                            obscureText: false),
+                      ),
+                      //password textfield
+                      Textfield(
+                          controller: passwordController,
+                          hintText: 'Password',
+                          obscureText: true),
+                    ],
+                  ))
+                ],
+              ),
+            ),
+            Flexible(
+              flex: 1,
+              child: ClipPath(
+                clipper:
+                    OvalTopBorderClipper(), // Custom clipper for rounded cone
+                child: Container(
+                  padding: const EdgeInsets.only(top: 52),
+                  width: 500,
+                  color: Constant.primaryColor,
+                  child: Center(
+                      child: Column(
+                    children: [
+                      //sign in button
+                      Button(onTap: signIn, text: 'Sign In'),
+                      //forgot password?
+                      Container(
+                        margin: const EdgeInsets.only(top: 32),
+                        child: const Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: Constant.onPrimaryColor,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      //not a member? register
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('New to StudentsHub?',
+                                style:
+                                    TextStyle(color: Constant.onPrimaryColor)),
+                            const SizedBox(width: 20),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: Constant.onPrimaryColor, width: 2),
+                              ),
+                              child: const Text('Join Now',
+                                  style: TextStyle(
+                                      color: Constant.onPrimaryColor,
+                                      fontWeight: FontWeight.normal)),
+                            )
+                          ]),
+                    ],
+                  )),
+                ),
               ),
             ),
           ])),

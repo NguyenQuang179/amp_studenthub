@@ -1,6 +1,5 @@
 import 'package:amp_studenthub/components/project_item.dart';
 import 'package:amp_studenthub/configs/constant.dart';
-import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,13 +22,12 @@ class ProjectList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Constant.backgroundColor,
-      appBar: AuthAppBar(),
       body: SafeArea(
         child: Center(
             child: Column(
           children: [
             Container(
-              margin: EdgeInsets.all(16),
+              margin: const EdgeInsets.all(16),
               child: Row(
                 children: [
                   Expanded(
@@ -43,8 +41,8 @@ class ProjectList extends StatelessWidget {
                                 top: 8, left: 16, right: 16),
                             filled: true,
                             fillColor: Constant.onPrimaryColor,
-                            prefixIcon: Icon(Icons.search),
-                            prefixStyle: TextStyle(),
+                            prefixIcon: const Icon(Icons.search),
+                            prefixStyle: const TextStyle(),
                             hintText: "Search for job...",
                             labelStyle: TextStyle(color: Colors.grey[600]),
                             border: OutlineInputBorder(
@@ -61,10 +59,10 @@ class ProjectList extends StatelessWidget {
                                     color: Colors.grey[500]!, width: 1)))),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 8),
+                    margin: const EdgeInsets.only(left: 8),
                     child: IconButton(
                         style: IconButton.styleFrom(
-                            padding: EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(12),
                             backgroundColor: Constant.primaryColor,
                             foregroundColor: Constant.onPrimaryColor),
                         onPressed: () => checkSaved(context),

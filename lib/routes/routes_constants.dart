@@ -7,7 +7,6 @@ class RouteConstants {
   static String profileInputNew = 'profileInputNew';
   static String profileInputOld = 'profileInputOld';
   static String welcome = 'welcome';
-  static String companyDashboard = 'companyDashboard';
   static String companyPostProject = 'companyPostProject';
   static String companyProjectDetails = 'companyProjectDetails';
   static String projectDetails = 'projectDetails';
@@ -15,4 +14,11 @@ class RouteConstants {
   static String projectListFiltered = 'projectListFiltered';
   static String messageList = 'messageList';
   static String messageDetail = 'messageDetail';
+
+  // Company Navigator
+  static String company = 'company';
+  static String companyProject = 'companyProject';
+  static String companyDashboard = 'companyDashboard';
+  static String companyMessage = 'companyMessage';
+  static String companyNotification = 'companyNotification';
 }
