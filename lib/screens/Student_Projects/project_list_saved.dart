@@ -4,19 +4,10 @@ import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class ProjectList extends StatelessWidget {
-  const ProjectList({super.key});
-  checkDetail(context) {
+class ProjectListSaved extends StatelessWidget {
+  const ProjectListSaved({super.key});
+  onClick(context) {
     GoRouter.of(context).push('/projectDetail');
-  }
-
-  checkSaved(context) {
-    GoRouter.of(context).push('/projectListSaved');
-  }
-
-  handleSubmit(context, value) {
-    GoRouter.of(context).push('/projectListFiltered');
-    print(value);
   }
 
   @override
@@ -35,8 +26,6 @@ class ProjectList extends StatelessWidget {
                   Expanded(
                     child: TextField(
                         onChanged: (value) {},
-                        onSubmitted: (String value) =>
-                            handleSubmit(context, value),
                         textAlignVertical: TextAlignVertical.center,
                         decoration: InputDecoration(
                             contentPadding: const EdgeInsets.only(
@@ -67,8 +56,8 @@ class ProjectList extends StatelessWidget {
                             padding: EdgeInsets.all(12),
                             backgroundColor: Constant.primaryColor,
                             foregroundColor: Constant.onPrimaryColor),
-                        onPressed: () => checkSaved(context),
-                        icon: const Icon(Icons.favorite_border)),
+                        onPressed: () => GoRouter.of(context).pop(),
+                        icon: const Icon(Icons.arrow_back_rounded)),
                   )
                 ],
               ),
@@ -78,13 +67,14 @@ class ProjectList extends StatelessWidget {
               itemCount: 5,
               itemBuilder: (BuildContext context, int index) {
                 return ProjectItem(
-                    jobTitle: 'Front-End Developer (React JS)sssssss',
-                    jobCreatedDate: '16/03/2024',
-                    jobDuration: '1-3 months',
-                    jobStudentNeeded: 5,
-                    jobProposalNums: 10,
-                    onClick: () => checkDetail(context),
-                    isSaved: false);
+                  jobTitle: 'Front-End Developer (React JS)sssssss',
+                  jobCreatedDate: '16/03/2024',
+                  jobDuration: '1-3 months',
+                  jobStudentNeeded: 5,
+                  jobProposalNums: 10,
+                  onClick: () => onClick(context),
+                  isSaved: true,
+                );
               },
             )),
           ],

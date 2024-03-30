@@ -1,13 +1,14 @@
 import 'package:amp_studenthub/components/project_item.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/screens/Message/message_item.dart';
 import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class ProjectList extends StatelessWidget {
-  const ProjectList({super.key});
+class MessageList extends StatelessWidget {
+  const MessageList({super.key});
   checkDetail(context) {
-    GoRouter.of(context).push('/projectDetail');
+    GoRouter.of(context).push('/messageDetail');
   }
 
   checkSaved(context) {
@@ -77,12 +78,10 @@ class ProjectList extends StatelessWidget {
                 child: ListView.builder(
               itemCount: 5,
               itemBuilder: (BuildContext context, int index) {
-                return ProjectItem(
-                    jobTitle: 'Front-End Developer (React JS)sssssss',
+                return MessageItem(
                     jobCreatedDate: '16/03/2024',
-                    jobDuration: '1-3 months',
-                    jobStudentNeeded: 5,
-                    jobProposalNums: 10,
+                    messageReceiver: 'Luis Pham Irecnus',
+                    receiverPosition: 'Senior frontend dev (Fintech)',
                     onClick: () => checkDetail(context),
                     isSaved: false);
               },

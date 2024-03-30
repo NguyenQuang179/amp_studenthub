@@ -1,6 +1,7 @@
 import 'package:amp_studenthub/configs/constant.dart';
-import 'package:amp_studenthub/screens/Student_Projects/project_detail.dart';
+import 'package:amp_studenthub/screens/Message/message_list.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list.dart';
+import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -16,15 +17,8 @@ class _NavigationMenuState extends State<NavigationMenu> {
 
   final screens = [
     const ProjectList(),
-    const ProjectDetail(
-      projectDate: "3 Days Ago",
-      projectPosition: "Project Position",
-      projectExpectation: "Project Expectation",
-      projectDuration: "Project Duration",
-      projectStudentNeeded: 5,
-      projectProposalNums: 10,
-    ),
-    Container(color: Colors.pink),
+    const CompanyDashboardScreen(),
+    const MessageList(),
     Container(color: Colors.yellow)
   ];
 
