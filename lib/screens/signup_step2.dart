@@ -1,6 +1,7 @@
 import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
@@ -20,23 +21,10 @@ class SignupStepTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Constant.backgroundColor,
+        appBar: AuthAppBar(),
         body: SafeArea(
           child: Center(
               child: Column(children: [
-            const SizedBox(
-              height: 50,
-            ),
-            //logo
-            const Text(
-              'StudentHub',
-              style: TextStyle(
-                  color: Constant.primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
             const Text(
               'SIGN UP',
               style: TextStyle(
@@ -44,32 +32,24 @@ class SignupStepTwo extends StatelessWidget {
                   fontWeight: FontWeight.w900,
                   fontSize: 40),
             ),
-            const SizedBox(
-              height: 50,
-            ),
+
             //username texfield
             Textfield(
                 controller: usernameController,
                 hintText: 'Fullname',
                 obscureText: false),
-            const SizedBox(
-              height: 20,
-            ),
+
             //password textfield
             Textfield(
                 controller: passwordController,
                 hintText: 'Work Email Address',
                 obscureText: true),
-            const SizedBox(
-              height: 20,
-            ),
+
             Textfield(
                 controller: usernameController,
                 hintText: 'password',
                 obscureText: false),
-            const SizedBox(
-              height: 20,
-            ),
+
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -82,9 +62,7 @@ class SignupStepTwo extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
+
             ClipPath(
               clipper:
                   OvalTopBorderClipper(), // Custom clipper for rounded cone
@@ -100,9 +78,7 @@ class SignupStepTwo extends StatelessWidget {
                     ),
                     //sign in button
                     Button(onTap: signIn, text: 'Sign Up'),
-                    const SizedBox(
-                      height: 50,
-                    ),
+
                     //forgot password?
 
                     //not a member? register

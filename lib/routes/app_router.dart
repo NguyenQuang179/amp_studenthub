@@ -161,7 +161,7 @@ class AppRouter {
     redirect: (context, state) {
       bool isAuth = true;
       // ignore: dead_code
-      if (!isAuth) {
+      if (!isAuth && state.matchedLocation == '/') {
         return state.namedLocation(RouteConstants.login);
         // ignore: dead_code
       } else if (state.matchedLocation == '/') {

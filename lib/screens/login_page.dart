@@ -1,9 +1,11 @@
 import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -31,7 +33,7 @@ class LoginPage extends StatelessWidget {
                 children: [
                   //logo
                   Container(
-                    margin: const EdgeInsets.only(top: 32),
+                    margin: const EdgeInsets.only(top: 16),
                     child: const Text(
                       'StudentHub',
                       style: TextStyle(
@@ -99,7 +101,7 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(
-                        height: 50,
+                        height: 32,
                       ),
                       //not a member? register
                       Row(
@@ -108,16 +110,11 @@ class LoginPage extends StatelessWidget {
                             const Text('New to StudentsHub?',
                                 style:
                                     TextStyle(color: Constant.onPrimaryColor)),
-                            const SizedBox(width: 20),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 12),
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                    color: Constant.onPrimaryColor, width: 2),
-                              ),
+                            const SizedBox(width: 16),
+                            TextButton(
+                              onPressed: () {
+                                context.pushNamed(RouteConstants.signUp1);
+                              },
                               child: const Text('Join Now',
                                   style: TextStyle(
                                       color: Constant.onPrimaryColor,
