@@ -31,14 +31,17 @@ class _CompanyNavbarScaffoldState extends State<CompanyNavbarScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AuthAppBar(),
+      appBar: const AuthAppBar(),
       body: widget.child,
       bottomNavigationBar: NavigationBar(
         height: 80,
         backgroundColor: Constant.backgroundWithOpacity,
         indicatorColor: Constant.primaryColor,
         surfaceTintColor: Constant.onPrimaryColor,
-        selectedIndex: routePaths.indexOf(widget.location),
+        selectedIndex: routePaths.contains(widget.location) &&
+                routePaths.indexOf(widget.location) < routePaths.length
+            ? routePaths.indexOf(widget.location)
+            : 0,
         onDestinationSelected: (value) => {navigateTab(context, value)},
         destinations: const [
           NavigationDestination(

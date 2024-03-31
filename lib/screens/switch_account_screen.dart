@@ -1,9 +1,10 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/account.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/widgets/account_list_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class SwitchAccountScreen extends StatefulWidget {
   const SwitchAccountScreen({super.key});
@@ -22,26 +23,25 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
       Account(fullName: 'Niên 2', type: 'Student')
     ];
 
-    Color customColor = const Color(0xFF3F72AF);
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Constant.backgroundColor,
+        toolbarHeight: 56,
         title: const Text(
-          "StudentHub",
-          style: TextStyle(color: Constant.onPrimaryColor),
+          'StudentHub',
+          style: TextStyle(
+              color: Constant.primaryColor, fontWeight: FontWeight.bold),
         ),
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.arrow_back),
-          color: Constant.onPrimaryColor,
-        ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
-            color: Constant.onPrimaryColor,
-          )
+        actions: [
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              child: IconButton.outlined(
+                  onPressed: () {},
+                  icon: const FaIcon(
+                    FontAwesomeIcons.magnifyingGlass,
+                    size: 16,
+                  ))),
         ],
-        backgroundColor: customColor,
         centerTitle: true,
       ),
       body: Column(
@@ -50,7 +50,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
             currentAccount: currentAccount,
             accountList: accountList,
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Padding(
@@ -96,15 +96,17 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 60),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: SizedBox(
               height: 60,
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.goNamed(RouteConstants.login);
+                },
                 style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.zero,
-                    backgroundColor: Color(0xFF3F72AF)),
+                    backgroundColor: const Color(0xFF3F72AF)),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -112,10 +114,10 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                       Icons.logout,
                       color: Colors.white,
                     ),
-                    SizedBox(width: 8),
+                    SizedBox(width: 16),
                     Text(
-                      'Logout',
-                      style: TextStyle(color: Colors.white),
+                      'Sign Out',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                   ],
                 ),

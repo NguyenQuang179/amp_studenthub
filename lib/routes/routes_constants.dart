@@ -14,6 +14,7 @@ class RouteConstants {
   static String projectListFiltered = 'projectListFiltered';
   static String messageList = 'messageList';
   static String messageDetail = 'messageDetail';
+  static String videoCall = 'videoCall';
 
   // Company Navigator
   static String company = 'company';

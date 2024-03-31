@@ -1,10 +1,7 @@
-import 'package:amp_studenthub/components/project_item.dart';
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/screens/Message/message_detail_item.dart';
-import 'package:amp_studenthub/screens/Message/message_item.dart';
-import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MessageDetail extends StatelessWidget {
   const MessageDetail({super.key});
@@ -13,7 +10,25 @@ class MessageDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Constant.backgroundColor,
-      appBar: AuthAppBar(),
+      appBar: AppBar(
+        backgroundColor: Constant.backgroundColor,
+        toolbarHeight: 60,
+        title: const Text(
+          'Luis Pham Irecnus',
+          style: TextStyle(
+              color: Constant.primaryColor, fontWeight: FontWeight.w600),
+        ),
+        actions: [
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              child: IconButton.outlined(
+                  onPressed: () {},
+                  icon: const FaIcon(
+                    FontAwesomeIcons.ellipsis,
+                    size: 16,
+                  ))),
+        ],
+      ),
       body: SafeArea(
         child: Center(
             child: Column(
@@ -47,7 +62,7 @@ class MessageDetail extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.send),
+                    icon: const Icon(Icons.send),
                     onPressed: () {},
                   ),
                 ],

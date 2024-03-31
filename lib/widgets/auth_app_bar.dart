@@ -11,7 +11,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Constant.backgroundColor,
-      toolbarHeight: 120,
+      toolbarHeight: 56,
       title: const Text(
         'StudentHub',
         style: TextStyle(
@@ -30,7 +30,7 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
                 color: Constant.onPrimaryColor,
               ),
               onPressed: () {
-                GoRouter.of(context).goNamed(RouteConstants.switchAccount);
+                GoRouter.of(context).pushNamed(RouteConstants.switchAccount);
               },
             ),
           ),

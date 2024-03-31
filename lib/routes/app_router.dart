@@ -10,10 +10,12 @@ import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
 import 'package:amp_studenthub/screens/home_screen.dart';
 import 'package:amp_studenthub/screens/job_details_screen.dart';
 import 'package:amp_studenthub/screens/login_page.dart';
+import 'package:amp_studenthub/screens/notification_list.dart';
 import 'package:amp_studenthub/screens/post_job_screen.dart';
 import 'package:amp_studenthub/screens/signup_step1.dart';
 import 'package:amp_studenthub/screens/signup_step2.dart';
 import 'package:amp_studenthub/screens/switch_account_screen.dart';
+import 'package:amp_studenthub/screens/video_call_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -52,13 +54,28 @@ class AppRouter {
           },
           routes: [
             GoRoute(
-              name: RouteConstants.companyProject,
-              parentNavigatorKey: _bottomNavbarNavigatorKey,
-              path: '/project',
-              pageBuilder: (context, state) {
-                return const MaterialPage(child: ProjectList());
-              },
-            ),
+                name: RouteConstants.companyProject,
+                parentNavigatorKey: _bottomNavbarNavigatorKey,
+                path: '/project',
+                pageBuilder: (context, state) {
+                  return const MaterialPage(child: ProjectList());
+                },
+                routes: [
+                  GoRoute(
+                      name: RouteConstants.projectDetails,
+                      path: 'details',
+                      pageBuilder: (context, state) {
+                        return const MaterialPage(
+                            child: ProjectDetail(
+                          jobTitle: 'Front-End Developer (React JS)',
+                          jobCreatedDate: '16/03/2024',
+                          jobDuration: '1-3 months',
+                          jobStudentNeeded: 5,
+                          jobProposalNums: 10,
+                          jobExpectation: 'React JS, HTML, CSS, JavaScript',
+                        ));
+                      }),
+                ]),
             GoRoute(
               name: RouteConstants.companyDashboard,
               parentNavigatorKey: _bottomNavbarNavigatorKey,
@@ -73,6 +90,14 @@ class AppRouter {
               path: '/message',
               pageBuilder: (context, state) {
                 return const MaterialPage(child: MessageList());
+              },
+            ),
+            GoRoute(
+              name: RouteConstants.companyNotification,
+              parentNavigatorKey: _bottomNavbarNavigatorKey,
+              path: '/notification',
+              pageBuilder: (context, state) {
+                return const MaterialPage(child: NotificationListScreen());
               },
             )
           ]),
@@ -117,20 +142,6 @@ class AppRouter {
             return const MaterialPage(child: JobDetailsScreen());
           }),
       GoRoute(
-          name: RouteConstants.projectDetails,
-          path: '/projectDetail',
-          pageBuilder: (context, state) {
-            return const MaterialPage(
-                child: ProjectDetail(
-              jobTitle: 'Front-End Developer (React JS)',
-              jobCreatedDate: '16/03/2024',
-              jobDuration: '1-3 months',
-              jobStudentNeeded: 5,
-              jobProposalNums: 10,
-              jobExpectation: 'React JS, HTML, CSS, JavaScript',
-            ));
-          }),
-      GoRoute(
           name: RouteConstants.projectListSaved,
           path: '/projectListSaved',
           pageBuilder: (context, state) {
@@ -153,6 +164,12 @@ class AppRouter {
           path: '/messageDetail',
           pageBuilder: (context, state) {
             return const MaterialPage(child: MessageDetail());
+          }),
+      GoRoute(
+          name: RouteConstants.videoCall,
+          path: '/videoCall',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: VideoCallScreen());
           }),
     ],
     // errorPageBuilder: (context, state) {

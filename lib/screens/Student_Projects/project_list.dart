@@ -1,12 +1,13 @@
 import 'package:amp_studenthub/components/project_item.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ProjectList extends StatelessWidget {
   const ProjectList({super.key});
   checkDetail(context) {
-    GoRouter.of(context).push('/projectDetail');
+    GoRouter.of(context).pushNamed(RouteConstants.projectDetails);
   }
 
   checkSaved(context) {
