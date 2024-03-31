@@ -59,7 +59,21 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
               height: 50,
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  bool isNewProfile = true;
+                  bool isStudent = true;
+                  if (isStudent) {
+                    context.pushNamed(RouteConstants.createStudentProfile1);
+                    // ignore: dead_code
+                  } else {
+                    if (isNewProfile) {
+                      context.pushNamed(RouteConstants.createCompanyProfile);
+                      // ignore: dead_code
+                    } else {
+                      context.pushNamed(RouteConstants.editCompanyProfile);
+                    }
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.zero,
                 ),

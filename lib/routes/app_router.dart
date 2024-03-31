@@ -1,6 +1,9 @@
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/Message/message_detail.dart';
 import 'package:amp_studenthub/screens/Message/message_list.dart';
+import 'package:amp_studenthub/screens/Student_Profile/profile_input_1.dart';
+import 'package:amp_studenthub/screens/Student_Profile/profile_input_2.dart';
+import 'package:amp_studenthub/screens/Student_Profile/profile_input_3.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_detail.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list_filtered.dart';
@@ -12,10 +15,13 @@ import 'package:amp_studenthub/screens/job_details_screen.dart';
 import 'package:amp_studenthub/screens/login_page.dart';
 import 'package:amp_studenthub/screens/notification_list.dart';
 import 'package:amp_studenthub/screens/post_job_screen.dart';
+import 'package:amp_studenthub/screens/profile_input_new_screen.dart';
+import 'package:amp_studenthub/screens/profile_input_view_screen.dart';
 import 'package:amp_studenthub/screens/signup_step1.dart';
 import 'package:amp_studenthub/screens/signup_step2.dart';
 import 'package:amp_studenthub/screens/switch_account_screen.dart';
 import 'package:amp_studenthub/screens/video_call_screen.dart';
+import 'package:amp_studenthub/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,6 +37,13 @@ class AppRouter {
           path: '/',
           pageBuilder: (context, state) {
             return const MaterialPage(child: HomeScreen());
+          }),
+      GoRoute(
+          parentNavigatorKey: _rootNavigatorKey,
+          name: RouteConstants.welcome,
+          path: '/welcome',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: WelcomeScreen());
           }),
       GoRoute(
         name: RouteConstants.company,
@@ -171,12 +184,42 @@ class AppRouter {
           pageBuilder: (context, state) {
             return const MaterialPage(child: VideoCallScreen());
           }),
+      GoRoute(
+          name: RouteConstants.createCompanyProfile,
+          path: '/createCompanyProfile',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: ProfileInputNew());
+          }),
+      GoRoute(
+          name: RouteConstants.editCompanyProfile,
+          path: '/editCompanyProfile',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: ProfileInputView());
+          }),
+      GoRoute(
+          name: RouteConstants.createStudentProfile1,
+          path: '/createStudentProfile1',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: StudentProfileInput1());
+          }),
+      GoRoute(
+          name: RouteConstants.createStudentProfile2,
+          path: '/createStudentProfile2',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: StudentProfileInput2());
+          }),
+      GoRoute(
+          name: RouteConstants.createStudentProfile3,
+          path: '/createStudentProfile3',
+          pageBuilder: (context, state) {
+            return MaterialPage(child: StudentProfileInput3());
+          }),
     ],
     // errorPageBuilder: (context, state) {
     //   return MaterialPage(child: null);
     // },
     redirect: (context, state) {
-      bool isAuth = true;
+      bool isAuth = false;
       // ignore: dead_code
       if (!isAuth && state.matchedLocation == '/') {
         return state.namedLocation(RouteConstants.login);

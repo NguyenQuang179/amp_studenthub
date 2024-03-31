@@ -1,12 +1,13 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class StudentProfileInput1 extends StatefulWidget {
-  const StudentProfileInput1({Key? key}) : super(key: key);
+  const StudentProfileInput1({super.key});
 
   @override
   State<StudentProfileInput1> createState() => _StudentProfileInput1State();
@@ -82,7 +83,7 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
 
   @override
   Widget build(BuildContext context) {
-    var selectedValue;
+    String selectedValue;
 
     return GestureDetector(
       onTap: () {
@@ -226,23 +227,20 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                         spacing: 5,
                         runSpacing: 5,
                         children: <Widget>[
-                          ...selectedSkills
-                              .map(
-                                (skill) => Padding(
-                                  padding: const EdgeInsets.only(right: 5),
-                                  child: InputChip(
-                                    label: Text(
-                                      skill,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                    onDeleted: () {},
-                                    backgroundColor: Colors.lightBlue,
-                                    deleteIconColor: Colors.white,
-                                  ),
+                          ...selectedSkills.map(
+                            (skill) => Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: InputChip(
+                                label: Text(
+                                  skill,
+                                  style: const TextStyle(color: Colors.white),
                                 ),
-                              )
-                              .toList(),
+                                onDeleted: () {},
+                                backgroundColor: Colors.lightBlue,
+                                deleteIconColor: Colors.white,
+                              ),
+                            ),
+                          ),
                           IntrinsicWidth(
                             child: TextField(
                               controller: skillsetTextController,
@@ -313,10 +311,10 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                 ),
                 ...languageList.map(
                   (item) => Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
                       item,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -346,7 +344,8 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                             children: [
                               Text(
                                 item['name'],
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                               Text(item['time'])
                             ],
@@ -354,10 +353,37 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                           const Spacer(),
                           IconButton(
                               onPressed: () {},
-                              icon: FaIcon(FontAwesomeIcons.penToSquare)),
+                              icon: const FaIcon(FontAwesomeIcons.penToSquare)),
                           IconButton(
                               onPressed: () {},
-                              icon: FaIcon(FontAwesomeIcons.trashCan))
+                              icon: const FaIcon(FontAwesomeIcons.trashCan))
+                        ],
+                      ),
+                    )),
+                Container(
+                    alignment: Alignment.bottomCenter,
+                    margin: const EdgeInsets.only(bottom: 16, top: 32),
+                    width: double.infinity,
+                    height: 48,
+                    child: TextButton(
+                      onPressed: () {
+                        context.pushNamed(RouteConstants.createStudentProfile2);
+                      },
+                      style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          backgroundColor: Constant.primaryColor,
+                          foregroundColor: Constant.onPrimaryColor),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: const Text(
+                              'Next',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w500),
+                            ),
+                          ),
                         ],
                       ),
                     ))

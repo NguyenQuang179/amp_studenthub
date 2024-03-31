@@ -68,7 +68,7 @@ class SignUpStepOne extends StatelessWidget {
                               height: 52,
                               child: TextButton(
                                 onPressed: () {
-                                  context.goNamed(RouteConstants.signUp2);
+                                  context.pushNamed(RouteConstants.signUp2);
                                 },
                                 style: TextButton.styleFrom(
                                     shape: RoundedRectangleBorder(
@@ -97,7 +97,7 @@ class SignUpStepOne extends StatelessWidget {
                               height: 52,
                               child: TextButton(
                                 onPressed: () {
-                                  context.goNamed(RouteConstants.signUp2);
+                                  context.pushNamed(RouteConstants.signUp2);
                                 },
                                 style: TextButton.styleFrom(
                                     shape: RoundedRectangleBorder(

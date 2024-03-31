@@ -1,7 +1,9 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -69,7 +71,9 @@ class WelcomeScreen extends StatelessWidget {
                       width: double.infinity,
                       height: 48,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          context.goNamed(RouteConstants.company);
+                        },
                         style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),

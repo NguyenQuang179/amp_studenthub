@@ -4,8 +4,6 @@ class RouteConstants {
   static String signUp1 = 'signUp1';
   static String signUp2 = 'signUp2';
   static String switchAccount = 'switchAccount';
-  static String profileInputNew = 'profileInputNew';
-  static String profileInputOld = 'profileInputOld';
   static String welcome = 'welcome';
   static String companyPostProject = 'companyPostProject';
   static String companyProjectDetails = 'companyProjectDetails';
@@ -22,4 +20,10 @@ class RouteConstants {
   static String companyDashboard = 'companyDashboard';
   static String companyMessage = 'companyMessage';
   static String companyNotification = 'companyNotification';
+  static String createCompanyProfile = 'createCompanyProfile';
+  static String editCompanyProfile = 'editCompanyProfile';
+
+  static String createStudentProfile1 = 'createStudentProfile1';
+  static String createStudentProfile2 = 'createStudentProfile2';
+  static String createStudentProfile3 = 'createStudentProfile3';
 }

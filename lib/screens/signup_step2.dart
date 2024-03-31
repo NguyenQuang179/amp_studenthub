@@ -21,54 +21,71 @@ class SignupStepTwo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Constant.backgroundColor,
-        appBar: AuthAppBar(),
+        appBar: const AuthAppBar(),
         body: SafeArea(
           child: Center(
               child: Column(children: [
-            const Text(
-              'SIGN UP',
-              style: TextStyle(
-                  color: Constant.secondaryColor,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 40),
-            ),
-
-            //username texfield
-            Textfield(
-                controller: usernameController,
-                hintText: 'Fullname',
-                obscureText: false),
-
-            //password textfield
-            Textfield(
-                controller: passwordController,
-                hintText: 'Work Email Address',
-                obscureText: true),
-
-            Textfield(
-                controller: usernameController,
-                hintText: 'password',
-                obscureText: false),
-
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Checkbox(value: false, onChanged: null),
-                Text(
-                  'I have read & accept the Terms & Conditions',
-                  style: TextStyle(
-                    color: Constant.secondaryColor,
+            Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 24),
+                    child: const Text(
+                      'SIGN UP',
+                      style: TextStyle(
+                          color: Constant.secondaryColor,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 32),
+                    ),
                   ),
-                ),
-              ],
-            ),
 
+                  //username texfield
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Textfield(
+                        controller: usernameController,
+                        hintText: 'Fullname',
+                        obscureText: false),
+                  ),
+
+                  //password textfield
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Textfield(
+                        controller: passwordController,
+                        hintText: 'Email Address',
+                        obscureText: true),
+                  ),
+
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: Textfield(
+                        controller: usernameController,
+                        hintText: 'password',
+                        obscureText: false),
+                  ),
+
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Checkbox(value: false, onChanged: null),
+                      Text(
+                        'I have read & accept the Terms & Conditions',
+                        style: TextStyle(
+                          color: Constant.secondaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
             ClipPath(
               clipper:
                   OvalTopBorderClipper(), // Custom clipper for rounded cone
               child: Container(
                 width: 500,
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.5,
                 color: Constant.primaryColor,
                 child: Center(
                     child: Column(
@@ -77,7 +94,9 @@ class SignupStepTwo extends StatelessWidget {
                       height: 60,
                     ),
                     //sign in button
-                    Button(onTap: signIn, text: 'Sign Up'),
+                    Container(
+                        margin: const EdgeInsets.only(bottom: 32),
+                        child: Button(onTap: signIn, text: 'Sign Up')),
 
                     //forgot password?
 
