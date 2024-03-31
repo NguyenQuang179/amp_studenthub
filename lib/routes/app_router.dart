@@ -9,6 +9,7 @@ import 'package:amp_studenthub/screens/login_page.dart';
 import 'package:amp_studenthub/screens/post_job_screen.dart';
 import 'package:amp_studenthub/screens/signup_step1.dart';
 import 'package:amp_studenthub/screens/signup_step2.dart';
+import 'package:amp_studenthub/screens/student_dashboard.dart';
 import 'package:amp_studenthub/screens/switch_account_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -20,7 +21,7 @@ class AppRouter {
           name: RouteConstants.home,
           path: '/',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: HomeScreen());
+            return const MaterialPage(child: StudentDashboard());
           }),
       GoRoute(
         name: RouteConstants.login,
@@ -104,13 +105,13 @@ class AppRouter {
     // errorPageBuilder: (context, state) {
     //   return MaterialPage(child: null);
     // },
-    redirect: (context, state) {
-      bool isAuth = false;
-      // ignore: dead_code
-      if (!isAuth && state.matchedLocation == '/') {
-        return state.namedLocation(RouteConstants.login);
-      }
-      return null;
-    },
+    // redirect: (context, state) {
+    //   bool isAuth = false;
+    //   // ignore: dead_code
+    //   if (!isAuth && state.matchedLocation == '/') {
+    //     return state.namedLocation(RouteConstants.login);
+    //   }
+    //   return null;
+    // },
   );
 }
