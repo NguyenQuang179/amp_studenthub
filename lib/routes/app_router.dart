@@ -19,6 +19,8 @@ import 'package:amp_studenthub/screens/profile_input_new_screen.dart';
 import 'package:amp_studenthub/screens/profile_input_view_screen.dart';
 import 'package:amp_studenthub/screens/signup_step1.dart';
 import 'package:amp_studenthub/screens/signup_step2.dart';
+import 'package:amp_studenthub/screens/student_dashboard.dart';
+import 'package:amp_studenthub/screens/student_submit_proposal.dart';
 import 'package:amp_studenthub/screens/switch_account_screen.dart';
 import 'package:amp_studenthub/screens/video_call_screen.dart';
 import 'package:amp_studenthub/screens/welcome_screen.dart';
@@ -36,7 +38,7 @@ class AppRouter {
           name: RouteConstants.home,
           path: '/',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: HomeScreen());
+            return const MaterialPage(child: StudentSubmitProposal());
           }),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
@@ -212,7 +214,7 @@ class AppRouter {
           name: RouteConstants.createStudentProfile3,
           path: '/createStudentProfile3',
           pageBuilder: (context, state) {
-            return MaterialPage(child: StudentProfileInput3());
+            return const MaterialPage(child: StudentProfileInput3());
           }),
     ],
     // errorPageBuilder: (context, state) {

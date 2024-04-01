@@ -386,7 +386,28 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                           ),
                         ],
                       ),
-                    ))
+                    )),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    const Spacer(),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Next',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           ),
