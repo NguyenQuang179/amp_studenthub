@@ -165,7 +165,7 @@ class HomeScreen extends StatelessWidget {
                                 child: TextButton(
                                   onPressed: () {
                                     GoRouter.of(context)
-                                        .goNamed(RouteConstants.company);
+                                        .goNamed(RouteConstants.login);
                                   },
                                   style: TextButton.styleFrom(
                                       shape: RoundedRectangleBorder(
