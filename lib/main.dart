@@ -1,11 +1,10 @@
 import 'package:amp_studenthub/configs/constant.dart';
-import 'package:amp_studenthub/screens/navigation_menu.dart';
 import 'package:amp_studenthub/routes/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 ThemeData _buildTheme(brightness) {
@@ -25,7 +24,8 @@ ThemeData _buildTheme(brightness) {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  final appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +33,9 @@ class MyApp extends StatelessWidget {
       title: 'StudentHub',
       debugShowCheckedModeBanner: false,
       theme: _buildTheme(Brightness.light),
-      routeInformationProvider: AppRouter().router.routeInformationProvider,
-      routeInformationParser: AppRouter().router.routeInformationParser,
-      routerDelegate: AppRouter().router.routerDelegate,
+      routeInformationProvider: appRouter.router.routeInformationProvider,
+      routeInformationParser: appRouter.router.routeInformationParser,
+      routerDelegate: appRouter.router.routerDelegate,
     );
   }
 }

@@ -1,9 +1,8 @@
-import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/configs/constant.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class StudentProfileInput2 extends StatefulWidget {
   const StudentProfileInput2({super.key});
@@ -94,7 +93,7 @@ class _StudentProfileInput2State extends State<StudentProfileInput2> {
                   const Spacer(),
                   IconButton(
                       onPressed: () {},
-                      icon: FaIcon(FontAwesomeIcons.circlePlus))
+                      icon: const FaIcon(FontAwesomeIcons.circlePlus))
                 ],
               ),
               ...projectList.map((project) => Column(
@@ -106,13 +105,13 @@ class _StudentProfileInput2State extends State<StudentProfileInput2> {
                           const Spacer(),
                           IconButton(
                               onPressed: () {},
-                              icon: FaIcon(
+                              icon: const FaIcon(
                                 FontAwesomeIcons.penToSquare,
                                 size: 20,
                               )),
                           IconButton(
                               onPressed: () {},
-                              icon: FaIcon(
+                              icon: const FaIcon(
                                 FontAwesomeIcons.trashCan,
                                 size: 20,
                               ))
@@ -125,17 +124,17 @@ class _StudentProfileInput2State extends State<StudentProfileInput2> {
                             ', ' +
                             project['duration'].toString() +
                             ' months',
-                        style: TextStyle(color: Colors.black45),
+                        style: const TextStyle(color: Colors.black45),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(project['description']),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text('Skillset'),
-                      SizedBox(
+                      const Text('Skillset'),
+                      const SizedBox(
                         height: 10,
                       ),
                       Container(
@@ -184,16 +183,18 @@ class _StudentProfileInput2State extends State<StudentProfileInput2> {
                 children: [
                   const Spacer(),
                   ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Next',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
+                    onPressed: () {
+                      context.pushNamed(RouteConstants.createStudentProfile3);
+                    },
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
                       ),
+                    ),
+                    child: const Text(
+                      'Next',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   )
                 ],

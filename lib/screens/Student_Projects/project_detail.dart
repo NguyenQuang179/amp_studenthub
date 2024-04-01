@@ -1,4 +1,5 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,50 +32,45 @@ class ProjectDetail extends StatelessWidget {
               const SizedBox(
                 height: 40,
               ),
-              Text(
+              const Text(
                 "Project Detail",
-                style: const TextStyle(
-                    fontSize: 20, color: Constant.secondaryColor),
+                style: TextStyle(fontSize: 20, color: Constant.secondaryColor),
               ),
               Text(jobTitle,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontSize: 30, color: Constant.primaryColor)),
-              Divider(
+              const Divider(
                 color: Constant.primaryColor,
               ),
-              Text("Students are expecting:"),
+              const Text("Students are expecting:"),
               Text("- $jobExpectation"),
               Text("- $jobExpectation"),
               Text("- $jobExpectation"),
-              Divider(
+              const Divider(
                 color: Constant.primaryColor,
               ),
-              Text("Created:",
+              const Text("Created:",
                   textAlign: TextAlign.left,
-                  style: const TextStyle(
-                      fontSize: 20, color: Constant.primaryColor)),
+                  style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
               Text("- $jobCreatedDate"),
-              Text("Duration:",
+              const Text("Duration:",
                   textAlign: TextAlign.left,
-                  style: const TextStyle(
-                      fontSize: 20, color: Constant.primaryColor)),
+                  style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
               Text("- $jobDuration"),
-              Text("Available Slots:",
+              const Text("Available Slots:",
                   textAlign: TextAlign.left,
-                  style: const TextStyle(
-                      fontSize: 20, color: Constant.primaryColor)),
+                  style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
               Text("- $jobStudentNeeded Students"),
-              Text("Total Slots:",
+              const Text("Total Slots:",
                   textAlign: TextAlign.left,
-                  style: const TextStyle(
-                      fontSize: 20, color: Constant.primaryColor)),
+                  style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
               Text("- $jobProposalNums Students"),
               const SizedBox(
                 height: 40,
               ),
               // Spacer to create flexible space between items
-              Spacer(),
+              const Spacer(),
               // Second item with no flexible space
               Container(
                 child: Row(
@@ -86,7 +82,9 @@ class ProjectDetail extends StatelessWidget {
                                 Constant.primaryColor),
                             foregroundColor: MaterialStateProperty.all<Color>(
                                 Constant.onPrimaryColor)),
-                        onPressed: () {},
+                        onPressed: () {
+                          context.pushNamed(RouteConstants.submitProposal);
+                        },
                         child: const Text("Apply"),
                       ),
                     ),

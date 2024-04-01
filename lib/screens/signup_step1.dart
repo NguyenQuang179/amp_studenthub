@@ -1,6 +1,8 @@
-import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpStepOne extends StatelessWidget {
   SignUpStepOne({super.key});
@@ -22,83 +24,143 @@ class SignUpStepOne extends StatelessWidget {
           child: Center(
               child: Column(
             children: [
-              const SizedBox(
-                height: 50,
-              ),
-              //logo
-              const Text(
-                'StudentHub',
-                style: TextStyle(
-                    color: Constant.primaryColor,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              const Text(
-                'SIGN UP',
-                style: TextStyle(
-                    color: Constant.secondaryColor,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 40),
-              ),
-              const SizedBox(
-                height: 60,
-              ),
-              //sign in button
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 50),
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    border: Border.all(color: Constant.primaryColor, width: 4),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  children: [
-                    Button(onTap: signIn, text: 'Join as Student'),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Button(onTap: signIn, text: 'Join as Company'),
-                  ],
+                margin: const EdgeInsets.only(top: 16),
+                child: const Text(
+                  'StudentHub',
+                  style: TextStyle(
+                      color: Constant.primaryColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28),
                 ),
               ),
-              const SizedBox(
-                height: 50,
-              ),
-
               Container(
-                width: double.infinity,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: RichText(
-                    text: const TextSpan(
+                margin: const EdgeInsets.symmetric(vertical: 24),
+                child: const Text(
+                  'SIGN UP',
                   style: TextStyle(
-                    fontSize: 16,
-                    height: 1.8,
-                    color: Constant.textColor,
+                      color: Constant.secondaryColor,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 32),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          margin: const EdgeInsets.only(bottom: 20),
+                          child: const Text(
+                            "Join with us as",
+                            style: TextStyle(
+                                color: Constant.textColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500),
+                          )),
+                      Column(
+                        children: [
+                          Container(
+                              margin: const EdgeInsets.only(bottom: 24),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              width: double.infinity,
+                              height: 52,
+                              child: TextButton(
+                                onPressed: () {
+                                  context.pushNamed(RouteConstants.signUp2);
+                                },
+                                style: TextButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    side: const BorderSide(
+                                        color: Constant.primaryColor, width: 2),
+                                    foregroundColor: Constant.primaryColor),
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Student',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                          Container(
+                              margin: const EdgeInsets.only(bottom: 16),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              width: double.infinity,
+                              height: 52,
+                              child: TextButton(
+                                onPressed: () {
+                                  context.pushNamed(RouteConstants.signUp2);
+                                },
+                                style: TextButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
+                                    side: const BorderSide(
+                                        color: Constant.primaryColor, width: 2),
+                                    foregroundColor: Constant.primaryColor),
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Company',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                        ],
+                      ),
+                    ],
                   ),
-                  children: <TextSpan>[
-                    TextSpan(text: 'Find and onboard '),
-                    TextSpan(
-                        text: "best-skilled student ",
-                        style: TextStyle(fontWeight: FontWeight.w600)),
-                    TextSpan(text: 'for your product. Student works to '),
-                    TextSpan(
-                        text: 'gain experience & skills ',
-                        style: TextStyle(fontWeight: FontWeight.w600)),
-                    TextSpan(text: 'from '),
-                    TextSpan(
-                        text: 'real-world projects.',
-                        style: TextStyle(fontWeight: FontWeight.w600)),
-                  ],
-                )),
+                ),
               ),
-              const SizedBox(
-                height: 50,
-              ),
-              Button(onTap: signIn, text: 'Return to sign in'),
-              //not a member? register
+              ClipPath(
+                clipper: OvalTopBorderClipper(),
+                child: Container(
+                  color: Constant.primaryColor,
+                  padding: const EdgeInsets.symmetric(vertical: 32),
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 24, bottom: 16),
+                        child: const Text(
+                          "Already have an account?",
+                          style: TextStyle(
+                              fontSize: 16, color: Constant.onPrimaryColor),
+                        ),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            context.goNamed(RouteConstants.login);
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Sign In Now',
+                                style: TextStyle(
+                                  color: Constant.onPrimaryColor,
+                                  decoration: TextDecoration.underline,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ))
+                    ],
+                  ),
+                ),
+              )
             ],
           )),
         ));

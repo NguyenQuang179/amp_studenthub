@@ -1,8 +1,11 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/input_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileInputNew extends StatefulWidget {
   const ProfileInputNew({super.key});
@@ -29,24 +32,32 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Constant.backgroundColor,
+        toolbarHeight: 56,
         title: const Text(
-          "Profile",
-          style: TextStyle(color: Constant.onPrimaryColor),
+          'Create Profile',
+          style: TextStyle(
+              color: Constant.primaryColor, fontWeight: FontWeight.bold),
         ),
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.arrow_back),
-          color: Constant.onPrimaryColor,
-        ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.person),
-            color: Constant.onPrimaryColor,
-          )
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: CircleAvatar(
+              radius: 24,
+              backgroundColor: Constant.primaryColor,
+              child: IconButton(
+                icon: const FaIcon(
+                  FontAwesomeIcons.user,
+                  size: 20,
+                  color: Constant.onPrimaryColor,
+                ),
+                onPressed: () {
+                  GoRouter.of(context).pushNamed(RouteConstants.switchAccount);
+                },
+              ),
+            ),
+          ),
         ],
-        backgroundColor: const Color(0xFF3F72AF),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -99,11 +110,12 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
                         });
                       },
                       child: Container(
-                        padding: EdgeInsets.only(top: 5, left: 15, bottom: 10),
+                        padding:
+                            const EdgeInsets.only(top: 5, left: 15, bottom: 10),
                         child: Row(
                           children: [
                             Container(
-                              margin: EdgeInsets.only(right: 20),
+                              margin: const EdgeInsets.only(right: 20),
                               height: 20,
                               width: 20,
                               child: Radio(
@@ -118,7 +130,7 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
                             ),
                             Text(
                               entry.key,
-                              style: TextStyle(fontSize: 15),
+                              style: const TextStyle(fontSize: 15),
                             )
                           ],
                         ),
@@ -215,9 +227,11 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
               child: Padding(
                 padding: const EdgeInsets.only(right: 15.0),
                 child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: Icon(Icons.arrow_forward),
-                  label: Text('Continue'),
+                  onPressed: () {
+                    context.goNamed(RouteConstants.welcome);
+                  },
+                  icon: const Icon(Icons.arrow_forward),
+                  label: const Text('Continue'),
                 ),
               ),
             ),

@@ -1,6 +1,8 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -161,7 +163,10 @@ class HomeScreen extends StatelessWidget {
                                 width: double.infinity,
                                 height: 48,
                                 child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    GoRouter.of(context)
+                                        .goNamed(RouteConstants.company);
+                                  },
                                   style: TextButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:

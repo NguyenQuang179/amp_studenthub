@@ -1,5 +1,7 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ChatVideoSchedule extends StatelessWidget {
   final bool isCurrentUser;
@@ -12,7 +14,7 @@ class ChatVideoSchedule extends StatelessWidget {
   final bool isCancelled;
   final String timeCreated;
 
-  ChatVideoSchedule(
+  const ChatVideoSchedule(
       {super.key,
       required this.isCurrentUser,
       required this.message,
@@ -26,39 +28,36 @@ class ChatVideoSchedule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var alignment =
-        isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
-
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Container(
         width: MediaQuery.of(context).size.width * 0.8,
-        margin: EdgeInsets.only(top: 10, left: 25, right: 25, bottom: 5),
+        margin: const EdgeInsets.only(top: 10, left: 25, right: 25, bottom: 5),
         child: Row(
           mainAxisAlignment:
               isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
             !isCurrentUser
-                ? Text("")
+                ? const Text("")
                 : Text(
                     timeCreated,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Constant.textColor,
                       fontSize: 12,
                     ),
                   ),
             Text(
-              " " + username + " want to schedule a meeting" + " ",
-              style: TextStyle(
+              " $username want to schedule a meeting ",
+              style: const TextStyle(
                 color: Constant.textColor,
                 fontSize: 12,
               ),
               textAlign: isCurrentUser ? TextAlign.right : TextAlign.left,
             ),
             isCurrentUser
-                ? Text("")
+                ? const Text("")
                 : Text(
                     timeCreated,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Constant.textColor,
                       fontSize: 12,
                     ),
@@ -70,14 +69,14 @@ class ChatVideoSchedule extends StatelessWidget {
           width: MediaQuery.of(context).size.width * 0.8,
           decoration: BoxDecoration(
             color: Constant.backgroundColor,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
             border: Border.all(
               color: Constant.primaryColor,
               width: 2,
             ),
           ),
-          padding: EdgeInsets.all(16),
-          margin: EdgeInsets.symmetric(horizontal: 25),
+          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -86,21 +85,21 @@ class ChatVideoSchedule extends StatelessWidget {
                 children: [
                   Text(
                     meetingName,
-                    style: TextStyle(color: Constant.textColor),
+                    style: const TextStyle(color: Constant.textColor),
                   ),
                   Text(
                     duration,
-                    style: TextStyle(color: Constant.textColor),
+                    style: const TextStyle(color: Constant.textColor),
                   )
                 ],
               ),
               Text(
-                "Start Time:" + startTime,
-                style: TextStyle(color: Constant.textColor),
+                "Start Time:$startTime",
+                style: const TextStyle(color: Constant.textColor),
               ),
               Text(
-                "End Time:" + endTime,
-                style: TextStyle(color: Constant.textColor),
+                "End Time:$endTime",
+                style: const TextStyle(color: Constant.textColor),
               ),
               isCancelled
                   ? Text("Meeting cancelled",
@@ -110,13 +109,15 @@ class ChatVideoSchedule extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
-                          child: Text(
-                            "Join Meeting",
-                            style: TextStyle(color: Constant.onPrimaryColor),
-                          ),
+                          onPressed: () {
+                            context.pushNamed(RouteConstants.videoCall);
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Constant.primaryColor,
+                          ),
+                          child: const Text(
+                            "Join Meeting",
+                            style: TextStyle(color: Constant.onPrimaryColor),
                           ),
                         ),
                         // IconButton(
@@ -127,11 +128,11 @@ class ChatVideoSchedule extends StatelessWidget {
                           return [
                             PopupMenuItem(
                               onTap: () {},
-                              child: Text("Reschedule"),
+                              child: const Text("Reschedule"),
                             ),
                             PopupMenuItem(
                               onTap: () {},
-                              child: Text("Cancel"),
+                              child: const Text("Cancel"),
                             ),
                           ];
                         })

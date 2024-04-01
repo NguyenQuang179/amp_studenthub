@@ -1,15 +1,17 @@
 import 'dart:io';
 
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class StudentProfileInput3 extends StatefulWidget {
-  StudentProfileInput3({super.key});
+  const StudentProfileInput3({super.key});
 
   @override
   State<StudentProfileInput3> createState() => _StudentProfileInput3State();
@@ -121,7 +123,7 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
                         DottedBorder(
                           borderType: BorderType.RRect,
                           radius: const Radius.circular(8),
-                          child: Container(
+                          child: SizedBox(
                             width: double.infinity,
                             height: 100,
                             child: Center(
@@ -188,13 +190,13 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
                         DottedBorder(
                           borderType: BorderType.RRect,
                           radius: const Radius.circular(8),
-                          child: Container(
+                          child: SizedBox(
                             width: double.infinity,
                             height: 100,
                             child: Center(
                               child: ElevatedButton(
                                 onPressed: () => pickFile(false),
-                                child: Text('Choose file to Up'),
+                                child: const Text('Choose file to Up'),
                               ),
                             ),
                           ),
@@ -205,10 +207,10 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
                 ),
               ),
             ),
-            Align(
+            const Align(
               alignment: Alignment.bottomRight,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(16.0),
                 child: YourEndWidget(),
               ),
             ),
@@ -220,11 +222,15 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
 }
 
 class YourEndWidget extends StatelessWidget {
+  const YourEndWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          context.goNamed(RouteConstants.welcome);
+        },
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
