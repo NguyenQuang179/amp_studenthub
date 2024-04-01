@@ -237,7 +237,7 @@ class AppRouter {
       bool isAuth = false;
       // ignore: dead_code
       if (!isAuth && state.matchedLocation == '/') {
-        return state.namedLocation(RouteConstants.login);
+        return state.namedLocation(RouteConstants.home);
         // ignore: dead_code
       } else if (state.matchedLocation == '/') {
         return state.namedLocation(RouteConstants.company);

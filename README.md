@@ -1,6 +1,7 @@
 # amp_studenthub
 
-A new Flutter project.
+Video Demo:
+Phasing 01: https://youtu.be/g6augs4n2XA
 
 ## Getting Started
 
