@@ -38,7 +38,7 @@ class AppRouter {
           name: RouteConstants.home,
           path: '/',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: StudentSubmitProposal());
+            return const MaterialPage(child: HomeScreen());
           }),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
@@ -60,7 +60,6 @@ class AppRouter {
       ShellRoute(
           navigatorKey: _bottomNavbarNavigatorKey,
           pageBuilder: (context, state, child) {
-            print(state.uri.toString());
             return MaterialPage(
                 child: CompanyNavbarScaffold(
               location: state.uri.toString(),
@@ -92,11 +91,19 @@ class AppRouter {
                       }),
                 ]),
             GoRoute(
+              name: RouteConstants.studentDashboard,
+              parentNavigatorKey: _bottomNavbarNavigatorKey,
+              path: '/studentDashboard',
+              pageBuilder: (context, state) {
+                return const MaterialPage(child: StudentDashboard());
+              },
+            ),
+            GoRoute(
               name: RouteConstants.companyDashboard,
               parentNavigatorKey: _bottomNavbarNavigatorKey,
               path: '/dashboard',
               pageBuilder: (context, state) {
-                return const MaterialPage(child: CompanyDashboardScreen());
+                return const MaterialPage(child: StudentDashboard());
               },
             ),
             GoRoute(
@@ -215,6 +222,12 @@ class AppRouter {
           path: '/createStudentProfile3',
           pageBuilder: (context, state) {
             return const MaterialPage(child: StudentProfileInput3());
+          }),
+      GoRoute(
+          name: RouteConstants.submitProposal,
+          path: '/submitProposal',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: StudentSubmitProposal());
           }),
     ],
     // errorPageBuilder: (context, state) {

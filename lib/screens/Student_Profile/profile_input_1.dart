@@ -360,33 +360,34 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                         ],
                       ),
                     )),
-                Container(
-                    alignment: Alignment.bottomCenter,
-                    margin: const EdgeInsets.only(bottom: 16, top: 32),
-                    width: double.infinity,
-                    height: 48,
-                    child: TextButton(
-                      onPressed: () {
-                        context.pushNamed(RouteConstants.createStudentProfile2);
-                      },
-                      style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          backgroundColor: Constant.primaryColor,
-                          foregroundColor: Constant.onPrimaryColor),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: const Text(
-                              'Next',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
+                // Container(
+                //     alignment: Alignment.bottomCenter,
+                //     margin: const EdgeInsets.only(bottom: 16, top: 32),
+                //     width: double.infinity,
+                //     height: 48,
+                //     child: TextButton(
+                //       onPressed: () {
+                //         context.pushNamed(RouteConstants.createStudentProfile2);
+                //       },
+                //       style: TextButton.styleFrom(
+                //           shape: RoundedRectangleBorder(
+                //               borderRadius: BorderRadius.circular(12)),
+                //           backgroundColor: Constant.primaryColor,
+                //           foregroundColor: Constant.onPrimaryColor),
+                //       child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: [
+                //           Container(
+                //             child: const Text(
+                //               'Next',
+                //               style: TextStyle(
+                //                   fontSize: 20, fontWeight: FontWeight.w500),
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     )),
+
                 const SizedBox(
                   height: 20,
                 ),
@@ -394,16 +395,18 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                   children: [
                     const Spacer(),
                     ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Next',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
+                      onPressed: () {
+                        context.pushNamed(RouteConstants.createStudentProfile2);
+                      },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                         ),
+                      ),
+                      child: const Text(
+                        'Next',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     )
                   ],

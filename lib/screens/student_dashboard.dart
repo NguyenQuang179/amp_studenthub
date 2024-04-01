@@ -1,6 +1,4 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -72,40 +70,13 @@ class _StudentDashboardState extends State<StudentDashboard>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
-        toolbarHeight: 64,
-        title: const Text(
-          'StudentHub',
-          style: TextStyle(
-              color: Constant.primaryColor, fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: CircleAvatar(
-              radius: 24,
-              backgroundColor: Constant.primaryColor,
-              child: IconButton(
-                icon: const FaIcon(
-                  FontAwesomeIcons.user,
-                  size: 20,
-                  color: Constant.onPrimaryColor,
-                ),
-                onPressed: () {},
-              ),
-            ),
-          ),
-        ],
-        centerTitle: true,
-      ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 'Your Projects',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
@@ -130,7 +101,7 @@ class _StudentDashboardState extends State<StudentDashboard>
                       tabs: tabHeader.map<Widget>((tab) {
                         return Text(
                           tab,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                           ),
                         );
@@ -138,7 +109,7 @@ class _StudentDashboardState extends State<StudentDashboard>
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 10),
+                margin: const EdgeInsets.only(top: 10),
                 height: MediaQuery.of(context).size.height,
                 child: TabBarView(controller: tabController, children: [
                   AllProjectContainer(
@@ -217,7 +188,7 @@ class _AllProjectContainerState extends State<AllProjectContainer> {
                     // No need to handle hover state for active proposal
                   },
                   child: AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
@@ -250,7 +221,7 @@ class _AllProjectContainerState extends State<AllProjectContainer> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),
@@ -269,7 +240,7 @@ class _AllProjectContainerState extends State<AllProjectContainer> {
                 'Submitted Proposal (${widget.submittedProposalList.length})',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               ...widget.submittedProposalList.asMap().entries.map((entry) {
@@ -288,7 +259,7 @@ class _AllProjectContainerState extends State<AllProjectContainer> {
                     });
                   },
                   child: AnimatedContainer(
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
@@ -323,7 +294,7 @@ class _AllProjectContainerState extends State<AllProjectContainer> {
                     ),
                   ),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),
@@ -334,9 +305,9 @@ class _AllProjectContainerState extends State<AllProjectContainer> {
 
 class ProjectContainer extends StatefulWidget {
   const ProjectContainer({
-    Key? key,
+    super.key,
     required this.projectList,
-  }) : super(key: key);
+  });
 
   final List<Map<String, dynamic>> projectList;
 
@@ -361,7 +332,7 @@ class _ProjectContainerState extends State<ProjectContainer> {
             });
           },
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),

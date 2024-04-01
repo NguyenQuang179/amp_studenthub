@@ -1,8 +1,8 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class StudentSubmitProposal extends StatefulWidget {
   const StudentSubmitProposal({super.key});
@@ -39,7 +39,7 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
               color: Constant.primaryColor, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new),
+          icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () {},
         ),
         actions: [
@@ -66,14 +66,14 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Cover letter',
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 10,
             ),
-            Text(
+            const Text(
               'Describe why do you fit for this project',
             ),
             const SizedBox(
@@ -84,7 +84,7 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
                 focusNode?.requestFocus();
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
                 height: 200,
                 decoration: BoxDecoration(
                   color: Colors.transparent,
@@ -95,7 +95,7 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
                   child: TextField(
                     focusNode: focusNode, // Assign the focus node
                     controller: controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                     ),
                     maxLines: null,
@@ -116,17 +116,19 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  child: Container(
+                  child: const SizedBox(
                       width: 130, child: Center(child: Text('Cancel'))),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.goNamed(RouteConstants.company);
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  child: Container(
+                  child: const SizedBox(
                       width: 130,
                       child: Center(child: Text('Submit Proposal'))),
                 ),
