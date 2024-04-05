@@ -1,4 +1,7 @@
+import 'package:amp_studenthub/configs/constant.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -8,9 +11,9 @@ class StudentDashboard extends StatefulWidget {
 }
 
 class _StudentDashboardState extends State<StudentDashboard>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late final TabController tabController;
-  List<String> tabHeader = ['All Projects', 'Working', 'Archieved'];
+  List<String> tabHeader = ['All', 'Working', 'Archieved'];
 
   List<Map<String, dynamic>> activeProposalList = [
     {
@@ -44,7 +47,7 @@ class _StudentDashboardState extends State<StudentDashboard>
     }
   ];
 
-  List<Map<String, dynamic>> archievedList = [
+  List<Map<String, dynamic>> archivedList = [
     {
       'name': 'Senior frontend Developer (Fintech)',
       'lastSubmitted': '3',
@@ -53,71 +56,124 @@ class _StudentDashboardState extends State<StudentDashboard>
     }
   ];
 
+  final Set<int> selectedSegmentIndex = {0};
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     tabController = TabController(length: 3, vsync: this);
+    tabController.addListener(() {
+      setState(() {
+        selectedSegmentIndex.clear();
+        selectedSegmentIndex.add(tabController.index);
+      });
+    });
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     tabController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: SizedBox.expand(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'Your Projects',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              DefaultTabController(
-                length: 3,
-                child: Container(
-                  height: kToolbarHeight - 8,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: TabBar(
-                      controller: tabController,
-                      labelColor: Colors.white,
-                      indicatorColor: Colors.white,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicator: BoxDecoration(
-                          color: Colors.blue.shade400,
-                          borderRadius: BorderRadius.circular(8)),
-                      tabs: tabHeader.map<Widget>((tab) {
-                        return Text(
-                          tab,
-                          style: const TextStyle(
-                            fontSize: 15,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Your Projects',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: Constant.primaryColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Constant.backgroundColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(children: [
+                        Expanded(
+                          flex: 1,
+                          child: SegmentedButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    if (states
+                                        .contains(MaterialState.selected)) {
+                                      return Constant.primaryColor;
+                                    }
+                                    return Constant.backgroundColor;
+                                  },
+                                ),
+                                foregroundColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    if (states
+                                        .contains(MaterialState.selected)) {
+                                      return Constant.onPrimaryColor;
+                                    }
+                                    return Constant.textColor;
+                                  },
+                                ),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12))),
+                                textStyle:
+                                    const MaterialStatePropertyAll(TextStyle(
+                                  fontSize: 16,
+                                ))),
+                            segments: tabHeader.map((header) {
+                              return ButtonSegment<int>(
+                                value: tabHeader.indexOf(header),
+                                label: Text(header),
+                              );
+                            }).toList(),
+                            selected: selectedSegmentIndex,
+                            onSelectionChanged: (newSelection) {
+                              setState(() {
+                                selectedSegmentIndex.clear();
+                                selectedSegmentIndex.addAll(newSelection);
+                                tabController.animateTo(newSelection.first);
+                              });
+                            },
                           ),
-                        );
-                      }).toList()),
+                        ),
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: tabController,
+                        children: [
+                          AllProjectContainer(
+                            activeProposalList: activeProposalList,
+                            submittedProposalList: submittedProposalList,
+                          ),
+                          ProjectContainer(projectList: workingList),
+                          ProjectContainer(projectList: archivedList),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 10),
-                height: MediaQuery.of(context).size.height,
-                child: TabBarView(controller: tabController, children: [
-                  AllProjectContainer(
-                      activeProposalList: activeProposalList,
-                      submittedProposalList: submittedProposalList),
-                  ProjectContainer(projectList: workingList),
-                  ProjectContainer(projectList: archievedList),
-                ]),
               ),
             ],
           ),
@@ -141,15 +197,17 @@ class AllProjectContainer extends StatefulWidget {
   State<AllProjectContainer> createState() => _AllProjectContainerState();
 }
 
-class _AllProjectContainerState extends State<AllProjectContainer> {
+class _AllProjectContainerState extends State<AllProjectContainer>
+    with SingleTickerProviderStateMixin {
   int activeProposalIndex = -1;
   int submittedProposalIndex = -1;
   List<bool> isHoveredSubmittedList = [];
+  late final tabController;
 
   @override
   void initState() {
     super.initState();
-    // Initialize the list with false values for each item
+    tabController = TabController(length: 2, vsync: this);
     isHoveredSubmittedList = List<bool>.filled(
         widget.submittedProposalList.length, false,
         growable: false);
@@ -184,9 +242,7 @@ class _AllProjectContainerState extends State<AllProjectContainer> {
                       activeProposalIndex = isSelected ? -1 : index;
                     });
                   },
-                  onHover: (isHovering) {
-                    // No need to handle hover state for active proposal
-                  },
+                  onHover: (isHovering) {},
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
                     padding: const EdgeInsets.all(10),

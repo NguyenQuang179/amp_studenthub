@@ -38,7 +38,7 @@ class AppRouter {
           name: RouteConstants.home,
           path: '/',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: HomeScreen());
+            return const MaterialPage(child: StudentDashboard());
           }),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
@@ -233,17 +233,17 @@ class AppRouter {
     // errorPageBuilder: (context, state) {
     //   return MaterialPage(child: null);
     // },
-    redirect: (context, state) {
-      bool isAuth = false;
-      // ignore: dead_code
-      if (!isAuth && state.matchedLocation == '/') {
-        return state.namedLocation(RouteConstants.home);
-        // ignore: dead_code
-      } else if (state.matchedLocation == '/') {
-        return state.namedLocation(RouteConstants.company);
-      }
-      // ignore: dead_code
-      return null;
-    },
+    // redirect: (context, state) {
+    //   bool isAuth = true;
+    //   // ignore: dead_code
+    //   if (!isAuth && state.matchedLocation == '/') {
+    //     return state.namedLocation(RouteConstants.home);
+    //     // ignore: dead_code
+    //   } else if (state.matchedLocation == '/') {
+    //     return state.namedLocation(RouteConstants.company);
+    //   }
+    //   // ignore: dead_code
+    //   return null;
+    // },
   );
 }
