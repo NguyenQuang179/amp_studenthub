@@ -1,11 +1,15 @@
+import 'dart:convert';
 import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dio/dio.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -14,9 +18,36 @@ class LoginPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
 
   // signin
-  void signIn() {
-    print('Username: ${usernameController.text}');
-    print('Password: ${passwordController.text}');
+  Future<void> signIn() async {
+    final dio = Dio();
+    try {
+      const endpoint = '${Constant.baseURL}/api/auth/sign-in';
+      final submitData = {
+        "email": usernameController.text,
+        "password": passwordController.text
+      };
+
+      final Response response = await dio.post(
+        endpoint,
+        data: submitData,
+      );
+      final List<dynamic> resData = jsonDecode(response.data[0]);
+      for (var res in resData) {
+        print(res['result']);
+      }
+    } on DioException catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.headers);
+        print(e.response?.requestOptions);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+    }
   }
 
   @override
@@ -113,6 +144,7 @@ class LoginPage extends StatelessWidget {
                             const SizedBox(width: 16),
                             TextButton(
                               onPressed: () {
+                                print(context.read<UserProvider>().userToken);
                                 context.pushNamed(RouteConstants.signUp1);
                               },
                               child: const Text('Join Now',

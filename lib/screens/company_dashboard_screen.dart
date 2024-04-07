@@ -1,5 +1,6 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/job.dart';
+import 'package:amp_studenthub/providers/company_project_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/utilities/constant.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class CompanyDashboardScreen extends StatefulWidget {
   const CompanyDashboardScreen({super.key});
@@ -21,18 +23,7 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     DashboardFilterOptions.all
   };
 
-  final List<Job> allJobs = [
-    Job('job1', "Front End Job", '1 to 3 months', 2, "Description...",
-        '2024-03-19'),
-    Job('job2', "Back End Job", '3 to 6 months', 2, "Description...",
-        '2024-03-19'),
-    Job('job3', "React JS Job", '1 to 3 months', 2, "Description...",
-        '2024-03-19'),
-    Job('job4', "Nest JS Job", '3 to 6 months', 2, "Description...",
-        '2024-03-19'),
-    Job('job5', "Data Engineer Job", '1 to 3 months', 2, "Description...",
-        '2024-03-19')
-  ];
+  final List<Job> allJobs = [];
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +100,7 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                 ]),
               ),
               // Render Job List
-              if (allJobs.isEmpty)
+              if (context.watch<CompanyProjectProvider>().companyJobs.isEmpty)
                 Expanded(
                   child: Column(
                     children: [
@@ -145,9 +136,14 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                           margin: const EdgeInsets.symmetric(vertical: 16),
                           child: ListView.builder(
                               physics: const ClampingScrollPhysics(),
-                              itemCount: allJobs.length,
+                              itemCount: context
+                                  .watch<CompanyProjectProvider>()
+                                  .companyJobs
+                                  .length,
                               itemBuilder: (BuildContext context, int index) {
-                                Job job = allJobs[index];
+                                Job job = context
+                                    .watch<CompanyProjectProvider>()
+                                    .companyJobs[index];
                                 return InkWell(
                                   onTap: () => GoRouter.of(context).pushNamed(
                                       RouteConstants.companyProjectDetails),
