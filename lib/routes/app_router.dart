@@ -103,7 +103,7 @@ class AppRouter {
               parentNavigatorKey: _bottomNavbarNavigatorKey,
               path: '/dashboard',
               pageBuilder: (context, state) {
-                return const MaterialPage(child: StudentDashboard());
+                return const MaterialPage(child: CompanyDashboardScreen());
               },
             ),
             GoRoute(
@@ -234,7 +234,7 @@ class AppRouter {
     //   return MaterialPage(child: null);
     // },
     redirect: (context, state) {
-      bool isAuth = false;
+      bool isAuth = true;
       // ignore: dead_code
       if (!isAuth && state.matchedLocation == '/') {
         return state.namedLocation(RouteConstants.home);
