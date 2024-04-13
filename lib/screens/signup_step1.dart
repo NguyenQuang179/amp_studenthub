@@ -1,20 +1,16 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/signup_role_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class SignUpStepOne extends StatelessWidget {
   SignUpStepOne({super.key});
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  // signin
-  void signIn() {
-    print('Username: ${usernameController.text}');
-    print('Password: ${passwordController.text}');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +64,9 @@ class SignUpStepOne extends StatelessWidget {
                               height: 52,
                               child: TextButton(
                                 onPressed: () {
+                                  Provider.of<RoleProvider>(context,
+                                          listen: false)
+                                      .setRole(0); // For student
                                   context.pushNamed(RouteConstants.signUp2);
                                 },
                                 style: TextButton.styleFrom(
@@ -97,6 +96,9 @@ class SignUpStepOne extends StatelessWidget {
                               height: 52,
                               child: TextButton(
                                 onPressed: () {
+                                  Provider.of<RoleProvider>(context,
+                                          listen: false)
+                                      .setRole(1); // For student
                                   context.pushNamed(RouteConstants.signUp2);
                                 },
                                 style: TextButton.styleFrom(
