@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/account.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
@@ -9,6 +11,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import '../models/user.dart';
 
 class SwitchAccountScreen extends StatefulWidget {
   const SwitchAccountScreen({super.key});
@@ -46,13 +50,48 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
     }
   }
 
+
+  late final User user;
+
+  Future<void> getUser() async {
+    final dio = Dio();
+    try {
+      const endpoint = '${Constant.baseURL}/api/auth/me';
+      final Response response = await dio.get(
+        endpoint,
+      );
+      final List<dynamic> resData = jsonDecode(response.data);
+      for (var res in resData) {
+        var data = res['result'];
+        user = User.fromJson(data);
+      }
+    } on DioException catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.headers);
+        print(e.response?.requestOptions);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
-    Account currentAccount =
-        Account(fullName: 'Nguyễn Duy Niên', type: 'Student');
+    Account currentAccount = Account(fullName: 'Nguyễn Duy Niên', type: 1);
     List<Account> accountList = [
-      Account(fullName: 'Niên', type: 'Company'),
-      Account(fullName: 'Niên 2', type: 'Student')
+      Account(fullName: 'Niên', type: 0),
     ];
 
     return Scaffold(

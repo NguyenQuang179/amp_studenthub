@@ -4,12 +4,12 @@ import 'package:amp_studenthub/widgets/account_card.dart';
 import 'package:flutter/material.dart';
 
 class AccountListView extends StatefulWidget {
-  final List<Account>? accountList;
+  final List<Account> accountList;
   final Account currentAccount;
 
   const AccountListView({
     super.key,
-    this.accountList,
+    required this.accountList,
     required this.currentAccount,
   });
 
@@ -30,10 +30,10 @@ class _AccountListViewState extends State<AccountListView> {
     );
   }
 
-  Widget? _buildList(List<Account>? list, Account currentAcc) {
-    if (list == null || list.isEmpty) {
-      return null; // Return null when the list is null or empty
-    }
+  Widget? _buildList(List<Account> list, Account currentAcc) {
+    // if (list == null || list.isEmpty) {
+    //   return null; // Return null when the list is null or empty
+    // }
     return ClipRRect(
       borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
@@ -49,7 +49,8 @@ class _AccountListViewState extends State<AccountListView> {
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   children: [
-                    ...list.map((account) => AccountCard(account: account))
+                    ...list.map((account) => GestureDetector(
+                        onTap: () {}, child: AccountCard(account: account)))
                   ],
                 )),
           ]),
