@@ -46,8 +46,9 @@ class LoginPage extends StatelessWidget {
 
       if (accessToken != null) {
         // Use Provider to set the access token
-        Provider.of<UserProvider>(context, listen: false).update(accessToken);
-        context.pushNamed(RouteConstants.home);
+        Provider.of<UserProvider>(context, listen: false)
+            .updateToken(accessToken);
+        context.goNamed(RouteConstants.companyProject);
       } else {
         final String? errorDetails = responseData['errorDetails'];
 
