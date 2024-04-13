@@ -1,6 +1,6 @@
 class Account {
   String fullName = '';
-  String type = '';
+  int type = 0;
 
   Account({
     required this.fullName,
