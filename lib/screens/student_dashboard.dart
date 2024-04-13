@@ -2,6 +2,7 @@ import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -16,12 +17,12 @@ class _StudentDashboardState extends State<StudentDashboard>
   List<String> tabHeader = ['All', 'Working', 'Archieved'];
 
   List<Map<String, dynamic>> activeProposalList = [
-    {
-      'name': 'Senior frontend Developer (Fintech)',
-      'lastSubmitted': '3',
-      'description':
-          'Students are looking for \n \t\u2022 Clear expectation about your project or deliverables'
-    }
+    // {
+    //   'name': 'Senior frontend Developer (Fintech)',
+    //   'lastSubmitted': '3',
+    //   'description':
+    //       'Students are looking for \n \t\u2022 Clear expectation about your project or deliverables'
+    // }
   ];
   List<Map<String, dynamic>> submittedProposalList = [
     {
@@ -215,146 +216,174 @@ class _AllProjectContainerState extends State<AllProjectContainer>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.black87)),
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Active Proposal (${widget.activeProposalList.length})',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ...widget.activeProposalList.asMap().entries.map((entry) {
-                final index = entry.key;
-                final project = entry.value;
-                final isSelected = index == activeProposalIndex;
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      activeProposalIndex = isSelected ? -1 : index;
-                    });
-                  },
-                  onHover: (isHovering) {},
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: isSelected
-                          ? Colors.blue.withOpacity(0.1)
-                          : Colors.transparent,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            project['name'],
-                            style: const TextStyle(color: Colors.green),
-                          ),
-                          Text(
-                            'Submitted ${project['lastSubmitted']} ago',
-                            style: TextStyle(color: Colors.grey.shade500),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(project['description']),
-                          const Divider(
-                            thickness: 2,
-                          ),
-                        ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black87)),
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Active Proposal (${widget.activeProposalList.length})',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                if (widget.activeProposalList.isEmpty)
+                  Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        child: SvgPicture.asset(
+                          'assets/empty.svg',
+                          height: 320,
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.black87)),
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Submitted Proposal (${widget.submittedProposalList.length})',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ...widget.submittedProposalList.asMap().entries.map((entry) {
-                final index = entry.key;
-                final project = entry.value;
-                final isSelected = index == submittedProposalIndex;
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      submittedProposalIndex = isSelected ? -1 : index;
-                    });
-                  },
-                  onHover: (isHovering) {
-                    setState(() {
-                      isHoveredSubmittedList[index] = isHovering;
-                    });
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: isSelected
-                          ? Colors.blue.withOpacity(0.1)
-                          : isHoveredSubmittedList[index]
+                      Container(
+                        margin: const EdgeInsets.only(top: 24),
+                        child: const Text(
+                          "Welcome, Quang!\nYour job list is empty",
+                          style: TextStyle(
+                            color: Constant.secondaryColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  )
+                else
+                  ...widget.activeProposalList.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final project = entry.value;
+                    final isSelected = index == activeProposalIndex;
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          activeProposalIndex = isSelected ? -1 : index;
+                        });
+                      },
+                      onHover: (isHovering) {},
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: isSelected
                               ? Colors.blue.withOpacity(0.1)
                               : Colors.transparent,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            project['name'],
-                            style: const TextStyle(color: Colors.green),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                project['name'],
+                                style: const TextStyle(color: Colors.green),
+                              ),
+                              Text(
+                                'Submitted ${project['lastSubmitted']} ago',
+                                style: TextStyle(color: Colors.grey.shade500),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(project['description']),
+                              const Divider(
+                                thickness: 2,
+                              ),
+                            ],
                           ),
-                          Text(
-                            'Submitted ${project['lastSubmitted']} ago',
-                            style: TextStyle(color: Colors.grey.shade500),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(project['description']),
-                          const Divider(
-                            thickness: 2,
-                          ),
-                        ],
+                        ),
+                      ),
+                    );
+                  }),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black87)),
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Submitted Proposal (${widget.submittedProposalList.length})',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ...widget.submittedProposalList.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final project = entry.value;
+                  final isSelected = index == submittedProposalIndex;
+                  return InkWell(
+                    onTap: () {
+                      setState(() {
+                        submittedProposalIndex = isSelected ? -1 : index;
+                      });
+                    },
+                    onHover: (isHovering) {
+                      setState(() {
+                        isHoveredSubmittedList[index] = isHovering;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: isSelected
+                            ? Colors.blue.withOpacity(0.1)
+                            : isHoveredSubmittedList[index]
+                                ? Colors.blue.withOpacity(0.1)
+                                : Colors.transparent,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              project['name'],
+                              style: const TextStyle(color: Colors.green),
+                            ),
+                            Text(
+                              'Submitted ${project['lastSubmitted']} ago',
+                              style: TextStyle(color: Colors.grey.shade500),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(project['description']),
+                            const Divider(
+                              thickness: 2,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }),
-            ],
+                  );
+                }),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
