@@ -1,3 +1,4 @@
+import 'package:amp_studenthub/providers/signup_role_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/Message/message_detail.dart';
 import 'package:amp_studenthub/screens/Message/message_list.dart';
@@ -26,6 +27,7 @@ import 'package:amp_studenthub/screens/video_call_screen.dart';
 import 'package:amp_studenthub/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -141,7 +143,13 @@ class AppRouter {
         name: RouteConstants.signUp2,
         path: '/signup2',
         pageBuilder: (context, state) {
-          return MaterialPage(child: SignupStepTwo());
+          final roleProvider =
+              Provider.of<RoleProvider>(context, listen: false);
+          return MaterialPage(
+            child: SignupStepTwo(
+              role: roleProvider.role,
+            ),
+          );
         },
       ),
       GoRoute(

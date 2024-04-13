@@ -1,10 +1,14 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/account.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/widgets/account_list_view.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class SwitchAccountScreen extends StatefulWidget {
   const SwitchAccountScreen({super.key});
@@ -14,6 +18,34 @@ class SwitchAccountScreen extends StatefulWidget {
 }
 
 class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
+  logOut(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    //get access token from provider
+    final accessToken = userProvider.userToken;
+    final dio = Dio();
+
+    try {
+      const endpoint = '${Constant.baseURL}/api/auth/logout';
+
+      final Response response = await dio.post(
+        endpoint,
+      );
+
+      userProvider.update("");
+      context.pushNamed(RouteConstants.createStudentProfile1);
+    } on DioException catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        // The request was made and the server responded with an error status code
+        final responseData = e.response?.data;
+        Fluttertoast.showToast(msg: responseData.toString());
+      } else {
+        // Something else happened, such as network error
+        Fluttertoast.showToast(msg: e.message as String);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Account currentAccount =
