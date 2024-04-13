@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
@@ -7,6 +6,7 @@ import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
@@ -18,9 +18,16 @@ class LoginPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
 
   // signin
-  Future<void> signIn() async {
+  Future<void> signIn(BuildContext context) async {
     final dio = Dio();
     try {
+      if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
+        Fluttertoast.showToast(
+          msg: 'Please fill in all fields',
+        );
+        return;
+      }
+
       const endpoint = '${Constant.baseURL}/api/auth/sign-in';
       final submitData = {
         "email": usernameController.text,
@@ -31,9 +38,25 @@ class LoginPage extends StatelessWidget {
         endpoint,
         data: submitData,
       );
-      final List<dynamic> resData = jsonDecode(response.data[0]);
-      for (var res in resData) {
-        print(res['result']);
+
+      final responseData = response.data;
+
+      // Extract the access token from the response
+      final String? accessToken = responseData['result']['token'];
+
+      if (accessToken != null) {
+        // Use Provider to set the access token
+        Provider.of<UserProvider>(context, listen: false).update(accessToken);
+        context.pushNamed(RouteConstants.home);
+      } else {
+        final String? errorDetails = responseData['errorDetails'];
+
+        // Handle case where access token is not present in the response
+        if (errorDetails != null) {
+          Fluttertoast.showToast(
+            msg: errorDetails,
+          );
+        }
       }
     } on DioException catch (e) {
       // The request was made and the server responded with a status code
@@ -118,19 +141,36 @@ class LoginPage extends StatelessWidget {
                       child: Column(
                     children: [
                       //sign in button
-                      Button(onTap: signIn, text: 'Sign In'),
+                      Button(
+                          onTap: () {
+                            signIn(context);
+                          },
+                          text: 'Sign In'),
                       //forgot password?
                       Container(
-                        margin: const EdgeInsets.only(top: 32),
-                        child: const Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                            color: Constant.onPrimaryColor,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
+                          margin: const EdgeInsets.only(top: 32),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Handle click on Forgot Password
+                              // For example, navigate to the Forgot Password screen
+                              Fluttertoast.showToast(
+                                  msg: 'Forgot Password',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            },
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: Colors.blue, // Change color as needed
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          )),
                       const SizedBox(
                         height: 32,
                       ),
