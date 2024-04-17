@@ -1,14 +1,49 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/input_screen.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class ProfileInputNew extends StatefulWidget {
   const ProfileInputNew({super.key});
+
+  Future<void> getUser(BuildContext context) async {
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      const endpoint = '${Constant.baseURL}/api/auth/me';
+      final Response response = await dio.get(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      if (result != null) {
+      } else {
+        print('User data not found in the response');
+      }
+    } on DioError catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        final responseData = e.response?.data;
+        print(responseData);
+      } else {
+        print(e.message);
+      }
+    }
+  }
 
   @override
   State<ProfileInputNew> createState() => _ProfileInputNewState();
@@ -79,7 +114,7 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
               height: 10,
             ),
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 20),
               child: Text(
                 'Tell us about your company and you will be your way connect with high-skilled students',
                 textAlign: TextAlign.left,
@@ -90,7 +125,7 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 15.0),
+              padding: EdgeInsets.only(left: 20.0),
               child: Text(
                 'How many people are there in your company?',
                 style: TextStyle(
@@ -111,7 +146,7 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
                       },
                       child: Container(
                         padding:
-                            const EdgeInsets.only(top: 5, left: 15, bottom: 10),
+                            const EdgeInsets.only(top: 5, left: 24, bottom: 10),
                         child: Row(
                           children: [
                             Container(
@@ -140,7 +175,7 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
                   .toList(),
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 15.0),
+              padding: EdgeInsets.only(left: 20.0),
               child: Text(
                 'Company Name',
                 style: TextStyle(
@@ -152,7 +187,7 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
               child: TextField(
                 controller: companyNameController,
                 decoration: const InputDecoration(
@@ -165,7 +200,7 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
               height: 10,
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 15.0),
+              padding: EdgeInsets.only(left: 20.0),
               child: Text(
                 'Website',
                 style: TextStyle(
@@ -177,7 +212,7 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
               child: TextField(
                 controller: websiteController,
                 decoration: const InputDecoration(
@@ -187,7 +222,7 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 15.0),
+              padding: EdgeInsets.only(left: 20.0),
               child: Text(
                 'Description',
                 style: TextStyle(
@@ -199,7 +234,7 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
             ),
             Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
               child: TextField(
                 controller: descriptionController,
                 onTap: () async {
@@ -222,16 +257,26 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 15.0),
+            Center(
+              child: Container(
+                width: double.infinity,
+                height: 60,
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: ElevatedButton.icon(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Constant.primaryColor)),
                   onPressed: () {
                     context.goNamed(RouteConstants.welcome);
                   },
-                  icon: const Icon(Icons.arrow_forward),
-                  label: const Text('Continue'),
+                  icon: const Icon(
+                    Icons.arrow_forward,
+                    color: Colors.white,
+                  ),
+                  label: const Text(
+                    'Continue',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ),

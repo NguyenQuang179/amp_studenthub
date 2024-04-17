@@ -15,7 +15,7 @@ class AccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String role = account.type == 0 ? 'Company' : 'Student';
+    String role = account.type == 1 ? 'Company' : 'Student';
 
     String? imageUrl = this.imageUrl ?? 'assets/logo.png';
     return Padding(
