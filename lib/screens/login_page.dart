@@ -1,11 +1,15 @@
 import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dio/dio.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -14,9 +18,60 @@ class LoginPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
 
   // signin
-  void signIn() {
-    print('Username: ${usernameController.text}');
-    print('Password: ${passwordController.text}');
+  Future<void> signIn(BuildContext context) async {
+    final dio = Dio();
+    try {
+      if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
+        Fluttertoast.showToast(
+          msg: 'Please fill in all fields',
+        );
+        return;
+      }
+
+      const endpoint = '${Constant.baseURL}/api/auth/sign-in';
+      final submitData = {
+        "email": usernameController.text,
+        "password": passwordController.text
+      };
+
+      final Response response = await dio.post(
+        endpoint,
+        data: submitData,
+      );
+
+      final responseData = response.data;
+
+      // Extract the access token from the response
+      final String? accessToken = responseData['result']['token'];
+
+      if (accessToken != null) {
+        // Use Provider to set the access token
+        Provider.of<UserProvider>(context, listen: false)
+            .updateToken(accessToken);
+        context.goNamed(RouteConstants.companyProject);
+      } else {
+        final String? errorDetails = responseData['errorDetails'];
+
+        // Handle case where access token is not present in the response
+        if (errorDetails != null) {
+          Fluttertoast.showToast(
+            msg: errorDetails,
+          );
+        }
+      }
+    } on DioException catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.headers);
+        print(e.response?.requestOptions);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+    }
   }
 
   @override
@@ -87,19 +142,36 @@ class LoginPage extends StatelessWidget {
                       child: Column(
                     children: [
                       //sign in button
-                      Button(onTap: signIn, text: 'Sign In'),
+                      Button(
+                          onTap: () {
+                            signIn(context);
+                          },
+                          text: 'Sign In'),
                       //forgot password?
                       Container(
-                        margin: const EdgeInsets.only(top: 32),
-                        child: const Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                            color: Constant.onPrimaryColor,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
+                          margin: const EdgeInsets.only(top: 32),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Handle click on Forgot Password
+                              // For example, navigate to the Forgot Password screen
+                              Fluttertoast.showToast(
+                                  msg: 'Forgot Password',
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0);
+                            },
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: Colors.blue, // Change color as needed
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          )),
                       const SizedBox(
                         height: 32,
                       ),
@@ -113,6 +185,7 @@ class LoginPage extends StatelessWidget {
                             const SizedBox(width: 16),
                             TextButton(
                               onPressed: () {
+                                print(context.read<UserProvider>().userToken);
                                 context.pushNamed(RouteConstants.signUp1);
                               },
                               child: const Text('Join Now',

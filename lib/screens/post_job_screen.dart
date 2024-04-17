@@ -1,7 +1,9 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/company_project_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class PostJobScreen extends StatefulWidget {
   const PostJobScreen({super.key});
@@ -395,6 +397,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
                             print(
                                 'Number Of Students: ${numberOfStudentController.text}');
                             print('Description: ${descriptionController.text}');
+                            context.read<CompanyProjectProvider>().removeAll();
                             GoRouter.of(context).pop();
                             return;
                           }

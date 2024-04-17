@@ -15,6 +15,8 @@ class AccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String role = account.type == 1 ? 'Company' : 'Student';
+
     String? imageUrl = this.imageUrl ?? 'assets/logo.png';
     return Padding(
       padding: const EdgeInsets.all(0),
@@ -49,7 +51,7 @@ class AccountCard extends StatelessWidget {
                       style: const TextStyle(color: Constant.onPrimaryColor),
                     ),
                     Text(
-                      account.type,
+                      role,
                       style: const TextStyle(color: Constant.onPrimaryColor),
                     )
                   ],
