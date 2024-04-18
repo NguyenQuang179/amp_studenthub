@@ -234,7 +234,7 @@ class AppRouter {
     //   return MaterialPage(child: null);
     // },
     redirect: (context, state) {
-      bool isAuth = true;
+      bool isAuth = false;
       // ignore: dead_code
       if (!isAuth && state.matchedLocation == '/') {
         return state.namedLocation(RouteConstants.home);
