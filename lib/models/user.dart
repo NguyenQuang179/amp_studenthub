@@ -1,28 +1,37 @@
+import 'package:amp_studenthub/models/company_profile.dart';
+import 'package:amp_studenthub/models/student_profile.dart';
+
 class User {
-  final num id;
+  final int id;
   final String fullname;
-  final List<num> roles;
-  final int studentYear;
-  final String studentGrade;
-  final String proposal;
+  final List<dynamic> roles;
+  final CompanyProfile? company;
+  // final StudentProfile? student;
 
-  User(this.id, this.fullname, this.roles, this.studentYear, this.studentGrade,
-      this.proposal);
+  User(
+    this.id,
+    this.fullname,
+    this.roles, {
+    this.company,
+    /*this.student*/
+  });
 
-  // User.fromJson(Map<String, dynamic> json)
-  //     : id = json['id'] as String,
-  //       fullname = json['name'] as String,
-  //       roles = json['jobPosition'] as String,
-  //       studentYear = json['studentYear'] as int,
-  //       studentGrade = json['studentGrade'] as String,
-  //       proposal = json['proposal'] as String;
+  User.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as int,
+        fullname = json['fullname'] as String,
+        roles = json['roles'] as List<dynamic>,
+        // student = json.containsKey('student')
+        //     ? StudentProfile.fromJson(json['student'])
+        //     : null,
+        company = json['company'] != null
+            ? CompanyProfile.fromJson(json['company'])
+            : null;
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'name': fullname,
-        'jobPosition': roles,
-        'studentYear': studentYear,
-        'studentGrade': studentGrade,
-        'proposal': proposal
+        'fullname': fullname,
+        'roles': roles,
+        // 'student': student?.toJson(),
+        'company': company?.toJson(),
       };
 }

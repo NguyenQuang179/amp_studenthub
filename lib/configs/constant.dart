@@ -9,8 +9,8 @@ class Constant {
   static const backgroundWithOpacity = Color(0xFFDBE2EF);
 
   // API
-  // static const String baseURL = "http://34.16.137.128";
-  static const String baseURL = "http://localhost:4567";
+  static const String baseURL = "http://34.16.137.128";
+  // static const String baseURL = "http://localhost:4567";
   static const String token =
       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZnVsbG5hbWUiOiJOZ3V5ZW4gTmdvYyBRdWFuZyIsImVtYWlsIjoibm5xdWFuZzIwQGNsYy5maXR1cy5lZHUudm4iLCJyb2xlcyI6WzBdLCJpYXQiOjE3MTI5NDA3NjksImV4cCI6MTcxNDE1MDM2OX0.ccOxnGWHxg89-vv9m3TrrKPQsrsFFQqu73QniRQPzOw";
   static const int apiTimeOut = 60000;
