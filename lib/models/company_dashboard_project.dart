@@ -11,8 +11,8 @@ class CompanyProject {
   final int? countMessages;
   final int? countHired;
   final String createdAt;
-  final String updatedAt;
-  final String? deletedAt;
+  // final String updatedAt;
+  // final String? deletedAt;
   final bool isFavorite;
 
   CompanyProject(
@@ -28,8 +28,8 @@ class CompanyProject {
     this.countMessages,
     this.countHired,
     this.createdAt,
-    this.updatedAt,
-    this.deletedAt,
+    // this.updatedAt,
+    // this.deletedAt,
     this.isFavorite,
   );
 
@@ -46,8 +46,8 @@ class CompanyProject {
         countMessages = json['countMessages'] ?? 0,
         countHired = json['countHired'] ?? 0,
         createdAt = json['createdAt'] as String,
-        updatedAt = json['updatedAt'] as String,
-        deletedAt = json['deletedAt'] as String?,
+        // updatedAt = json['updatedAt'] as String,
+        // deletedAt = json['deletedAt'] as String?,
         isFavorite = json['isFavorite'] as bool;
 
   Map<String, dynamic> toJson() => {
@@ -63,8 +63,8 @@ class CompanyProject {
         'countMessages': countMessages,
         'countHired': countHired,
         'createdAt': createdAt,
-        'updatedAt': updatedAt,
-        'deletedAt': deletedAt,
+        // 'updatedAt': updatedAt,
+        // 'deletedAt': deletedAt,
         'isFavorite': isFavorite
       };
 }
