@@ -13,38 +13,6 @@ import 'package:provider/provider.dart';
 class ProfileInputNew extends StatefulWidget {
   const ProfileInputNew({super.key});
 
-  Future<void> getUser(BuildContext context) async {
-    final dio = Dio();
-    try {
-      final userProvider = Provider.of<UserProvider>(context, listen: false);
-      // Get access token from provider
-      final accessToken = userProvider.userToken;
-      const endpoint = '${Constant.baseURL}/api/auth/me';
-      final Response response = await dio.get(
-        endpoint,
-        options: Options(headers: {
-          'Authorization': 'Bearer $accessToken',
-        }),
-      );
-
-      final Map<String, dynamic> responseData =
-          response.data as Map<String, dynamic>;
-      final dynamic result = responseData['result'];
-      if (result != null) {
-      } else {
-        print('User data not found in the response');
-      }
-    } on DioError catch (e) {
-      // Handle Dio errors
-      if (e.response != null) {
-        final responseData = e.response?.data;
-        print(responseData);
-      } else {
-        print(e.message);
-      }
-    }
-  }
-
   @override
   State<ProfileInputNew> createState() => _ProfileInputNewState();
 }
@@ -62,6 +30,47 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
   final companyNameController = TextEditingController();
   final websiteController = TextEditingController();
   final descriptionController = TextEditingController();
+
+  Future<void> getUser(BuildContext context) async {
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      print(userProvider.userInfo);
+      print(userProvider.userInfo['fullname']);
+      // Get access token from provider
+      // final accessToken = userProvider.userToken;
+      // const endpoint = '${Constant.baseURL}/api/auth/me';
+      // final Response response = await dio.get(
+      //   endpoint,
+      //   options: Options(headers: {
+      //     'Authorization': 'Bearer $accessToken',
+      //   }),
+      // );
+
+      // final Map<String, dynamic> responseData =
+      //     response.data as Map<String, dynamic>;
+      // final dynamic result = responseData['result'];
+      // if (result != null) {
+      //   print(result);
+      // } else {
+      //   print('User data not found in the response');
+      // }
+    } on DioError catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        final responseData = e.response?.data;
+        print(responseData);
+      } else {
+        print(e.message);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUser(context);
+  }
 
   @override
   Widget build(BuildContext context) {

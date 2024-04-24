@@ -1,15 +1,16 @@
 import 'package:amp_studenthub/configs/constant.dart';
-import 'package:amp_studenthub/models/job.dart';
-import 'package:amp_studenthub/providers/company_project_provider.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/utilities/constant.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../models/company_dashboard_project.dart';
 
 class CompanyDashboardScreen extends StatefulWidget {
   const CompanyDashboardScreen({super.key});
@@ -19,11 +20,61 @@ class CompanyDashboardScreen extends StatefulWidget {
 }
 
 class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
+  List<CompanyProject> allCompanyProjects = [];
+
   Set<DashboardFilterOptions> selectedFilterOptions = {
     DashboardFilterOptions.all
   };
 
-  final List<Job> allJobs = [];
+  Future<void> fetchCompanyProjects() async {
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      print(userProvider.userInfo);
+      print(userProvider.userInfo['company']?['id']);
+      final accessToken = userProvider.userToken;
+      int companyId = userProvider.userInfo['company']?['id'];
+      String endpoint = '${Constant.baseURL}/api/project/company/$companyId';
+      final Response response = await dio.get(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final List<dynamic> result = responseData['result'];
+      List<CompanyProject> companyList = [];
+      for (var project in result) {
+        CompanyProject companyProject = CompanyProject.fromJson(project);
+        print(companyProject.companyId);
+        companyList.add(companyProject);
+      }
+      print(companyList.length);
+      setState(() {
+        allCompanyProjects = companyList;
+      });
+    } on DioException catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.headers);
+        print(e.response?.requestOptions);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCompanyProjects();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +150,8 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                   )
                 ]),
               ),
-              // Render Job List
-              if (context.watch<CompanyProjectProvider>().companyJobs.isEmpty)
+              // Render CompanyProject List
+              if (allCompanyProjects.isEmpty)
                 Expanded(
                   child: Column(
                     children: [
@@ -136,14 +187,10 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                           margin: const EdgeInsets.symmetric(vertical: 16),
                           child: ListView.builder(
                               physics: const ClampingScrollPhysics(),
-                              itemCount: context
-                                  .watch<CompanyProjectProvider>()
-                                  .companyJobs
-                                  .length,
+                              itemCount: allCompanyProjects.length,
                               itemBuilder: (BuildContext context, int index) {
-                                Job job = context
-                                    .watch<CompanyProjectProvider>()
-                                    .companyJobs[index];
+                                CompanyProject project =
+                                    allCompanyProjects[index];
                                 return InkWell(
                                   onTap: () => GoRouter.of(context).pushNamed(
                                       RouteConstants.companyProjectDetails),
@@ -171,7 +218,7 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      job.title,
+                                                      project.title,
                                                       style: const TextStyle(
                                                           color: Constant
                                                               .secondaryColor,
@@ -184,7 +231,10 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                           const EdgeInsets.only(
                                                               top: 4),
                                                       child: Text(
-                                                        job.createdAt,
+                                                        DateFormat('yyyy-MM-dd')
+                                                            .format(DateTime
+                                                                .parse(project
+                                                                    .createdAt)),
                                                         textAlign:
                                                             TextAlign.start,
                                                         style: const TextStyle(
@@ -210,7 +260,7 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                                       FontAwesomeIcons
                                                                           .solidPenToSquare),
                                                                   title: Text(
-                                                                      'Edit Job'),
+                                                                      'Edit CompanyProject'),
                                                                 ),
                                                               ),
                                                               const Divider(),
@@ -223,7 +273,7 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                                       FontAwesomeIcons
                                                                           .solidTrashCan),
                                                                   title: Text(
-                                                                      'Remove Job'),
+                                                                      'Remove CompanyProject'),
                                                                 ),
                                                               ),
                                                               const Divider(),
@@ -261,7 +311,7 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                         FontWeight.w600),
                                               ),
                                               Text(
-                                                job.description,
+                                                project.description,
                                                 textAlign: TextAlign.justify,
                                               )
                                             ],
@@ -287,21 +337,22 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                       .symmetric(
                                                       vertical: 8,
                                                       horizontal: 8),
-                                                  child: const Column(
+                                                  child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Text(
+                                                      const Text(
                                                         "Proposals:",
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(),
                                                       ),
-                                                      Text("1",
-                                                          style: TextStyle(
+                                                      Text(
+                                                          '${project.countProposals}',
+                                                          style: const TextStyle(
                                                               fontSize: 20,
                                                               fontWeight:
                                                                   FontWeight
@@ -323,21 +374,22 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                       .symmetric(
                                                       vertical: 8,
                                                       horizontal: 8),
-                                                  child: const Column(
+                                                  child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Text(
+                                                      const Text(
                                                         "Messages:",
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(),
                                                       ),
-                                                      Text("1",
-                                                          style: TextStyle(
+                                                      Text(
+                                                          '${project.countMessages}',
+                                                          style: const TextStyle(
                                                               fontSize: 20,
                                                               fontWeight:
                                                                   FontWeight
@@ -361,21 +413,22 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                       .symmetric(
                                                       vertical: 8,
                                                       horizontal: 8),
-                                                  child: const Column(
+                                                  child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Text(
+                                                      const Text(
                                                         "Hired:",
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: TextStyle(),
                                                       ),
-                                                      Text("1",
-                                                          style: TextStyle(
+                                                      Text(
+                                                          '${project.countHired}',
+                                                          style: const TextStyle(
                                                               fontSize: 20,
                                                               fontWeight:
                                                                   FontWeight

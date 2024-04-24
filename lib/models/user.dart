@@ -8,13 +8,7 @@ class User {
   final CompanyProfile? company;
   // final StudentProfile? student;
 
-  User(
-    this.id,
-    this.fullname,
-    this.roles, {
-    this.company,
-    /*this.student*/
-  });
+  User(this.id, this.fullname, this.roles, this.company);
 
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int,

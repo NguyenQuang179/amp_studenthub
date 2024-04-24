@@ -48,6 +48,21 @@ class LoginPage extends StatelessWidget {
         // Use Provider to set the access token
         Provider.of<UserProvider>(context, listen: false)
             .updateToken(accessToken);
+        // Get and store user data to provider
+        const endpoint = '${Constant.baseURL}/api/auth/me';
+        final Response userResponse = await dio.get(
+          endpoint,
+          options: Options(headers: {
+            'Authorization': 'Bearer $accessToken',
+          }),
+        );
+
+        final Map<String, dynamic> userResponseData =
+            userResponse.data as Map<String, dynamic>;
+        final dynamic userData = userResponseData['result'];
+        print(userData);
+        Provider.of<UserProvider>(context, listen: false)
+            .updateUserInfo(userData);
         context.goNamed(RouteConstants.companyProject);
       } else {
         final String? errorDetails = responseData['errorDetails'];
@@ -163,7 +178,7 @@ class LoginPage extends StatelessWidget {
                                   textColor: Colors.white,
                                   fontSize: 16.0);
                             },
-                            child: Text(
+                            child: const Text(
                               'Forgot Password?',
                               style: TextStyle(
                                 color: Colors.blue, // Change color as needed

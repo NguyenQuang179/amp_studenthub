@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:amp_studenthub/configs/constant.dart';
-import 'package:amp_studenthub/providers/company_project_provider.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -17,8 +21,14 @@ class _PostJobScreenState extends State<PostJobScreen> {
   final numberOfStudentController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  final List<String> timelineOptions = ['1 to 3 months', '3 to 6 months'];
-  String selectedTimelineOption = "1 to 3 months";
+  final List<String> timelineOptions = [
+    'Less than 1 month',
+    '1 to 3 months',
+    '3 to 6 months',
+    'More than 6 month'
+  ];
+  String selectedTimelineOption = "Less than 1 month";
+  int selectedProjectScope = 0;
   List<Step> getSteps() => [
         Step(
             state: currentStep > 0 ? StepState.complete : StepState.indexed,
@@ -114,26 +124,44 @@ class _PostJobScreenState extends State<PostJobScreen> {
                         style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 16),
                       )),
+                  // ListView.builder(
+                  //   itemCount: timelineOptions.length,
+                  //   itemBuilder: (context, index) {
+                  //     return ListTile(
+                  //         title: Text(timelineOptions[index]),
+                  //         leading: Radio(
+                  //           groupValue: selectedTimelineOption,
+                  //           value: timelineOptions[0],
+                  //           onChanged: (String? value) {
+                  //             setState(() {
+                  //               selectedTimelineOption = timelineOptions[0];
+                  //               selectedProjectScope = index;
+                  //             });
+                  //           },
+                  //         ));
+                  //   },
+                  // ),
+                  ListTile(
+                      title: const Text("Less than 1 month"),
+                      leading: Radio(
+                        groupValue: selectedTimelineOption,
+                        value: timelineOptions[0],
+                        onChanged: (String? value) {
+                          setState(() {
+                            selectedTimelineOption = timelineOptions[0];
+                            selectedProjectScope = 0;
+                          });
+                        },
+                      )),
                   ListTile(
                     title: const Text("1 to 3 months"),
-                    leading: Radio(
-                      groupValue: selectedTimelineOption,
-                      value: timelineOptions[0],
-                      onChanged: (String? value) {
-                        setState(() {
-                          selectedTimelineOption = timelineOptions[0];
-                        });
-                      },
-                    ),
-                  ),
-                  ListTile(
-                    title: const Text("3 to 6 months"),
                     leading: Radio(
                       groupValue: selectedTimelineOption,
                       value: timelineOptions[1],
                       onChanged: (String? value) {
                         setState(() {
                           selectedTimelineOption = timelineOptions[1];
+                          selectedProjectScope = 1;
                         });
                       },
                     ),
@@ -311,16 +339,57 @@ class _PostJobScreenState extends State<PostJobScreen> {
                       style: TextStyle(color: Constant.textColor, fontSize: 16),
                     ),
                   ),
-                  Text(descriptionController.text,
-                      textAlign: TextAlign.justify,
-                      style: const TextStyle(
-                          color: Constant.textColor, fontSize: 16))
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 24),
+                    child: Text(descriptionController.text,
+                        textAlign: TextAlign.justify,
+                        style: const TextStyle(
+                            color: Constant.textColor, fontSize: 16)),
+                  )
                 ],
               ),
             ))
       ];
 
   int currentStep = 0;
+
+  Future<void> postNewProject() async {
+    final dio = Dio();
+    try {
+      const endpoint = '${Constant.baseURL}/api/project';
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+      final accessToken = userProvider.userToken;
+      int companyId = userProvider.userInfo['company']?['id'];
+
+      var data = {
+        "companyId": companyId.toString(),
+        "projectScopeFlag": selectedProjectScope,
+        "title": jobTitleController.text,
+        "numberOfStudents": int.parse(numberOfStudentController.text),
+        "description": descriptionController.text,
+        "typeFlag": 0
+      };
+      final Response response = await dio.post(endpoint,
+          data: jsonEncode(data),
+          options: Options(headers: {
+            'Authorization': 'Bearer $accessToken',
+          }));
+      log(response.toString());
+    } on DioException catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        print(e.response?.data);
+        print(e.response?.headers);
+        print(e.response?.requestOptions);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -393,11 +462,15 @@ class _PostJobScreenState extends State<PostJobScreen> {
                               currentStep == getSteps().length - 1;
                           if (isLastStep) {
                             print("Completed post a job");
-                            print('Job Title: ${jobTitleController.text}');
-                            print(
-                                'Number Of Students: ${numberOfStudentController.text}');
-                            print('Description: ${descriptionController.text}');
-                            context.read<CompanyProjectProvider>().removeAll();
+                            print({
+                              "projectScopeFlag": selectedProjectScope,
+                              "title": jobTitleController.text,
+                              "numberOfStudents":
+                                  numberOfStudentController.text,
+                              "description": descriptionController.text,
+                              "typeFlag": 0
+                            });
+                            postNewProject();
                             GoRouter.of(context).pop();
                             return;
                           }
@@ -410,7 +483,7 @@ class _PostJobScreenState extends State<PostJobScreen> {
                               },
                         onStepTapped: (step) {
                           setState(() {
-                            // if (step > currentStep) return;
+                            if (step > currentStep) return;
                             currentStep = step;
                           });
                         },
