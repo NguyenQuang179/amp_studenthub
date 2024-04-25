@@ -29,15 +29,15 @@ class _ProfileInputViewState extends State<ProfileInputView> {
   }
 
   @override
-  didChangeDependencies() {
-    getCompanyProfle(context);
+  didChangeDependencies() async {
+    await getCompanyProfile(context);
     super.didChangeDependencies();
   }
 
-  late CompanyProfile _companyProfile;
+  CompanyProfile _companyProfile = CompanyProfile(0, '', 0, '', '');
   late String option;
 
-  Future<void> getCompanyProfle(BuildContext context) async {
+  Future<void> getCompanyProfile(BuildContext context) async {
     final dio = Dio();
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -54,12 +54,13 @@ class _ProfileInputViewState extends State<ProfileInputView> {
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
+      print(result);
       if (result != null) {
         var user = User.fromJson(result);
-        _companyProfile = user.company != null
-            ? user.company!
-            : CompanyProfile(0, '', 0, '', '');
-        option = optionList[_companyProfile.size] ?? optionList[0]!;
+        setState(() {
+          _companyProfile = CompanyProfile.fromJson(result['company']);
+          option = optionList[_companyProfile.size] ?? optionList[0]!;
+        });
       } else {
         print('User data not found in the response');
       }
