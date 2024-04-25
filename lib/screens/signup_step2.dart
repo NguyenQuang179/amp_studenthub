@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
@@ -16,7 +14,7 @@ import 'package:provider/provider.dart';
 class SignupStepTwo extends StatefulWidget {
   final int role;
 
-  SignupStepTwo({required this.role});
+  const SignupStepTwo({super.key, required this.role});
   @override
   _SignupStepTowState createState() => _SignupStepTowState();
 }
@@ -139,7 +137,7 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                           });
                         },
                       ),
-                      Text(
+                      const Text(
                         'I have read & accept the ',
                         style: TextStyle(
                           color: Constant.secondaryColor,
@@ -151,7 +149,7 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                           // Example: Navigate to a Terms & Conditions page
                           Fluttertoast.showToast(msg: 'Terms & Conditions');
                         },
-                        child: Text(
+                        child: const Text(
                           'Terms & Conditions',
                           style: TextStyle(
                             color: Colors.blue,
@@ -197,8 +195,7 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                               onPressed: () {
                                 Provider.of<RoleProvider>(context,
                                         listen: false)
-                                    .setRole(
-                                        1 - widget.role as int); // For student
+                                    .setRole(1 - widget.role); // For student
                                 context.pushNamed(RouteConstants.signUp2);
                               },
                               style: TextButton.styleFrom(
@@ -214,7 +211,7 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                                     widget.role == 1
                                         ? 'Join as student'
                                         : 'Join as company',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w500),
                                   ),

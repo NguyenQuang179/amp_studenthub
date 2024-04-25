@@ -129,11 +129,11 @@ class _ProfileInputViewState extends State<ProfileInputView> {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(top: 5, left: 15, bottom: 10),
+              padding: const EdgeInsets.only(top: 5, left: 15, bottom: 10),
               child: Row(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 20),
+                    margin: const EdgeInsets.only(right: 20),
                     height: 20,
                     width: 20,
                     child: const Radio(
@@ -144,7 +144,7 @@ class _ProfileInputViewState extends State<ProfileInputView> {
                   ),
                   Text(
                     option,
-                    style: TextStyle(fontSize: 15),
+                    style: const TextStyle(fontSize: 15),
                   )
                 ],
               ),
@@ -257,14 +257,14 @@ class _ProfileInputViewState extends State<ProfileInputView> {
                 label: const Text('Edit'),
               ),
             ),
-            Container(
+            SizedBox(
               width: 130,
               child: ElevatedButton.icon(
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(Icons.cancel),
-                label: Text('Cancel'),
+                icon: const Icon(Icons.cancel),
+                label: const Text('Cancel'),
               ),
             ),
           ],
