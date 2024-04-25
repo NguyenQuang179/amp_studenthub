@@ -1,3 +1,4 @@
+import 'package:amp_studenthub/models/company_dashboard_project.dart';
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/Message/message_detail.dart';
@@ -81,15 +82,13 @@ class AppRouter {
                       name: RouteConstants.projectDetails,
                       path: 'details',
                       pageBuilder: (context, state) {
-                        return const MaterialPage(
-                            child: ProjectDetail(
-                          jobTitle: 'Front-End Developer (React JS)',
-                          jobCreatedDate: '16/03/2024',
-                          jobDuration: '1-3 months',
-                          jobStudentNeeded: 5,
-                          jobProposalNums: 10,
-                          jobExpectation: 'React JS, HTML, CSS, JavaScript',
-                        ));
+                        // Extract id from the URI query parameters
+                        final id = state.uri.queryParameters['id'] ?? '0';
+
+                        // Create the ProjectDetail widget with the extracted id
+                        return MaterialPage(
+                          child: ProjectDetail(id: id),
+                        );
                       }),
                 ]),
             GoRoute(

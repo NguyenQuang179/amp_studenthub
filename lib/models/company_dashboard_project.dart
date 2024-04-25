@@ -32,6 +32,23 @@ class CompanyProject {
     // this.deletedAt,
     this.isFavorite,
   );
+  //default constructor
+  CompanyProject.empty()
+      : id = 0,
+        companyId = '',
+        title = '',
+        description = '',
+        projectScopeFlag = 0,
+        numberOfStudents = 0,
+        typeFlag = 0,
+        proposals = '',
+        countProposals = 0,
+        countMessages = 0,
+        countHired = 0,
+        createdAt = '',
+        // updatedAt = '',
+        // deletedAt = '',
+        isFavorite = false;
 
   CompanyProject.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int,
@@ -48,7 +65,7 @@ class CompanyProject {
         createdAt = json['createdAt'] as String,
         // updatedAt = json['updatedAt'] as String,
         // deletedAt = json['deletedAt'] as String?,
-        isFavorite = json['isFavorite'] as bool;
+        isFavorite = json['isFavorite'] ?? false;
 
   Map<String, dynamic> toJson() => {
         'id': id,

@@ -20,9 +20,10 @@ class _ProjectListState extends State<ProjectList> {
   late List<CompanyProject> companyProjectsList = [];
 
   get dio => null;
-  checkDetail(context) {
-    GoRouter.of(context).pushNamed(RouteConstants.projectDetails);
-  }
+  // checkDetail({id = String}) {
+  //   GoRouter.of(context)
+  //       .pushNamed(RouteConstants.projectDetails, queryParameters: {'id': id});
+  // }
 
   checkSaved(context) {
     GoRouter.of(context).push('/projectListSaved');
@@ -40,7 +41,7 @@ class _ProjectListState extends State<ProjectList> {
     getProjects();
   }
 
-  getProjects() async {
+  Future<void> getProjects() async {
     print('Fetching projects');
     final dio = Dio();
     try {
@@ -153,7 +154,13 @@ class _ProjectListState extends State<ProjectList> {
                   jobDuration: "companyProject",
                   jobStudentNeeded: companyProject.numberOfStudents,
                   jobProposalNums: companyProject.countProposals,
-                  onClick: () => checkDetail(context),
+                  onClick: () {
+                    // Navigate to project details page
+                    GoRouter.of(context).pushNamed(
+                      RouteConstants.projectDetails,
+                      queryParameters: {'id': companyProject.id.toString()},
+                    );
+                  },
                   isSaved: companyProject.isFavorite,
                 );
               },
