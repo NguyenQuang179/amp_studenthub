@@ -5,6 +5,7 @@ import 'package:amp_studenthub/models/company_dashboard_project.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:dio/dio.dart';
+import 'package:amp_studenthub/widgets/search_project_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -104,6 +105,21 @@ class _ProjectListState extends State<ProjectList> {
                 children: [
                   Expanded(
                     child: TextField(
+                        readOnly: true,
+                        onTap: () {
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom),
+                                  child: SearchProjectModal(),
+                                );
+                              });
+                        },
                         onChanged: (value) {},
                         onSubmitted: (String value) =>
                             handleSubmit(context, value),

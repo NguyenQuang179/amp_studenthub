@@ -10,8 +10,8 @@ class StudentProfile {
       this.studentGrade, this.proposal);
 
   // StudentProfile.fromJson(Map<String, dynamic> json)
-  //     : id = json['id'] as String,
-  //       name = json['name'] as String,
+  //     : id = json['id'] as num,
+  //       fullname = json['name'] as String,
   //       jobPosition = json['jobPosition'] as String,
   //       studentYear = json['studentYear'] as int,
   //       studentGrade = json['studentGrade'] as String,
