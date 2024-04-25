@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 class CompanyProjectProvider extends ChangeNotifier {
   /// Internal, private state of the cart.
   final List<Job> _companyJobs = [
-    Job('job1', "Front End Job", '1 to 3 months', 2, "Description...",
-        '2024-03-19'),
-    Job('job2', "Back End Job", '3 to 6 months', 2, "Description...",
-        '2024-03-19'),
-    Job('job3', "React JS Job", '1 to 3 months', 2, "Description...",
-        '2024-03-19'),
-    Job('job4', "Nest JS Job", '3 to 6 months', 2, "Description...",
-        '2024-03-19'),
-    Job('job5', "Data Engineer Job", '1 to 3 months', 2, "Description...",
-        '2024-03-19')
+    // Job('job1', "Front End Job", '1 to 3 months', 2, "Description...",
+    //     '2024-03-19'),
+    // Job('job2', "Back End Job", '3 to 6 months', 2, "Description...",
+    //     '2024-03-19'),
+    // Job('job3', "React JS Job", '1 to 3 months', 2, "Description...",
+    //     '2024-03-19'),
+    // Job('job4', "Nest JS Job", '3 to 6 months', 2, "Description...",
+    //     '2024-03-19'),
+    // Job('job5', "Data Engineer Job", '1 to 3 months', 2, "Description...",
+    //     '2024-03-19')
   ];
 
   /// An unmodifiable view of the companyJobs in the cart.
