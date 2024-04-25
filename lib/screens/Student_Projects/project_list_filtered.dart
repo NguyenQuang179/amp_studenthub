@@ -1,8 +1,14 @@
 import 'package:amp_studenthub/components/project_item.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/models/project.dart';
+import 'package:amp_studenthub/providers/student_project_provider.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
+import 'package:amp_studenthub/utilities/constant.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class ProjectListFiltered extends StatefulWidget {
   const ProjectListFiltered({super.key});
@@ -18,7 +24,9 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
     GoRouter.of(context).push('/projectDetail');
   }
 
-  ProjectLength? selectedOption = ProjectLength.option1;
+  ProjectLength? selectedOption;
+  TextEditingController studentNeededController = TextEditingController();
+  TextEditingController proposalsController = TextEditingController();
 
   onLengthSelected(value, setState) {
     print('selected');
@@ -28,8 +36,52 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
     });
   }
 
+  Future<void> filterProjects(BuildContext context) async {
+    final dio = Dio();
+    try {
+      String filterQuery = '';
+      final studentProjectProvider =
+          Provider.of<StudentProjectProvider>(context, listen: false);
+      var titleQuery = studentProjectProvider.searchQuery;
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      var endpoint = '${Constant.baseURL}/api/project?title=$titleQuery';
+      final Response response = await dio.get(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      if (result != null) {
+        List<Project> resultList = [];
+        for (var item in result) {
+          resultList.add(Project.fromJson(item));
+        }
+      } else {
+        print('User data not found in the response');
+      }
+    } on DioError catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        final responseData = e.response?.data;
+        print(responseData);
+      } else {
+        print(e.message);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final studentProjectProvider =
+        Provider.of<StudentProjectProvider>(context, listen: false);
+    final List<Project> resultList = studentProjectProvider.searchProjects;
+
     return Scaffold(
       backgroundColor: Constant.backgroundColor,
       appBar: AppBar(
@@ -109,7 +161,7 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                           color: Constant.textColor),
                                     ),
                                     RadioListTile<ProjectLength>(
-                                      title: const Text('Option 1'),
+                                      title: const Text('Less than 1 month'),
                                       value: ProjectLength.option1,
                                       groupValue: selectedOption,
                                       onChanged: (value) {
@@ -117,7 +169,7 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                       },
                                     ),
                                     RadioListTile<ProjectLength>(
-                                      title: const Text('Option 2'),
+                                      title: const Text('1-3 months'),
                                       value: ProjectLength.option2,
                                       groupValue: selectedOption,
                                       onChanged: (value) {
@@ -125,14 +177,14 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                       },
                                     ),
                                     RadioListTile<ProjectLength>(
-                                        title: const Text('Option 3'),
+                                        title: const Text('3-6 months'),
                                         value: ProjectLength.option3,
                                         groupValue: selectedOption,
                                         onChanged: (value) {
                                           onLengthSelected(value, setState);
                                         }),
                                     RadioListTile<ProjectLength>(
-                                      title: const Text('Option 4'),
+                                      title: const Text('More than 6 months'),
                                       value: ProjectLength.option4,
                                       groupValue: selectedOption,
                                       onChanged: (value) {
@@ -151,6 +203,7 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                       ),
                                     ),
                                     TextField(
+                                        controller: studentNeededController,
                                         decoration: const InputDecoration(
                                             labelText: "Enter your number"),
                                         keyboardType: TextInputType.number,
@@ -169,6 +222,7 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                       ),
                                     ),
                                     TextField(
+                                        controller: proposalsController,
                                         decoration: const InputDecoration(
                                             labelText: "Enter your number"),
                                         keyboardType: TextInputType.number,
@@ -209,9 +263,12 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                                         MaterialStateProperty
                                                             .all<Color>(Constant
                                                                 .primaryColor)),
-                                                onPressed: () =>
-                                                    GoRouter.of(context)
-                                                        .pop('/'),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    selectedOption = null;
+                                                  });
+                                                  GoRouter.of(context).pop('/');
+                                                },
                                                 child:
                                                     const Text("Clear Filter"),
                                               ),
@@ -247,14 +304,15 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                 )),
             Expanded(
                 child: ListView.builder(
-              itemCount: 5,
+              itemCount: resultList.length,
               itemBuilder: (BuildContext context, int index) {
+                final Project project = resultList[index];
                 return ProjectItem(
-                  jobTitle: 'Front-End Developer (React JS)sssssss',
-                  jobCreatedDate: '16/03/2024',
-                  jobDuration: '1-3 months',
-                  jobStudentNeeded: 5,
-                  jobProposalNums: 10,
+                  jobTitle: project.title,
+                  jobCreatedDate: project.createdDate,
+                  jobDuration: ProjectScopeToString[project.projectScopeFlag],
+                  jobStudentNeeded: project.numberOfStudents,
+                  jobProposalNums: project.countProposals,
                   onClick: () => onClick(context),
                   isSaved: true,
                 );
