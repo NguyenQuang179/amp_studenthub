@@ -8,7 +8,7 @@ class Project {
   final String title;
   final String description;
   final int numberOfStudents;
-  final int typeFlag;
+  final int? typeFlag;
   final int countProposals;
   final bool isFavorite;
   final String createdDate;
