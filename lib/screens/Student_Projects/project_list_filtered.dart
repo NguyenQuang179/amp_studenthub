@@ -95,6 +95,51 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
     }
   }
 
+  Future<void> clearFilters(BuildContext context) async {
+    final dio = Dio();
+    try {
+      final studentProjectProvider =
+          Provider.of<StudentProjectProvider>(context, listen: false);
+      var titleQuery = studentProjectProvider.searchQuery;
+
+      var finalURL = '${Constant.baseURL}/api/project?title=$titleQuery';
+
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      var endpoint = finalURL;
+      final Response response = await dio.get(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      if (result != null) {
+        List<Project> resultList = [];
+        for (var item in result) {
+          resultList.add(Project.fromJson(item));
+        }
+        studentProjectProvider.updateList(resultList);
+
+        setState(() {});
+      } else {
+        print('User data not found in the response');
+      }
+    } on DioError catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        final responseData = e.response?.data;
+        print(responseData);
+      } else {
+        print(e.message);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final studentProjectProvider =
@@ -285,10 +330,15 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                                         MaterialStateProperty
                                                             .all<Color>(Constant
                                                                 .primaryColor)),
-                                                onPressed: () {
+                                                onPressed: () async {
                                                   setState(() {
                                                     selectedOption = null;
+                                                    studentNeededController
+                                                        .text = '';
+                                                    proposalsController.text =
+                                                        '';
                                                   });
+                                                  await clearFilters(context);
                                                   GoRouter.of(context).pop('/');
                                                 },
                                                 child:
