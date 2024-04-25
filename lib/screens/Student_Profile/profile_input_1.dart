@@ -6,6 +6,7 @@ import 'package:amp_studenthub/network/dio.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
@@ -101,11 +102,26 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
       };
       final Response response =
           await dio.post(endpoint, data: jsonEncode(data));
+      Fluttertoast.showToast(
+          msg: "Create Student Profile Successfully",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.TOP,
+          timeInSecForIosWeb: 3,
+          fontSize: 20.0);
       log(response.toString());
     } on DioException catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
       if (e.response != null) {
+        if (e.response?.statusCode == 422) {
+          Fluttertoast.showToast(
+              msg: "Student Profile Existed",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.TOP,
+              timeInSecForIosWeb: 3,
+              fontSize: 20.0);
+        }
+        print(e.response?.statusCode);
         print(e.response?.data);
         print(e.response?.headers);
         print(e.response?.requestOptions);

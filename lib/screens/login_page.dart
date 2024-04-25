@@ -61,6 +61,7 @@ class LoginPage extends StatelessWidget {
             userResponse.data as Map<String, dynamic>;
         final dynamic userData = userResponseData['result'];
         print(userData);
+
         Provider.of<UserProvider>(context, listen: false)
             .updateUserInfo(userData);
         context.goNamed(RouteConstants.companyProject);
@@ -181,7 +182,8 @@ class LoginPage extends StatelessWidget {
                             child: const Text(
                               'Forgot Password?',
                               style: TextStyle(
-                                color: Colors.blue, // Change color as needed
+                                color: Constant
+                                    .onPrimaryColor, // Change color as needed
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
                               ),

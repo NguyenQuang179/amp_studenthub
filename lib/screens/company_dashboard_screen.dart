@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
@@ -8,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -181,7 +180,24 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       typeFlag = 2;
     }
     fetchCompanyProjects(typeFlag);
+    Fluttertoast.showToast(
+        msg: 'Start Working Successfully',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 3,
+        fontSize: 20.0);
     Navigator.pop(context);
+  }
+
+  refreshProjectList() {
+    int? typeFlag;
+    if (selectedFilterOptions.single == DashboardFilterOptions.working) {
+      typeFlag = 1;
+    } else if (selectedFilterOptions.single ==
+        DashboardFilterOptions.archived) {
+      typeFlag = 2;
+    }
+    fetchCompanyProjects(typeFlag);
   }
 
   @override

@@ -1,24 +1,79 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/models/company_dashboard_project.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-class ProjectDetail extends StatelessWidget {
-  final String jobTitle;
-  final String jobDuration;
-  final String jobCreatedDate;
-  final int jobStudentNeeded;
-  final int jobProposalNums;
-  final String jobExpectation;
-  const ProjectDetail({
-    super.key,
-    required this.jobTitle,
-    required this.jobDuration,
-    required this.jobCreatedDate,
-    required this.jobStudentNeeded,
-    required this.jobProposalNums,
-    required this.jobExpectation,
+class ProjectDetail extends StatefulWidget {
+  final String id;
+  const ProjectDetail({super.key, required this.id});
+
+  @override
+  _ProjectDetailState createState() => _ProjectDetailState(id: id);
+}
+
+class _ProjectDetailState extends State<ProjectDetail> {
+  final String id;
+  late CompanyProject companyProject;
+  _ProjectDetailState({
+    required this.id,
   });
+
+  Future<void> getProjectDetail(id) async {
+    print('Fetching projects');
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      final endpoint = '${Constant.baseURL}/api/project/$id';
+      final Response response = await dio.get(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      print(result);
+      CompanyProject fetchedCompanyProject = CompanyProject.fromJson(result);
+      print(fetchedCompanyProject);
+
+      setState(() {
+        companyProject = fetchedCompanyProject;
+      });
+      print(this.companyProject);
+      // if (responseData.containsKey('result')) {
+      //   // Assuming your API returns a list of jobs under 'jobs' key
+      //   print(result);
+      //   final List<dynamic> jobsData = result;
+      //   print(result[0]);
+
+      //   setState(() {
+      //     companyProjects =
+      //         jobsData.map((job) => CompanyProject.fromJson(job)).toList();
+      //   });
+      //   print(companyProjects);
+      // } else {}
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch jobs when the widget is initialized
+    print(id);
+    getProjectDetail(id);
+    companyProject = CompanyProject.empty();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +91,7 @@ class ProjectDetail extends StatelessWidget {
                 "Project Detail",
                 style: TextStyle(fontSize: 20, color: Constant.secondaryColor),
               ),
-              Text(jobTitle,
+              Text(companyProject.title,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                       fontSize: 30, color: Constant.primaryColor)),
@@ -44,28 +99,26 @@ class ProjectDetail extends StatelessWidget {
                 color: Constant.primaryColor,
               ),
               const Text("Students are expecting:"),
-              Text("- $jobExpectation"),
-              Text("- $jobExpectation"),
-              Text("- $jobExpectation"),
+              Text("- ${companyProject.description}"),
               const Divider(
                 color: Constant.primaryColor,
               ),
               const Text("Created:",
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
-              Text("- $jobCreatedDate"),
+              Text("- ${companyProject.createdAt}"),
               const Text("Duration:",
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
-              Text("- $jobDuration"),
+              Text("- ${companyProject.projectScopeFlag}"),
               const Text("Available Slots:",
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
-              Text("- $jobStudentNeeded Students"),
+              Text("- ${companyProject.countHired} Students"),
               const Text("Total Slots:",
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
-              Text("- $jobProposalNums Students"),
+              Text("- ${companyProject.countProposals}s Students"),
               const SizedBox(
                 height: 40,
               ),

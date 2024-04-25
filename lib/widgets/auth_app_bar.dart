@@ -18,23 +18,24 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
             color: Constant.primaryColor, fontWeight: FontWeight.bold),
       ),
       actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: CircleAvatar(
-            radius: 24,
-            backgroundColor: Constant.primaryColor,
-            child: IconButton(
-              icon: const FaIcon(
-                FontAwesomeIcons.user,
-                size: 20,
-                color: Constant.onPrimaryColor,
+        if (GoRouter.of(context).routeInformationProvider.value.uri.path != "/")
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: CircleAvatar(
+              radius: 24,
+              backgroundColor: Constant.primaryColor,
+              child: IconButton(
+                icon: const FaIcon(
+                  FontAwesomeIcons.user,
+                  size: 20,
+                  color: Constant.onPrimaryColor,
+                ),
+                onPressed: () {
+                  GoRouter.of(context).pushNamed(RouteConstants.switchAccount);
+                },
               ),
-              onPressed: () {
-                GoRouter.of(context).pushNamed(RouteConstants.switchAccount);
-              },
             ),
           ),
-        ),
       ],
       centerTitle: true,
     );
@@ -43,33 +44,3 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
-  // AuthAppBar({super.key})
-  //     : super(
-  //         backgroundColor = Constant.backgroundColor,
-  //         toolbarHeight = 64,
-  //         title = const Text(
-  //           'StudentHub',
-  //           style: TextStyle(
-  //               color: Constant.primaryColor, fontWeight: FontWeight.bold),
-  //         ),
-  //         actions = [
-  //           Padding(
-  //             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-  //             child: CircleAvatar(
-  //               radius: 24,
-  //               backgroundColor: Constant.primaryColor,
-  //               child: IconButton(
-  //                 icon: const FaIcon(
-  //                   FontAwesomeIcons.user,
-  //                   size: 20,
-  //                   color: Constant.onPrimaryColor,
-  //                 ),
-  //                 onPressed: () {
-  //                   GoRouter.of(co).goNamed()
-  //                 },
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //         centerTitle = true,
-  //       );
