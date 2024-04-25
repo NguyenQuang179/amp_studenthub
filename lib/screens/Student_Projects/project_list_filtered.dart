@@ -17,22 +17,20 @@ class ProjectListFiltered extends StatefulWidget {
   State<ProjectListFiltered> createState() => _ProjectListFilteredState();
 }
 
-enum ProjectLength { option1, option2, option3, option4 }
-
 class _ProjectListFilteredState extends State<ProjectListFiltered> {
   onClick(context) {
     GoRouter.of(context).push('/projectDetail');
   }
 
-  ProjectLength? selectedOption;
+  int? selectedOption;
   TextEditingController studentNeededController = TextEditingController();
   TextEditingController proposalsController = TextEditingController();
 
   onLengthSelected(value, setState) {
     print('selected');
     setState(() {
-      print(selectedOption);
       selectedOption = value;
+      print(selectedOption);
     });
   }
 
@@ -40,13 +38,31 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
     final dio = Dio();
     try {
       String filterQuery = '';
+      if (selectedOption != null) {
+        filterQuery += '&projectScopeFlag=$selectedOption';
+      }
+
+      if (studentNeededController.text != '') {
+        filterQuery += '&numberOfStudents=${studentNeededController.text}';
+      }
+
+      if (proposalsController.text != '') {
+        filterQuery += '&proposalsLessThan=${proposalsController.text}';
+      }
+
       final studentProjectProvider =
           Provider.of<StudentProjectProvider>(context, listen: false);
       var titleQuery = studentProjectProvider.searchQuery;
+
+      var finalURL = '${Constant.baseURL}/api/project?title=$titleQuery';
+      if (filterQuery != '') finalURL = '$finalURL&$filterQuery';
+
+      print(finalURL);
+
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
-      var endpoint = '${Constant.baseURL}/api/project?title=$titleQuery';
+      var endpoint = finalURL;
       final Response response = await dio.get(
         endpoint,
         options: Options(headers: {
@@ -62,6 +78,9 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
         for (var item in result) {
           resultList.add(Project.fromJson(item));
         }
+        studentProjectProvider.updateList(resultList);
+
+        setState(() {});
       } else {
         print('User data not found in the response');
       }
@@ -160,32 +179,32 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                           fontWeight: FontWeight.w600,
                                           color: Constant.textColor),
                                     ),
-                                    RadioListTile<ProjectLength>(
+                                    RadioListTile<int>(
                                       title: const Text('Less than 1 month'),
-                                      value: ProjectLength.option1,
+                                      value: 0,
                                       groupValue: selectedOption,
                                       onChanged: (value) {
                                         onLengthSelected(value, setState);
                                       },
                                     ),
-                                    RadioListTile<ProjectLength>(
+                                    RadioListTile<int>(
                                       title: const Text('1-3 months'),
-                                      value: ProjectLength.option2,
+                                      value: 1,
                                       groupValue: selectedOption,
                                       onChanged: (value) {
                                         onLengthSelected(value, setState);
                                       },
                                     ),
-                                    RadioListTile<ProjectLength>(
+                                    RadioListTile<int>(
                                         title: const Text('3-6 months'),
-                                        value: ProjectLength.option3,
+                                        value: 2,
                                         groupValue: selectedOption,
                                         onChanged: (value) {
                                           onLengthSelected(value, setState);
                                         }),
-                                    RadioListTile<ProjectLength>(
+                                    RadioListTile<int>(
                                       title: const Text('More than 6 months'),
-                                      value: ProjectLength.option4,
+                                      value: 3,
                                       groupValue: selectedOption,
                                       onChanged: (value) {
                                         onLengthSelected(value, setState);
@@ -245,7 +264,10 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                                         MaterialStateProperty
                                                             .all<Color>(Constant
                                                                 .onPrimaryColor)),
-                                                onPressed: () {},
+                                                onPressed: () async {
+                                                  await filterProjects(context);
+                                                  GoRouter.of(context).pop('/');
+                                                },
                                                 child: const Text("Apply"),
                                               ),
                                             ),

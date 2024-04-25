@@ -36,8 +36,8 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
     setState(() {});
   }
 
-  handleSubmit(context, value) {
-    getSearchedProject(context);
+  handleSubmit(context, value) async {
+    await getSearchedProject(context);
     GoRouter.of(context).push('/projectListFiltered');
     print(value);
   }
