@@ -1,6 +1,7 @@
 import 'package:amp_studenthub/components/project_item.dart';
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:amp_studenthub/widgets/search_project_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -33,6 +34,21 @@ class ProjectList extends StatelessWidget {
                 children: [
                   Expanded(
                     child: TextField(
+                        readOnly: true,
+                        onTap: () {
+                          showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom),
+                                  child: SearchProjectModal(),
+                                );
+                              });
+                        },
                         onChanged: (value) {},
                         onSubmitted: (String value) =>
                             handleSubmit(context, value),
