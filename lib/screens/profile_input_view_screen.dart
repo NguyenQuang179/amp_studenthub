@@ -1,5 +1,10 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/models/company_profile.dart';
+import 'package:amp_studenthub/models/user.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProfileInputView extends StatefulWidget {
   const ProfileInputView({super.key});
@@ -9,15 +14,65 @@ class ProfileInputView extends StatefulWidget {
 }
 
 class _ProfileInputViewState extends State<ProfileInputView> {
-  var option = 'It\'s just me';
-
-  var companyName = 'Nizo';
-  var website = 'abc.com';
-  var description = 'This is a company';
+  Map<int, String> optionList = {
+    0: 'It\'s just me',
+    1: '2-9 employees',
+    2: '10-100 employees',
+    3: '100-1000 employees',
+    4: 'More than 1000 employees'
+  };
 
   @override
   void initState() {
     super.initState();
+    option = optionList[0]!;
+  }
+
+  @override
+  didChangeDependencies() async {
+    await getCompanyProfile(context);
+    super.didChangeDependencies();
+  }
+
+  CompanyProfile _companyProfile = CompanyProfile(0, '', 0, '', '');
+  late String option;
+
+  Future<void> getCompanyProfile(BuildContext context) async {
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      const endpoint = '${Constant.baseURL}/api/auth/me';
+      final Response response = await dio.get(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      print(result);
+      if (result != null) {
+        var user = User.fromJson(result);
+        setState(() {
+          _companyProfile = CompanyProfile.fromJson(result['company']);
+          option = optionList[_companyProfile.size] ?? optionList[0]!;
+        });
+      } else {
+        print('User data not found in the response');
+      }
+    } on DioError catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        final responseData = e.response?.data;
+        print(responseData);
+      } else {
+        print(e.message);
+      }
+    }
   }
 
   @override
@@ -74,11 +129,11 @@ class _ProfileInputViewState extends State<ProfileInputView> {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(top: 5, left: 15, bottom: 10),
+              padding: const EdgeInsets.only(top: 5, left: 15, bottom: 10),
               child: Row(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 20),
+                    margin: const EdgeInsets.only(right: 20),
                     height: 20,
                     width: 20,
                     child: const Radio(
@@ -89,7 +144,7 @@ class _ProfileInputViewState extends State<ProfileInputView> {
                   ),
                   Text(
                     option,
-                    style: TextStyle(fontSize: 15),
+                    style: const TextStyle(fontSize: 15),
                   )
                 ],
               ),
@@ -108,19 +163,19 @@ class _ProfileInputViewState extends State<ProfileInputView> {
             Container(
               width: double.infinity,
               height: 50,
-              margin: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+              margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
               padding:
                   const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+              decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF3F72AF), width: 2)),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  companyName,
+                  _companyProfile.companyName,
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Color(0xFF3F72AF), width: 2)),
             ),
             const SizedBox(
               height: 10,
@@ -147,7 +202,7 @@ class _ProfileInputViewState extends State<ProfileInputView> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  website,
+                  _companyProfile.website,
                   textAlign: TextAlign.left,
                   style: const TextStyle(fontSize: 16),
                 ),
@@ -175,7 +230,7 @@ class _ProfileInputViewState extends State<ProfileInputView> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  website,
+                  _companyProfile.description,
                   textAlign: TextAlign.left,
                   style: const TextStyle(fontSize: 16),
                 ),
@@ -195,19 +250,21 @@ class _ProfileInputViewState extends State<ProfileInputView> {
           children: [
             Container(
               width: 130,
-              margin: EdgeInsets.only(right: 10),
+              margin: const EdgeInsets.only(right: 10),
               child: ElevatedButton.icon(
                 onPressed: () {},
-                icon: Icon(Icons.edit),
-                label: Text('Edit'),
+                icon: const Icon(Icons.edit),
+                label: const Text('Edit'),
               ),
             ),
-            Container(
+            SizedBox(
               width: 130,
               child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.cancel),
-                label: Text('Cancel'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.cancel),
+                label: const Text('Cancel'),
               ),
             ),
           ],

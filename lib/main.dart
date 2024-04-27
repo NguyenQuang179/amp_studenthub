@@ -1,6 +1,7 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/providers/company_project_provider.dart';
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
+import 'package:amp_studenthub/providers/student_project_provider.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/app_router.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => CompanyProjectProvider()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
-        ChangeNotifierProvider(create: (context) => RoleProvider())
+        ChangeNotifierProvider(create: (context) => RoleProvider()),
+        ChangeNotifierProvider(create: (context) => StudentProjectProvider())
       ],
       child: MaterialApp.router(
         title: 'StudentHub',

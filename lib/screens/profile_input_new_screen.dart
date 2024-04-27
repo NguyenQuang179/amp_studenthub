@@ -1,11 +1,11 @@
+import 'dart:convert';
+
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/input_screen.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -13,19 +13,45 @@ import 'package:provider/provider.dart';
 class ProfileInputNew extends StatefulWidget {
   const ProfileInputNew({super.key});
 
-  Future<void> getUser(BuildContext context) async {
+  @override
+  State<ProfileInputNew> createState() => _ProfileInputNewState();
+}
+
+class _ProfileInputNewState extends State<ProfileInputNew> {
+  Map<String, int> option = {
+    'It\'s just me': 0,
+    '2-9 employees': 1,
+    '10-100 employees': 2,
+    '100-1000 employees': 3,
+    'More than 1000 employees': 4
+  };
+
+  int _selectedOption = 0;
+  final companyNameController = TextEditingController();
+  final websiteController = TextEditingController();
+  final descriptionController = TextEditingController();
+
+  Future<void> createCompanyProfile(BuildContext context, String companyName,
+      String website, String description, int size) async {
     final dio = Dio();
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      // Get access token from provider
+
       final accessToken = userProvider.userToken;
-      const endpoint = '${Constant.baseURL}/api/auth/me';
-      final Response response = await dio.get(
-        endpoint,
-        options: Options(headers: {
-          'Authorization': 'Bearer $accessToken',
-        }),
-      );
+      const endpoint = '${Constant.baseURL}/api/profile/company';
+
+      var data = {
+        "companyName": companyName,
+        "size": size,
+        "website": website,
+        "description": description
+      };
+
+      final Response response = await dio.post(endpoint,
+          options: Options(headers: {
+            'Authorization': 'Bearer $accessToken',
+          }),
+          data: jsonEncode(data));
 
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
@@ -44,24 +70,6 @@ class ProfileInputNew extends StatefulWidget {
       }
     }
   }
-
-  @override
-  State<ProfileInputNew> createState() => _ProfileInputNewState();
-}
-
-class _ProfileInputNewState extends State<ProfileInputNew> {
-  Map<String, int> option = {
-    'It\'s just me': 1,
-    '2-9 employees': 2,
-    '10-100 employees': 3,
-    '100-1000 employees': 4,
-    'More than 1000 employees': 5
-  };
-
-  int _selectedOption = 1;
-  final companyNameController = TextEditingController();
-  final websiteController = TextEditingController();
-  final descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -261,12 +269,20 @@ class _ProfileInputNewState extends State<ProfileInputNew> {
               child: Container(
                 width: double.infinity,
                 height: 60,
+                margin: const EdgeInsets.only(top: 50),
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
                 child: ElevatedButton.icon(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
                           Constant.primaryColor)),
                   onPressed: () {
+                    final String companyName = companyNameController.text;
+                    final String website = websiteController.text;
+                    final String description = descriptionController.text;
+                    final int size = _selectedOption;
+
+                    createCompanyProfile(
+                        context, companyName, website, description, size);
                     context.goNamed(RouteConstants.welcome);
                   },
                   icon: const Icon(
