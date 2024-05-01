@@ -1,4 +1,3 @@
-import 'package:amp_studenthub/models/company_dashboard_project.dart';
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/Message/message_detail.dart';
@@ -12,7 +11,6 @@ import 'package:amp_studenthub/screens/Student_Projects/project_list_filtered.da
 import 'package:amp_studenthub/screens/Student_Projects/project_list_saved.dart';
 import 'package:amp_studenthub/screens/bottom_navbar_scaffold/company_bottom_navbar.dart';
 import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
-import 'package:amp_studenthub/screens/home_screen.dart';
 import 'package:amp_studenthub/screens/job_details_screen.dart';
 import 'package:amp_studenthub/screens/login_page.dart';
 import 'package:amp_studenthub/screens/notification_list.dart';
@@ -41,7 +39,7 @@ class AppRouter {
           name: RouteConstants.home,
           path: '/',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: HomeScreen());
+            return const MaterialPage(child: StudentProfileInput1());
           }),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,

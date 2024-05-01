@@ -12,7 +12,7 @@ class Constant {
   static const String baseURL = "http://34.16.137.128";
   // static const String baseURL = "http://localhost:4567";
   static const String token =
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZnVsbG5hbWUiOiJOZ3V5ZW4gTmdvYyBRdWFuZyIsImVtYWlsIjoibm5xdWFuZzIwQGNsYy5maXR1cy5lZHUudm4iLCJyb2xlcyI6WzBdLCJpYXQiOjE3MTI5NDA3NjksImV4cCI6MTcxNDE1MDM2OX0.ccOxnGWHxg89-vv9m3TrrKPQsrsFFQqu73QniRQPzOw";
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzY3LCJmdWxsbmFtZSI6IlF1YW5nIDYiLCJlbWFpbCI6Im5ucXVhbmcyMCs2QGNsYy5maXR1cy5lZHUudm4iLCJyb2xlcyI6WzAsMV0sImlhdCI6MTcxNDUzODM2NCwiZXhwIjoxNzE1NzQ3OTY0fQ.BwYt0sUM8UWgM94lW7_AMQ4RS6Zu8wfiS9JLMUAoWyI";
   static const int apiTimeOut = 60000;
 
 // Response Handler
