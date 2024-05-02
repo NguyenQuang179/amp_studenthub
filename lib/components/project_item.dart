@@ -1,8 +1,14 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-class ProjectItem extends StatelessWidget {
+class ProjectItem extends StatefulWidget {
+  final int id;
   final String jobTitle;
   final String jobDuration;
   final String jobCreatedDate;
@@ -10,15 +16,52 @@ class ProjectItem extends StatelessWidget {
   final int jobProposalNums;
   final onClick;
   final isSaved;
+  final favorite;
   const ProjectItem(
       {super.key,
+      required this.id,
       required this.jobTitle,
       required this.jobDuration,
       required this.jobCreatedDate,
       required this.jobStudentNeeded,
       required this.jobProposalNums,
-      required this.onClick,
-      required this.isSaved});
+      this.onClick,
+      required this.favorite,
+      this.isSaved});
+
+  @override
+  _ProjectItemState createState() => _ProjectItemState(id,
+      jobTitle: jobTitle,
+      jobDuration: jobDuration,
+      jobCreatedDate: jobCreatedDate,
+      jobStudentNeeded: jobStudentNeeded,
+      jobProposalNums: jobProposalNums,
+      onClick: onClick,
+      favorite: favorite,
+      isSaved: isSaved);
+}
+
+class _ProjectItemState extends State<ProjectItem> {
+  final int id;
+  final String jobTitle;
+  final String jobDuration;
+  final String jobCreatedDate;
+  final int jobStudentNeeded;
+  final int jobProposalNums;
+  final onClick;
+  final favorite;
+  final isSaved;
+  _ProjectItemState(
+    this.id, {
+    required this.jobTitle,
+    required this.jobDuration,
+    required this.jobCreatedDate,
+    required this.jobStudentNeeded,
+    required this.jobProposalNums,
+    required this.onClick,
+    required this.isSaved,
+    required this.favorite,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +151,9 @@ class ProjectItem extends StatelessWidget {
                                 : Constant.backgroundColor,
                             side: BorderSide(
                                 width: 1, color: Constant.primaryColor)),
-                        onPressed: () {},
+                        onPressed: () {
+                          favorite();
+                        },
                         icon: Icon(
                             isSaved ? Icons.favorite : Icons.favorite_border,
                             color: isSaved

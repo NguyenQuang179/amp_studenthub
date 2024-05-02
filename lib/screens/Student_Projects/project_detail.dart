@@ -136,7 +136,12 @@ class _ProjectDetailState extends State<ProjectDetail> {
                             foregroundColor: MaterialStateProperty.all<Color>(
                                 Constant.onPrimaryColor)),
                         onPressed: () {
-                          context.pushNamed(RouteConstants.submitProposal);
+                          GoRouter.of(context).pushNamed(
+                            RouteConstants.submitProposal,
+                            queryParameters: {
+                              'id': companyProject.id.toString()
+                            },
+                          );
                         },
                         child: const Text("Apply"),
                       ),

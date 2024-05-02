@@ -3,10 +3,12 @@ import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/project.dart';
 import 'package:amp_studenthub/providers/student_project_provider.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/utilities/constant.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -18,8 +20,65 @@ class ProjectListFiltered extends StatefulWidget {
 }
 
 class _ProjectListFilteredState extends State<ProjectListFiltered> {
-  onClick(context) {
-    GoRouter.of(context).push('/projectDetail');
+  Future<void> favorite(id, isSaved) async {
+    // Implement submit proposal logic here
+    //api request
+    final dio = Dio();
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
+    final studentId = userProvider.userInfo['student']?['id'];
+    final endpoint = '${Constant.baseURL}/api/favoriteProject/$studentId';
+
+    print(id);
+    final submitData = {
+      "projectId": id,
+      "disableFlag": isSaved ? "1" : "0",
+    };
+
+    print(submitData);
+    print(endpoint);
+    print(accessToken);
+    try {
+      final Response response = await dio.patch(
+        endpoint,
+        data: submitData,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final responseData = response.data;
+      print(responseData);
+
+      Fluttertoast.showToast(
+          msg: "Apply Successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+
+      await filterProjects(context);
+    } catch (error) {
+      print(error);
+      Fluttertoast.showToast(
+          msg: 'An error occurred',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
+  onClick(project) {
+    GoRouter.of(context).pushNamed(
+      RouteConstants.projectDetails,
+      queryParameters: {'id': project.id.toString()},
+    );
   }
 
   int? selectedOption;
@@ -380,13 +439,17 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
               itemBuilder: (BuildContext context, int index) {
                 final Project project = resultList[index];
                 return ProjectItem(
+                  id: project.id as int,
                   jobTitle: project.title,
                   jobCreatedDate: project.createdDate,
                   jobDuration: ProjectScopeToString[project.projectScopeFlag],
                   jobStudentNeeded: project.numberOfStudents,
                   jobProposalNums: project.countProposals,
-                  onClick: () => onClick(context),
-                  isSaved: true,
+                  onClick: () => onClick(project),
+                  isSaved: project.isFavorite,
+                  favorite: () {
+                    favorite(project.id, project.isFavorite);
+                  },
                 );
               },
             )),

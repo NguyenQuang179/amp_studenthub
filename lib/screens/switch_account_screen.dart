@@ -6,6 +6,7 @@ import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/widgets/account_list_view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,100 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
   late Account currentAccount;
   late List<Account> accountList = [];
   bool _isLoading = true;
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  Future<void> _displayTextInputDialog() async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Change password'),
+          content: Column(
+            children: [
+              TextField(
+                controller: oldPasswordController,
+                decoration: InputDecoration(hintText: "old password"),
+              ),
+              TextField(
+                controller: newPasswordController,
+                decoration: InputDecoration(hintText: "new password"),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () async {
+                //api request
+                final dio = Dio();
+                if (oldPasswordController.text.isEmpty ||
+                    newPasswordController.text.isEmpty) {
+                  Fluttertoast.showToast(
+                    msg: 'Please fill in all fields',
+                  );
+                  return;
+                }
+                final userProvider =
+                    Provider.of<UserProvider>(context, listen: false);
+                final accessToken = userProvider.userToken;
+
+                const endpoint = '${Constant.baseURL}/api/user/changePassword';
+                final submitData = {
+                  "oldPassword": oldPasswordController.text,
+                  "newPassword": newPasswordController.text,
+                };
+                try {
+                  final Response response = await dio.put(endpoint,
+                      data: submitData,
+                      options: Options(headers: {
+                        'Authorization': 'Bearer $accessToken',
+                      }));
+
+                  final responseData = response.data;
+                  final String? message = responseData['result']['message'];
+                  if (message != null) {
+                    Fluttertoast.showToast(
+                        msg: message,
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  } else {
+                    Fluttertoast.showToast(
+                        msg: 'An error occurred',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  }
+                } catch (error) {
+                  Fluttertoast.showToast(
+                      msg: 'An error occurred',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -206,6 +301,27 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     Icon(Icons.settings),
                     SizedBox(width: 8),
                     Text('Settings'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+            child: SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                ),
+                child: const Row(
+                  children: [
+                    SizedBox(width: 16),
+                    Icon(Icons.lock),
+                    SizedBox(width: 8),
+                    Text('Change Password'),
                   ],
                 ),
               ),

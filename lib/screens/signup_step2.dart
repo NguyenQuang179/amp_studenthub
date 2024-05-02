@@ -80,6 +80,7 @@ class _SignupStepTowState extends State<SignupStepTwo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Constant.backgroundColor,
         appBar: const AuthAppBar(),
         body: SafeArea(
