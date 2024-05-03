@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/Message/message_detail.dart';
@@ -5,12 +7,14 @@ import 'package:amp_studenthub/screens/Message/message_list.dart';
 import 'package:amp_studenthub/screens/Student_Profile/profile_input_1.dart';
 import 'package:amp_studenthub/screens/Student_Profile/profile_input_2.dart';
 import 'package:amp_studenthub/screens/Student_Profile/profile_input_3.dart';
+import 'package:amp_studenthub/screens/Student_Profile/view_student_profile.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_detail.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list_filtered.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list_saved.dart';
 import 'package:amp_studenthub/screens/bottom_navbar_scaffold/company_bottom_navbar.dart';
 import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
+import 'package:amp_studenthub/screens/home_screen.dart';
 import 'package:amp_studenthub/screens/job_details_screen.dart';
 import 'package:amp_studenthub/screens/login_page.dart';
 import 'package:amp_studenthub/screens/notification_list.dart';
@@ -39,7 +43,7 @@ class AppRouter {
           name: RouteConstants.home,
           path: '/',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: StudentProfileInput1());
+            return const MaterialPage(child: HomeScreen());
           }),
       GoRoute(
           parentNavigatorKey: _rootNavigatorKey,
@@ -164,9 +168,13 @@ class AppRouter {
           }),
       GoRoute(
           name: RouteConstants.companyProjectDetails,
-          path: '/jobDetails',
+          path: '/jobDetails/:projectId',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: JobDetailsScreen());
+            // Extract id from the URI query parameters
+            final id = state.pathParameters['projectId'] ?? '0';
+            log('ProjectID: $id');
+            // Create the ProjectDetail widget with the extracted id
+            return MaterialPage(child: JobDetailsScreen(projectId: id));
           }),
       GoRoute(
           name: RouteConstants.projectListSaved,
@@ -209,6 +217,12 @@ class AppRouter {
           path: '/editCompanyProfile',
           pageBuilder: (context, state) {
             return const MaterialPage(child: ProfileInputView());
+          }),
+      GoRoute(
+          name: RouteConstants.studentProfile,
+          path: '/studentProfile',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: ViewStudentProfile());
           }),
       GoRoute(
           name: RouteConstants.createStudentProfile1,

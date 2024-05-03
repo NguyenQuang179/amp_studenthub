@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/network/dio.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -12,6 +13,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:provider/provider.dart';
 
 class StudentProfileInput1 extends StatefulWidget {
   const StudentProfileInput1({super.key});
@@ -38,11 +40,13 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
 
   Future<void> getInitData() async {
     final dio = Dio();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
 
     Map<String, String> headers = {
       CONTENT_TYPE: APPLICATION_JSON,
       ACCEPT: APPLICATION_JSON,
-      AUTHORIZATION: Constant.token,
+      AUTHORIZATION: 'Bearer $accessToken',
       DEFAULT_LANGUAGE: "en"
     };
 
@@ -99,14 +103,16 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
 
   Future<void> uploadProfileData() async {
     final dio = Dio();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
+
     Map<String, String> headers = {
       CONTENT_TYPE: APPLICATION_JSON,
       ACCEPT: APPLICATION_JSON,
-      AUTHORIZATION: Constant.token,
+      AUTHORIZATION: 'Bearer $accessToken',
       DEFAULT_LANGUAGE: "en"
     };
     dio.options = BaseOptions(
-      baseUrl: Constant.baseURL,
       headers: headers,
     );
     try {
@@ -150,6 +156,7 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
           gravity: ToastGravity.TOP,
           timeInSecForIosWeb: 3,
           fontSize: 20.0);
+
       if (!mounted) return;
       context.pushNamed(RouteConstants.createStudentProfile2);
     } on DioException catch (e) {
@@ -797,9 +804,9 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                         width: double.infinity,
                         child: TextButton(
                           onPressed: () {
-                            // if (selectedTechStackId == "" ||
-                            //     _controller.selectedOptions.isEmpty) return;
-                            // uploadProfileData();
+                            if (selectedTechStackId == "" ||
+                                _controller.selectedOptions.isEmpty) return;
+                            uploadProfileData();
                             context.pushNamed(
                                 RouteConstants.createStudentProfile2);
                           },

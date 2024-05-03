@@ -23,6 +23,7 @@ class RouteConstants {
   static String createCompanyProfile = 'createCompanyProfile';
   static String editCompanyProfile = 'editCompanyProfile';
 
+  static String studentProfile = 'studentProfile';
   static String createStudentProfile1 = 'createStudentProfile1';
   static String createStudentProfile2 = 'createStudentProfile2';
   static String createStudentProfile3 = 'createStudentProfile3';

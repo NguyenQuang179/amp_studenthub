@@ -3,14 +3,14 @@ import 'package:amp_studenthub/screens/job_details_tabs/detail_tab.dart';
 import 'package:amp_studenthub/screens/job_details_tabs/hired_tab.dart';
 import 'package:amp_studenthub/screens/job_details_tabs/message_tab.dart';
 import 'package:amp_studenthub/screens/job_details_tabs/proposal_tab.dart';
+import 'package:amp_studenthub/utilities/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:amp_studenthub/utilities/constant.dart';
 
 class JobDetailsScreen extends StatefulWidget {
-  const JobDetailsScreen({super.key});
+  final String projectId;
+  const JobDetailsScreen({super.key, required this.projectId});
 
   @override
   State<JobDetailsScreen> createState() => _JobDetailsScreenState();
@@ -23,10 +23,11 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
   };
 
   late TabController tabController;
+
   @override
   void initState() {
-    tabController = TabController(length: 4, vsync: this);
     super.initState();
+    tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -81,10 +82,10 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
                     margin:
                         const EdgeInsets.only(bottom: 16, left: 24, right: 24),
                     child: const Text(
-                      "Front End Developer (React JS)",
+                      "Project Details",
                       style: TextStyle(
                           overflow: TextOverflow.ellipsis,
-                          fontSize: 20,
+                          fontSize: 24,
                           fontWeight: FontWeight.w600,
                           color: Constant.primaryColor),
                     )),
@@ -122,14 +123,14 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
                   ),
                 ),
                 Expanded(
-                    child: TabBarView(
-                        controller: tabController,
-                        children: const [
-                      ProposalTab(),
-                      JobDetailTab(),
-                      MessageTab(),
-                      HiredTab()
-                    ]))
+                    child: TabBarView(controller: tabController, children: [
+                  const ProposalTab(),
+                  JobDetailTab(
+                    projectId: widget.projectId,
+                  ),
+                  const MessageTab(),
+                  const HiredTab()
+                ]))
               ]))
             ])));
   }

@@ -32,4 +32,18 @@ class Constant {
   static const String strDefaultError = "default_error";
   static const String strCacheError = "cache_error";
   static const String strNoInternetError = "no_internet_error";
+
+  // Project Type Flag
+  static const Map<String, int> projectTypeFlag = {
+    "new": 0,
+    "working": 1,
+    "archived": 2
+  };
+
+  static const List<String> timelineOptions = [
+    'Less than 1 month',
+    '1 to 3 months',
+    '3 to 6 months',
+    'More than 6 month'
+  ];
 }

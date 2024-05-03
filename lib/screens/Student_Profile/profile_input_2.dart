@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/network/dio.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/models/value_item.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
+import 'package:provider/provider.dart';
 
 class StudentProfileInput2 extends StatefulWidget {
   const StudentProfileInput2({super.key});
@@ -22,7 +24,6 @@ class StudentProfileInput2 extends StatefulWidget {
 class _StudentProfileInput2State extends State<StudentProfileInput2> {
   bool isLoading = false;
   bool isSubmitting = false;
-  String selectedTechStackId = '';
   List<ValueItem<dynamic>> skillsetList = [];
   List<dynamic> skillsetListMap = [];
   List<Map<String, dynamic>> experienceList = [];
@@ -35,11 +36,13 @@ class _StudentProfileInput2State extends State<StudentProfileInput2> {
 
   Future<void> getInitData() async {
     final dio = Dio();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
 
     Map<String, String> headers = {
       CONTENT_TYPE: APPLICATION_JSON,
       ACCEPT: APPLICATION_JSON,
-      AUTHORIZATION: Constant.token,
+      AUTHORIZATION: 'Bearer $accessToken',
       DEFAULT_LANGUAGE: "en"
     };
 
@@ -86,10 +89,13 @@ class _StudentProfileInput2State extends State<StudentProfileInput2> {
 
   Future<void> uploadExperiences() async {
     final dio = Dio();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
+
     Map<String, String> headers = {
       CONTENT_TYPE: APPLICATION_JSON,
       ACCEPT: APPLICATION_JSON,
-      AUTHORIZATION: Constant.token,
+      AUTHORIZATION: 'Bearer $accessToken',
       DEFAULT_LANGUAGE: "en"
     };
     dio.options = BaseOptions(
