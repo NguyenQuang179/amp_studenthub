@@ -32,9 +32,11 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   Future<void> fetchCompanyProjects(int? typeFlag) async {
     final dio = Dio();
     try {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final accessToken = userProvider.userToken;
       int companyId = userProvider.userInfo['company']?['id'];
@@ -57,17 +59,21 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         companyList.add(companyProject);
       }
       print(companyList.length);
-      setState(() {
-        allCompanyProjects = companyList;
-      });
+      if (mounted) {
+        setState(() {
+          allCompanyProjects = companyList;
+        });
+      }
     } on DioException catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
       if (e.response != null) {
         if (e.response?.statusCode == 404) {
-          setState(() {
-            allCompanyProjects = [];
-          });
+          if (mounted) {
+            setState(() {
+              allCompanyProjects = [];
+            });
+          }
         }
         print(e.response?.statusCode);
         print(e.response?.data);
@@ -79,18 +85,22 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         print(e.message);
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
   Future<void> removeCompanyProject(int projectId) async {
     final dio = Dio();
     try {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final accessToken = userProvider.userToken;
       String endpoint = '${Constant.baseURL}/api/project/$projectId';
@@ -114,9 +124,11 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         print(e.message);
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -124,9 +136,11 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
       int typeFlag, int projectId, int numberOfStudents) async {
     final dio = Dio();
     try {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final accessToken = userProvider.userToken;
       String endpoint = '${Constant.baseURL}/api/project/$projectId';
@@ -149,9 +163,11 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         print(e.message);
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -281,9 +297,11 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                           typeFlag = 1;
                         } else if (newSelection.single ==
                             DashboardFilterOptions.archived) typeFlag = 2;
-                        setState(() {
-                          selectedFilterOptions = newSelection;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            selectedFilterOptions = newSelection;
+                          });
+                        }
                         fetchCompanyProjects(typeFlag);
                       },
                     ),

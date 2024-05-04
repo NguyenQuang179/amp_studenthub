@@ -55,9 +55,11 @@ class _ProjectListState extends State<ProjectList> {
 
     final dio = Dio();
     try {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
@@ -81,23 +83,12 @@ class _ProjectListState extends State<ProjectList> {
       }
       print(companyProjects);
       print("SUCCESS");
-
-      setState(() {
-        companyProjectsList = companyProjects;
-      });
+      if (mounted) {
+        setState(() {
+          companyProjectsList = companyProjects;
+        });
+      }
       print(companyProjectsList);
-      // if (responseData.containsKey('result')) {
-      //   // Assuming your API returns a list of jobs under 'jobs' key
-      //   print(result);
-      //   final List<dynamic> jobsData = result;
-      //   print(result[0]);
-
-      //   setState(() {
-      //     companyProjects =
-      //         jobsData.map((job) => CompanyProject.fromJson(job)).toList();
-      //   });
-      //   print(companyProjects);
-      // } else {}
     } on DioException catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
@@ -112,9 +103,11 @@ class _ProjectListState extends State<ProjectList> {
         print(e.message);
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 

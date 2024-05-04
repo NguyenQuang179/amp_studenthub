@@ -1,9 +1,9 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/job_details_tabs/detail_tab.dart';
 import 'package:amp_studenthub/screens/job_details_tabs/hired_tab.dart';
 import 'package:amp_studenthub/screens/job_details_tabs/message_tab.dart';
 import 'package:amp_studenthub/screens/job_details_tabs/proposal_tab.dart';
-import 'package:amp_studenthub/utilities/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -18,10 +18,6 @@ class JobDetailsScreen extends StatefulWidget {
 
 class _JobDetailsScreenState extends State<JobDetailsScreen>
     with SingleTickerProviderStateMixin {
-  final Set<JobDetailsTabOptions> selectedFilterOptions = {
-    JobDetailsTabOptions.proposal
-  };
-
   late TabController tabController;
 
   @override
@@ -62,7 +58,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
                     size: 20,
                     color: Constant.onPrimaryColor,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    context.pushNamed(RouteConstants.switchAccount);
+                  },
                 ),
               ),
             ),
@@ -70,68 +68,71 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
           centerTitle: true,
         ),
         body: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Expanded(
-                  // Layout Container Expand All Height
-                  child: Column(children: [
-                // Title
-                Container(
-                    width: double.infinity,
-                    margin:
-                        const EdgeInsets.only(bottom: 16, left: 24, right: 24),
-                    child: const Text(
-                      "Project Details",
-                      style: TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                          fontSize: 24,
-                          fontWeight: FontWeight.w600,
-                          color: Constant.primaryColor),
-                    )),
-                Container(
-                  width: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                      color: Constant.backgroundColor,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        child: TabBar(
-                          controller: tabController,
-                          indicatorColor: Constant.primaryColor,
-                          labelColor: Constant.primaryColor,
-                          unselectedLabelColor: Constant.textColor,
-                          tabs: const [
-                            Tab(
-                              text: "Proposal",
-                            ),
-                            Tab(
-                              text: "Detail",
-                            ),
-                            Tab(
-                              text: "Message",
-                            ),
-                            Tab(
-                              text: "Hired",
-                            ),
-                          ],
+          Expanded(
+              // Layout Container Expand All Height
+              child: Column(children: [
+            // Title
+            // Container(
+            //     width: double.infinity,
+            //     margin:
+            //         const EdgeInsets.only(bottom: 16, left: 24, right: 24),
+            //     child: const Text(
+            //       "Project Details",
+            //       style: TextStyle(
+            //           overflow: TextOverflow.ellipsis,
+            //           fontSize: 24,
+            //           fontWeight: FontWeight.w600,
+            //           color: Constant.primaryColor),
+            //     )),
+            Container(
+              width: MediaQuery.of(context).size.height,
+              decoration: BoxDecoration(
+                  color: Constant.backgroundColor,
+                  borderRadius: BorderRadius.circular(8)),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    child: TabBar(
+                      controller: tabController,
+                      indicatorColor: Constant.primaryColor,
+                      labelColor: Constant.primaryColor,
+                      unselectedLabelColor: Constant.textColor,
+                      tabs: const [
+                        Tab(
+                          text: "Detail",
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                Expanded(
-                    child: TabBarView(controller: tabController, children: [
-                  const ProposalTab(),
-                  JobDetailTab(
-                    projectId: widget.projectId,
-                  ),
-                  const MessageTab(),
-                  const HiredTab()
-                ]))
-              ]))
-            ])));
+                        Tab(
+                          text: "Proposal",
+                        ),
+                        Tab(
+                          text: "Message",
+                        ),
+                        Tab(
+                          text: "Hired",
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+                child: TabBarView(controller: tabController, children: [
+              JobDetailTab(
+                projectId: widget.projectId,
+              ),
+              ProposalTab(
+                projectId: widget.projectId,
+              ),
+              const MessageTab(),
+              HiredTab(
+                projectId: widget.projectId,
+              )
+            ]))
+          ]))
+        ])));
   }
 }
