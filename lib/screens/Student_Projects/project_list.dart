@@ -55,6 +55,7 @@ class _ProjectListState extends State<ProjectList> {
 
     final dio = Dio();
     try {
+      if (!mounted) return;
       setState(() {
         isLoading = true;
       });
@@ -82,36 +83,15 @@ class _ProjectListState extends State<ProjectList> {
       print(companyProjects);
       print("SUCCESS");
 
+      if (!mounted) return;
       setState(() {
         companyProjectsList = companyProjects;
       });
       print(companyProjectsList);
-      // if (responseData.containsKey('result')) {
-      //   // Assuming your API returns a list of jobs under 'jobs' key
-      //   print(result);
-      //   final List<dynamic> jobsData = result;
-      //   print(result[0]);
-
-      //   setState(() {
-      //     companyProjects =
-      //         jobsData.map((job) => CompanyProject.fromJson(job)).toList();
-      //   });
-      //   print(companyProjects);
-      // } else {}
     } on DioException catch (e) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx and is also not 304.
-      if (e.response != null) {
-        print(e.response?.statusCode);
-        print(e.response?.data);
-        print(e.response?.headers);
-        print(e.response?.requestOptions);
-      } else {
-        // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
-      }
+      // Handle DioException
     } finally {
+      if (!mounted) return;
       setState(() {
         isLoading = false;
       });
