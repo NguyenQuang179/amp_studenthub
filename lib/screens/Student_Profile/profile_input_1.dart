@@ -100,8 +100,10 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
         "techStackId": selectedTechStackId,
         "skillSets": selectedSkillSetIds
       };
-      final Response response =
-          await dio.post(endpoint, data: jsonEncode(data));
+      final Response response = await dio.post(
+        endpoint,
+        data: jsonEncode(data),
+      );
       Fluttertoast.showToast(
           msg: "Create Student Profile Successfully",
           toastLength: Toast.LENGTH_LONG,

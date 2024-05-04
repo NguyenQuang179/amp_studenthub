@@ -65,6 +65,7 @@ class _AccountListViewState extends State<AccountListView> {
                           var role = account.type == 0 ? 'Student' : 'Company';
                           userProvider.updateRole(role);
                           widget.onAccountChange(account);
+                          setState(() {});
                         },
                         child: AccountCard(account: account)))
                   ],
