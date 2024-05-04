@@ -110,9 +110,12 @@ class _ProjectListState extends State<ProjectList> {
 
     final dio = Dio();
     try {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
+
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
@@ -136,10 +139,11 @@ class _ProjectListState extends State<ProjectList> {
       }
       print(companyProjects);
       print("SUCCESS");
-
-      setState(() {
-        companyProjectsList = companyProjects;
-      });
+      if (mounted) {
+        setState(() {
+          companyProjectsList = companyProjects;
+        });
+      }
       print(companyProjectsList);
       // if (responseData.containsKey('result')) {
       //   // Assuming your API returns a list of jobs under 'jobs' key
@@ -167,9 +171,11 @@ class _ProjectListState extends State<ProjectList> {
         print(e.message);
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 

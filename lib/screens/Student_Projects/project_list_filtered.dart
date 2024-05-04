@@ -59,8 +59,6 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
           backgroundColor: Colors.red,
           textColor: Colors.white,
           fontSize: 16.0);
-
-      await filterProjects(context);
     } catch (error) {
       print(error);
       Fluttertoast.showToast(
@@ -449,6 +447,7 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                   isSaved: project.isFavorite,
                   favorite: () {
                     favorite(project.id, project.isFavorite);
+                    resultList[index].isFavorite = !project.isFavorite;
                   },
                 );
               },

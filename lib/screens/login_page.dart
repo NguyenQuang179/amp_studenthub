@@ -231,9 +231,10 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       //password textfield
                       Textfield(
-                          controller: passwordController,
-                          hintText: 'Password',
-                          obscureText: true),
+                        controller: passwordController,
+                        hintText: 'Password',
+                        obscureText: true,
+                      ),
                     ],
                   ))
                 ],

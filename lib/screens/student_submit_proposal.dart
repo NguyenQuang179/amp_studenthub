@@ -78,7 +78,7 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-        GoRouter.of(context).goNamed(RouteConstants.studentDashboard);
+        GoRouter.of(context).goNamed(RouteConstants.companyProject);
       } else {
         Fluttertoast.showToast(
             msg: 'An error occurred',

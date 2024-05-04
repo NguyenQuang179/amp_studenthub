@@ -25,6 +25,20 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
   bool _isLoading = true;
   TextEditingController oldPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
+  String? validatePassword(String password) {
+    // Define a regular expression pattern
+    final RegExp passwordPattern = RegExp(
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$',
+    );
+
+    // Check if the password matches the pattern
+    if (!passwordPattern.hasMatch(password)) {
+      return 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit';
+    }
+    // Return null if password is valid
+    return null;
+  }
+
   Future<void> _displayTextInputDialog() async {
     return showDialog(
       context: context,
@@ -38,9 +52,10 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                 decoration: InputDecoration(hintText: "old password"),
               ),
               TextField(
-                controller: newPasswordController,
-                decoration: InputDecoration(hintText: "new password"),
-              ),
+                  controller: newPasswordController,
+                  decoration: InputDecoration(
+                      hintText: "new password",
+                      errorText: validatePassword(newPasswordController.text))),
             ],
           ),
           actions: <Widget>[
@@ -312,7 +327,9 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
               height: 50,
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  _displayTextInputDialog();
+                },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.zero,
                 ),

@@ -4,6 +4,7 @@ import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class ProjectDetail extends StatefulWidget {
 class _ProjectDetailState extends State<ProjectDetail> {
   final String id;
   late CompanyProject companyProject;
+  bool isLoading = false;
   _ProjectDetailState({
     required this.id,
   });
@@ -43,10 +45,11 @@ class _ProjectDetailState extends State<ProjectDetail> {
       print(result);
       CompanyProject fetchedCompanyProject = CompanyProject.fromJson(result);
       print(fetchedCompanyProject);
-
-      setState(() {
-        companyProject = fetchedCompanyProject;
-      });
+      if (mounted) {
+        setState(() {
+          companyProject = fetchedCompanyProject;
+        });
+      }
       print(this.companyProject);
       // if (responseData.containsKey('result')) {
       //   // Assuming your API returns a list of jobs under 'jobs' key
@@ -72,6 +75,65 @@ class _ProjectDetailState extends State<ProjectDetail> {
     print(id);
     getProjectDetail(id);
     companyProject = CompanyProject.empty();
+  }
+
+  Future<void> favorite(id, isSaved) async {
+    // Implement submit proposal logic here
+    //api request
+    final dio = Dio();
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
+    final studentId = userProvider.userInfo['student']?['id'];
+    final endpoint = '${Constant.baseURL}/api/favoriteProject/$studentId';
+
+    print(id);
+    final submitData = {
+      "projectId": id,
+      "disableFlag": isSaved ? "1" : "0",
+    };
+
+    print(submitData);
+    print(endpoint);
+    print(accessToken);
+    try {
+      final Response response = await dio.patch(
+        endpoint,
+        data: submitData,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final responseData = response.data;
+      print(responseData);
+
+      Fluttertoast.showToast(
+          msg: "Apply Successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+
+      await getProjectDetail(id);
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } catch (error) {
+      print(error);
+      Fluttertoast.showToast(
+          msg: 'An error occurred',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   @override
@@ -156,8 +218,22 @@ class _ProjectDetailState extends State<ProjectDetail> {
                                 Constant.onPrimaryColor),
                             foregroundColor: MaterialStateProperty.all<Color>(
                                 Constant.primaryColor)),
-                        onPressed: () {},
-                        child: const Text("Save"),
+                        onPressed: isLoading
+                            ? null // Disable button if loading
+                            : () {
+                                if (mounted) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  favorite(companyProject.id,
+                                      companyProject.isFavorite);
+                                }
+                              },
+                        child: isLoading
+                            ? CircularProgressIndicator() // Show loading indicator if loading
+                            : companyProject.isFavorite
+                                ? const Text("Unsave")
+                                : const Text("Save"),
                       ),
                     ),
                     Expanded(
