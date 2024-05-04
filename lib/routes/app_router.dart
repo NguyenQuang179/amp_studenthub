@@ -75,7 +75,7 @@ class AppRouter {
                 parentNavigatorKey: _bottomNavbarNavigatorKey,
                 path: '/project',
                 pageBuilder: (context, state) {
-                  return const MaterialPage(child: StudentDashboard());
+                  return const MaterialPage(child: ProjectList());
                 },
                 routes: [
                   GoRoute(
