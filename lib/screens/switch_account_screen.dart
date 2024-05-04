@@ -6,7 +6,6 @@ import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/widgets/account_list_view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -76,20 +75,31 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
 
   void setupAccount(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    if (user.roles.length == 1) {
-      currentAccount = Account(fullName: user.fullname, type: user.roles[0]);
-      accountList = [
-        Account(fullName: user.fullname, type: user.roles[0] == 0 ? 1 : 0)
-      ];
+    if (userProvider.userRole == "") {
+      if (user.roles.length == 1) {
+        currentAccount = Account(fullName: user.fullname, type: user.roles[0]);
+        accountList = [
+          Account(fullName: user.fullname, type: user.roles[0] == 0 ? 1 : 0)
+        ];
+      } else {
+        currentAccount = Account(fullName: user.fullname, type: user.roles[0]);
+        accountList = [
+          Account(fullName: user.fullname, type: user.roles[0] == 0 ? 1 : 0)
+        ];
+      }
     } else {
-      currentAccount = Account(fullName: user.fullname, type: user.roles[0]);
+      int accType = userProvider.userRole == "Student" ? 0 : 1;
+      currentAccount = Account(fullName: user.fullname, type: accType);
       accountList = [
-        Account(fullName: user.fullname, type: user.roles[0] == 0 ? 1 : 0)
+        Account(fullName: user.fullname, type: accType == 0 ? 1 : 0)
       ];
     }
 
-    var role = user.roles[0] == 0 ? 'Company' : 'Student';
-    userProvider.updateRole(role);
+    if (userProvider.userRole == "") {
+      var role = user.roles[0] == 0 ? 'Student' : 'Company';
+      userProvider.updateRole(role);
+    }
+
     userProvider.updateCurrentAccount(currentAccount);
     userProvider.updateAccountList(accountList);
   }
@@ -185,7 +195,9 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
               height: 50,
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.pushNamed(RouteConstants.settings);
+                },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.zero,
                 ),
@@ -203,11 +215,11 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: SizedBox(
-              height: 60,
+              height: 52,
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
-                  context.goNamed(RouteConstants.login);
+                  context.goNamed(RouteConstants.home);
                 },
                 style: TextButton.styleFrom(
                     backgroundColor: Constant.onPrimaryColor,

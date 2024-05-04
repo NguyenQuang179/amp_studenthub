@@ -13,6 +13,7 @@ class RouteConstants {
   static String messageList = 'messageList';
   static String messageDetail = 'messageDetail';
   static String videoCall = 'videoCall';
+  static String settings = 'accountSettings';
 
   // Company Navigator
   static String company = 'company';

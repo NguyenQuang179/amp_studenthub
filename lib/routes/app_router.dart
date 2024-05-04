@@ -12,6 +12,7 @@ import 'package:amp_studenthub/screens/Student_Projects/project_detail.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list_filtered.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list_saved.dart';
+import 'package:amp_studenthub/screens/account_settings.dart';
 import 'package:amp_studenthub/screens/bottom_navbar_scaffold/company_bottom_navbar.dart';
 import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
 import 'package:amp_studenthub/screens/home_screen.dart';
@@ -247,6 +248,12 @@ class AppRouter {
           path: '/submitProposal',
           pageBuilder: (context, state) {
             return const MaterialPage(child: StudentSubmitProposal());
+          }),
+      GoRoute(
+          name: RouteConstants.settings,
+          path: '/settings',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: AccountSettings());
           }),
     ],
     // errorPageBuilder: (context, state) {
