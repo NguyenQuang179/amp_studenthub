@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/student_profile.dart';
@@ -99,7 +100,17 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
         languageList = [...profile.languages];
         educationList = [...profile.educations];
         skillsetListMap = skillsetJsonList;
-        // experienceList = [...profile.experiences];
+        List<Map<String, dynamic>> newExpList = profile.experiences.map((exp) {
+          List<dynamic> newSkillsetList = exp['skillSets'].map((skillSet) {
+            return skillSet['id'].toString();
+          }).toList();
+          return {
+            ...Map<String, dynamic>.from(exp as Map),
+            'skillSets': newSkillsetList
+          };
+        }).toList();
+        print(newExpList);
+        experienceList = [...newExpList];
       });
     } on DioException catch (e) {
       // The request was made and the server responded with a status code
