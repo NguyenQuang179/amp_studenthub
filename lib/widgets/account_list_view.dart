@@ -71,6 +71,7 @@ class _AccountListViewState extends State<AccountListView> {
                             expansionTileController.collapse();
                           }
                           widget.onAccountChange(account);
+                          setState(() {});
                         },
                         child: AccountCard(account: account)))
                   ],

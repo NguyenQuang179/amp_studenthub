@@ -1,4 +1,17 @@
+import 'dart:developer';
+
+import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/models/project.dart';
+import 'package:amp_studenthub/models/proposal.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -8,116 +21,198 @@ class StudentDashboard extends StatefulWidget {
 }
 
 class _StudentDashboardState extends State<StudentDashboard>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
   late final TabController tabController;
-  List<String> tabHeader = ['All Projects', 'Working', 'Archieved'];
+  List<String> tabHeader = ['All', 'Working', 'Archived'];
 
-  List<Map<String, dynamic>> activeProposalList = [
-    {
-      'name': 'Senior frontend Developer (Fintech)',
-      'lastSubmitted': '3',
-      'description':
-          'Students are looking for \n \t\u2022 Clear expectation about your project or deliverables'
-    }
-  ];
-  List<Map<String, dynamic>> submittedProposalList = [
-    {
-      'name': 'Senior frontend Developer (Fintech)',
-      'lastSubmitted': '3',
-      'description':
-          'Students are looking for \n \t\u2022 Clear expectation about your project or deliverables'
-    },
-    {
-      'name': 'Senior frontend Developer (Fintech)',
-      'lastSubmitted': '3',
-      'description':
-          'Students are looking for \n \t\u2022 Clear expectation about your project or deliverables'
-    }
-  ];
+  List<Project> activeProposalList = [];
+  List<Project> submittedProposalList = [];
+  List<Project> workingList = [];
+  List<Project> archivedList = [];
 
-  List<Map<String, dynamic>> workingList = [
-    {
-      'name': 'Senior frontend Developer (Fintech)',
-      'lastSubmitted': '3',
-      'description':
-          'Students are looking for \n \t\u2022 Clear expectation about your project or deliverables'
-    }
-  ];
-
-  List<Map<String, dynamic>> archievedList = [
-    {
-      'name': 'Senior frontend Developer (Fintech)',
-      'lastSubmitted': '3',
-      'description':
-          'Students are looking for \n \t\u2022 Clear expectation about your project or deliverables'
-    }
-  ];
+  final Set<int> selectedSegmentIndex = {0};
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     tabController = TabController(length: 3, vsync: this);
+    tabController.addListener(() {
+      setState(() {
+        selectedSegmentIndex.clear();
+        selectedSegmentIndex.add(tabController.index);
+      });
+    });
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  didChangeDependencies() async {
+    await getProposals(context);
+    super.didChangeDependencies();
+  }
+
+  Future<void> getProposals(BuildContext context) async {
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      var studentId = userProvider.userInfo['student']['id'];
+      var endpoint = '${Constant.baseURL}/api/proposal/project/$studentId';
+      final Response response = await dio.get(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      if (result != null) {
+        for (var proposal in result) {
+          Proposal temp = Proposal.fromJson(proposal);
+          log(temp.statusFlag.toString());
+          switch (temp.statusFlag) {
+            case 0:
+              setState(() {
+                submittedProposalList.add(temp.project);
+              });
+              break;
+            case 1:
+              setState(() {
+                activeProposalList.add(temp.project);
+              });
+              break;
+            case 2:
+              setState(() {
+                activeProposalList.add(temp.project);
+              });
+              break;
+            case 3:
+              setState(() {
+                workingList.add(temp.project);
+              });
+              break;
+          }
+        }
+      } else {
+        print('User data not found in the response');
+      }
+    } on DioError catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        final responseData = e.response?.data;
+        print(responseData);
+      } else {
+        print(e.message);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: SizedBox.expand(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text(
-                'Your Projects',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              DefaultTabController(
-                length: 3,
-                child: Container(
-                  height: kToolbarHeight - 8,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: TabBar(
-                      controller: tabController,
-                      labelColor: Colors.white,
-                      indicatorColor: Colors.white,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      indicator: BoxDecoration(
-                          color: Colors.blue.shade400,
-                          borderRadius: BorderRadius.circular(8)),
-                      tabs: tabHeader.map<Widget>((tab) {
-                        return Text(
-                          tab,
-                          style: const TextStyle(
-                            fontSize: 15,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Your Projects',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                        color: Constant.primaryColor,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Constant.backgroundColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(children: [
+                        Expanded(
+                          flex: 1,
+                          child: SegmentedButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    if (states
+                                        .contains(MaterialState.selected)) {
+                                      return Constant.primaryColor;
+                                    }
+                                    return Constant.backgroundColor;
+                                  },
+                                ),
+                                foregroundColor:
+                                    MaterialStateProperty.resolveWith<Color>(
+                                  (Set<MaterialState> states) {
+                                    if (states
+                                        .contains(MaterialState.selected)) {
+                                      return Constant.onPrimaryColor;
+                                    }
+                                    return Constant.textColor;
+                                  },
+                                ),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12))),
+                                textStyle:
+                                    const MaterialStatePropertyAll(TextStyle(
+                                  fontSize: 15,
+                                ))),
+                            segments: tabHeader.map((header) {
+                              return ButtonSegment<int>(
+                                value: tabHeader.indexOf(header),
+                                label: Text(header),
+                              );
+                            }).toList(),
+                            selected: selectedSegmentIndex,
+                            onSelectionChanged: (newSelection) {
+                              setState(() {
+                                selectedSegmentIndex.clear();
+                                selectedSegmentIndex.addAll(newSelection);
+                                tabController.animateTo(newSelection.first);
+                              });
+                            },
                           ),
-                        );
-                      }).toList()),
+                        ),
+                      ]),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        controller: tabController,
+                        children: [
+                          AllProjectContainer(
+                            activeProposalList: activeProposalList,
+                            submittedProposalList: submittedProposalList,
+                          ),
+                          ProjectContainer(projectList: workingList),
+                          ProjectContainer(projectList: archivedList),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Container(
-                margin: const EdgeInsets.only(top: 10),
-                height: MediaQuery.of(context).size.height,
-                child: TabBarView(controller: tabController, children: [
-                  AllProjectContainer(
-                      activeProposalList: activeProposalList,
-                      submittedProposalList: submittedProposalList),
-                  ProjectContainer(projectList: workingList),
-                  ProjectContainer(projectList: archievedList),
-                ]),
               ),
             ],
           ),
@@ -134,22 +229,24 @@ class AllProjectContainer extends StatefulWidget {
     required this.submittedProposalList,
   });
 
-  final List<Map<String, dynamic>> activeProposalList;
-  final List<Map<String, dynamic>> submittedProposalList;
+  final List<Project> activeProposalList;
+  final List<Project> submittedProposalList;
 
   @override
   State<AllProjectContainer> createState() => _AllProjectContainerState();
 }
 
-class _AllProjectContainerState extends State<AllProjectContainer> {
+class _AllProjectContainerState extends State<AllProjectContainer>
+    with SingleTickerProviderStateMixin {
   int activeProposalIndex = -1;
   int submittedProposalIndex = -1;
   List<bool> isHoveredSubmittedList = [];
+  late final tabController;
 
   @override
   void initState() {
     super.initState();
-    // Initialize the list with false values for each item
+    tabController = TabController(length: 2, vsync: this);
     isHoveredSubmittedList = List<bool>.filled(
         widget.submittedProposalList.length, false,
         growable: false);
@@ -157,148 +254,195 @@ class _AllProjectContainerState extends State<AllProjectContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.black87)),
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Active Proposal (${widget.activeProposalList.length})',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ...widget.activeProposalList.asMap().entries.map((entry) {
-                final index = entry.key;
-                final project = entry.value;
-                final isSelected = index == activeProposalIndex;
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      activeProposalIndex = isSelected ? -1 : index;
-                    });
-                  },
-                  onHover: (isHovering) {
-                    // No need to handle hover state for active proposal
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: isSelected
-                          ? Colors.blue.withOpacity(0.1)
-                          : Colors.transparent,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            project['name'],
-                            style: const TextStyle(color: Colors.green),
-                          ),
-                          Text(
-                            'Submitted ${project['lastSubmitted']} ago',
-                            style: TextStyle(color: Colors.grey.shade500),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(project['description']),
-                          const Divider(
-                            thickness: 2,
-                          ),
-                        ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black87)),
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Active Proposal (${widget.activeProposalList.length})',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                if (widget.activeProposalList.isEmpty)
+                  Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        child: SvgPicture.asset(
+                          'assets/empty.svg',
+                          height: 320,
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.black87)),
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Submitted Proposal (${widget.submittedProposalList.length})',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ...widget.submittedProposalList.asMap().entries.map((entry) {
-                final index = entry.key;
-                final project = entry.value;
-                final isSelected = index == submittedProposalIndex;
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      submittedProposalIndex = isSelected ? -1 : index;
-                    });
-                  },
-                  onHover: (isHovering) {
-                    setState(() {
-                      isHoveredSubmittedList[index] = isHovering;
-                    });
-                  },
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: isSelected
-                          ? Colors.blue.withOpacity(0.1)
-                          : isHoveredSubmittedList[index]
+                      Container(
+                        margin: const EdgeInsets.only(top: 24),
+                        child: const Text(
+                          "Your Proposal list is empty",
+                          style: TextStyle(
+                            color: Constant.secondaryColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  )
+                else
+                  ...widget.activeProposalList.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final project = entry.value;
+                    final isSelected = index == activeProposalIndex;
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          activeProposalIndex = isSelected ? -1 : index;
+                        });
+                      },
+                      onHover: (isHovering) {},
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: isSelected
                               ? Colors.blue.withOpacity(0.1)
                               : Colors.transparent,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            project['name'],
-                            style: const TextStyle(color: Colors.green),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                project.title,
+                                style: const TextStyle(color: Colors.green),
+                              ),
+                              Text(
+                                'Submitted ${project.createdDate} ago',
+                                style: TextStyle(color: Colors.grey.shade500),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(project.description),
+                              const Divider(
+                                thickness: 2,
+                              ),
+                            ],
                           ),
-                          Text(
-                            'Submitted ${project['lastSubmitted']} ago',
-                            style: TextStyle(color: Colors.grey.shade500),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(project['description']),
-                          const Divider(
-                            thickness: 2,
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              }),
-            ],
+                    );
+                  }),
+              ],
+            ),
           ),
-        ),
-      ],
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black87)),
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Submitted Proposal (${widget.submittedProposalList.length})',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                if (widget.submittedProposalList.isEmpty)
+                  Column(
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        child: SvgPicture.asset(
+                          'assets/empty.svg',
+                          height: 320,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 24),
+                        child: const Text(
+                          "Your Proposal list is empty",
+                          style: TextStyle(
+                            color: Constant.secondaryColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  )
+                else
+                  ...widget.submittedProposalList.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final project = entry.value;
+                    final isSelected = index == submittedProposalIndex;
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          submittedProposalIndex = isSelected ? -1 : index;
+                        });
+                        GoRouter.of(context).pushNamed(
+                          RouteConstants.projectDetails,
+                          queryParameters: {'id': entry.value.id.toString()},
+                        );
+                      },
+                      onHover: (isHovering) {},
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.transparent),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                project.title,
+                                style: const TextStyle(color: Colors.green),
+                              ),
+                              Text(
+                                'Submitted ${project.createdDate} ago',
+                                style: TextStyle(color: Colors.grey.shade500),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(project.description),
+                              const Divider(
+                                thickness: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -309,7 +453,7 @@ class ProjectContainer extends StatefulWidget {
     required this.projectList,
   });
 
-  final List<Map<String, dynamic>> projectList;
+  final List<Project> projectList;
 
   @override
   _ProjectContainerState createState() => _ProjectContainerState();
@@ -320,50 +464,77 @@ class _ProjectContainerState extends State<ProjectContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: widget.projectList.length,
-      itemBuilder: (context, index) {
-        final project = widget.projectList[index];
-        final isSelected = index == selectedIndex;
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              selectedIndex = isSelected ? -1 : index;
-            });
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.black87),
-              color: isSelected
-                  ? Colors.blue.withOpacity(0.1)
-                  : Colors.transparent,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  project['name'],
-                  style: const TextStyle(color: Colors.green),
-                ),
-                Text(
-                  'Submitted ${project['lastSubmitted']} ago',
-                  style: TextStyle(color: Colors.grey.shade500),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(project['description']),
-                const Divider(
-                  thickness: 2,
-                ),
-              ],
+    if (widget.projectList.isEmpty) {
+      return Column(
+        children: [
+          Container(
+            alignment: Alignment.center,
+            child: SvgPicture.asset(
+              'assets/empty.svg',
+              height: 320,
+              fit: BoxFit.contain,
             ),
           ),
-        );
-      },
-    );
+          Container(
+            margin: const EdgeInsets.only(top: 24),
+            child: const Text(
+              "Your Project list is empty",
+              style: TextStyle(
+                color: Constant.secondaryColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          )
+        ],
+      );
+    } else {
+      return ListView.builder(
+        itemCount: widget.projectList.length,
+        itemBuilder: (context, index) {
+          final project = widget.projectList[index];
+          final isSelected = index == selectedIndex;
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedIndex = isSelected ? -1 : index;
+              });
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black87),
+                color: isSelected
+                    ? Colors.blue.withOpacity(0.1)
+                    : Colors.transparent,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    project.title,
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                  Text(
+                    'Submitted ${project.createdDate} ago',
+                    style: TextStyle(color: Colors.grey.shade500),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(project.description),
+                  const Divider(
+                    thickness: 2,
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
   }
 }

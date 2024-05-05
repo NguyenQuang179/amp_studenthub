@@ -109,6 +109,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
     var userProvider = Provider.of<UserProvider>(context, listen: false);
 
     var role = userProvider.userRole;
+    print(role);
     var isNewProfile = role == 'Student'
         ? userProvider.isStudentProfile
         : userProvider.isCompanyProfile;
