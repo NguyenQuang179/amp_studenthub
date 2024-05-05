@@ -6,17 +6,17 @@ class User {
   final String fullname;
   final List<dynamic> roles;
   final CompanyProfile? company;
-  // final StudentProfile? student;
+  final StudentProfile? student;
 
-  User(this.id, this.fullname, this.roles, this.company);
+  User(this.id, this.fullname, this.roles, this.company, this.student);
 
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int,
         fullname = json['fullname'] as String,
         roles = json['roles'] as List<dynamic>,
-        // student = json.containsKey('student')
-        //     ? StudentProfile.fromJson(json['student'])
-        //     : null,
+        student = json['student'] != null
+            ? StudentProfile.fromJson(json['student'])
+            : null,
         company = json['company'] != null
             ? CompanyProfile.fromJson(json['company'])
             : null;
@@ -25,7 +25,7 @@ class User {
         'id': id,
         'fullname': fullname,
         'roles': roles,
-        // 'student': student?.toJson(),
+        'student': student?.toJson(),
         'company': company?.toJson(),
       };
 }

@@ -6,7 +6,7 @@ class UserProvider extends ChangeNotifier {
   String _userToken = "";
   String _userRole = "";
   bool _isCompanyProfile = false;
-  final bool _isStudentProfile = false;
+  bool _isStudentProfile = false;
   Account _currentAccount = Account(fullName: '', type: -1);
   List<Account> _accountList = [];
   dynamic _userInfo = {};
@@ -32,10 +32,10 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isStudentProfile => _isCompanyProfile;
+  bool get isStudentProfile => _isStudentProfile;
 
   void updateIsStudentProfile(bool isAvail) {
-    _isCompanyProfile = isAvail;
+    _isStudentProfile = isAvail;
     notifyListeners();
   }
 

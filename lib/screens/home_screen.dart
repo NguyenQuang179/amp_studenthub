@@ -1,8 +1,10 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -138,6 +140,10 @@ class HomeScreen extends StatelessWidget {
                                 height: 48,
                                 child: TextButton(
                                   onPressed: () {
+                                    final userProvider =
+                                        Provider.of<UserProvider>(context,
+                                            listen: false);
+                                    userProvider.updateRole("Student");
                                     GoRouter.of(context)
                                         .goNamed(RouteConstants.login);
                                   },
@@ -158,7 +164,14 @@ class HomeScreen extends StatelessWidget {
                                 width: double.infinity,
                                 height: 48,
                                 child: OutlinedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    final userProvider =
+                                        Provider.of<UserProvider>(context,
+                                            listen: false);
+                                    userProvider.updateRole("Company");
+                                    GoRouter.of(context)
+                                        .goNamed(RouteConstants.login);
+                                  },
                                   style: TextButton.styleFrom(
                                       side: const BorderSide(
                                           width: 1,

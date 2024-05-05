@@ -55,10 +55,11 @@ class _ProjectListState extends State<ProjectList> {
 
     final dio = Dio();
     try {
-      if (!mounted) return;
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
@@ -82,19 +83,20 @@ class _ProjectListState extends State<ProjectList> {
       }
       print(companyProjects);
       print("SUCCESS");
-
-      if (!mounted) return;
-      setState(() {
-        companyProjectsList = companyProjects;
-      });
+      if (mounted) {
+        setState(() {
+          companyProjectsList = companyProjects;
+        });
+      }
       print(companyProjectsList);
     } on DioException catch (e) {
       // Handle DioException
     } finally {
-      if (!mounted) return;
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
