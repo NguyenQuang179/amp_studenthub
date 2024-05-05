@@ -6,7 +6,6 @@ import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/widgets/account_list_view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -30,8 +29,8 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
 
   @override
   didChangeDependencies() {
-    getUser(context as BuildContext).then((_) {
-      setupAccount(context as BuildContext);
+    getUser(context).then((_) {
+      setupAccount(context);
       setState(() {
         _isLoading = false;
       });
@@ -59,6 +58,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
       if (result != null) {
         user = User.fromJson(result);
         userProvider.updateIsCompanyProfile(user.company != null);
+        userProvider.updateIsStudentProfile(user.student != null);
       } else {
         print('User data not found in the response');
       }
@@ -75,20 +75,31 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
 
   void setupAccount(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    if (user.roles.length == 1) {
-      currentAccount = Account(fullName: user.fullname, type: user.roles[0]);
-      accountList = [
-        Account(fullName: user.fullname, type: user.roles[0] == 0 ? 1 : 0)
-      ];
+    if (userProvider.userRole == "") {
+      if (user.roles.length == 1) {
+        currentAccount = Account(fullName: user.fullname, type: user.roles[0]);
+        accountList = [
+          Account(fullName: user.fullname, type: user.roles[0] == 0 ? 1 : 0)
+        ];
+      } else {
+        currentAccount = Account(fullName: user.fullname, type: user.roles[0]);
+        accountList = [
+          Account(fullName: user.fullname, type: user.roles[0] == 0 ? 1 : 0)
+        ];
+      }
     } else {
-      currentAccount = Account(fullName: user.fullname, type: user.roles[0]);
+      int accType = userProvider.userRole == "Student" ? 0 : 1;
+      currentAccount = Account(fullName: user.fullname, type: accType);
       accountList = [
-        Account(fullName: user.fullname, type: user.roles[0] == 0 ? 1 : 0)
+        Account(fullName: user.fullname, type: accType == 0 ? 1 : 0)
       ];
     }
 
-    var role = user.roles[0] == 0 ? 'Company' : 'Student';
-    userProvider.updateRole(role);
+    if (userProvider.userRole == "") {
+      var role = user.roles[0] == 0 ? 'Student' : 'Company';
+      userProvider.updateRole(role);
+    }
+
     userProvider.updateCurrentAccount(currentAccount);
     userProvider.updateAccountList(accountList);
   }
@@ -98,6 +109,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
     var userProvider = Provider.of<UserProvider>(context, listen: false);
 
     var role = userProvider.userRole;
+    print(role);
     var isNewProfile = role == 'Student'
         ? userProvider.isStudentProfile
         : userProvider.isCompanyProfile;
@@ -118,18 +130,6 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
           style: TextStyle(
               color: Constant.primaryColor, fontWeight: FontWeight.bold),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            child: IconButton.outlined(
-              onPressed: () {},
-              icon: const FaIcon(
-                FontAwesomeIcons.magnifyingGlass,
-                size: 16,
-              ),
-            ),
-          ),
-        ],
         centerTitle: true,
       ),
       body: Column(
@@ -159,18 +159,18 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  bool _isNewProfile = isNewProfile;
                   bool isStudent = role == 'Student';
-                  print("profile new:" + _isNewProfile.toString());
-                  print("isStudent: " + isStudent.toString());
+                  print("profile new:$isNewProfile");
+                  print("isStudent: $isStudent");
                   if (isStudent) {
-                    context.pushNamed(RouteConstants.createStudentProfile1);
-
-                    // ignore: dead_code
+                    if (!isNewProfile) {
+                      context.pushNamed(RouteConstants.createStudentProfile1);
+                    } else {
+                      context.pushNamed(RouteConstants.studentProfile);
+                    }
                   } else {
-                    if (!_isNewProfile) {
+                    if (!isNewProfile) {
                       context.pushNamed(RouteConstants.createCompanyProfile);
-                      // ignore: dead_code
                     } else {
                       context.pushNamed(RouteConstants.editCompanyProfile);
                     }
@@ -196,7 +196,9 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
               height: 50,
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.pushNamed(RouteConstants.settings);
+                },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.zero,
                 ),
@@ -214,26 +216,33 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: SizedBox(
-              height: 60,
+              height: 52,
               width: double.infinity,
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: () {
-                  context.goNamed(RouteConstants.login);
+                  context.goNamed(RouteConstants.home);
                 },
-                style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    backgroundColor: const Color(0xFF3F72AF)),
+                style: TextButton.styleFrom(
+                    backgroundColor: Constant.onPrimaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100)),
+                    side: const BorderSide(
+                        color: Constant.primaryColor, width: 1),
+                    foregroundColor: Constant.primaryColor),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.logout,
-                      color: Colors.white,
+                      color: Constant.primaryColor,
                     ),
                     SizedBox(width: 16),
                     Text(
                       'Sign Out',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      style: TextStyle(
+                          color: Constant.primaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),

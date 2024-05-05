@@ -55,9 +55,11 @@ class _ProjectListState extends State<ProjectList> {
 
     final dio = Dio();
     try {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
@@ -81,40 +83,20 @@ class _ProjectListState extends State<ProjectList> {
       }
       print(companyProjects);
       print("SUCCESS");
-
-      setState(() {
-        companyProjectsList = companyProjects;
-      });
-      print(companyProjectsList);
-      // if (responseData.containsKey('result')) {
-      //   // Assuming your API returns a list of jobs under 'jobs' key
-      //   print(result);
-      //   final List<dynamic> jobsData = result;
-      //   print(result[0]);
-
-      //   setState(() {
-      //     companyProjects =
-      //         jobsData.map((job) => CompanyProject.fromJson(job)).toList();
-      //   });
-      //   print(companyProjects);
-      // } else {}
-    } on DioException catch (e) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx and is also not 304.
-      if (e.response != null) {
-        print(e.response?.statusCode);
-        print(e.response?.data);
-        print(e.response?.headers);
-        print(e.response?.requestOptions);
-      } else {
-        // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+      if (mounted) {
+        setState(() {
+          companyProjectsList = companyProjects;
+        });
       }
+      print(companyProjectsList);
+    } on DioException catch (e) {
+      // Handle DioException
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 

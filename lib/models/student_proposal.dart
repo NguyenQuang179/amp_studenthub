@@ -1,28 +1,51 @@
-class StudentProposal {
-  final String id;
-  final String name;
-  final String jobPosition;
-  final int studentYear;
-  final String studentGrade;
-  final String proposal;
+import 'package:amp_studenthub/models/company_dashboard_project.dart';
+import 'package:amp_studenthub/models/student_profile.dart';
 
-  StudentProposal(this.id, this.name, this.jobPosition, this.studentYear,
-      this.studentGrade, this.proposal);
+class Proposal {
+  final int id;
+  final int projectId;
+  final int studentId;
+  final int statusFlag;
+  final int disableFlag;
+  final String coverLetter;
+  final CompanyProject? project;
+  final StudentProfile? student;
 
-  StudentProposal.fromJson(Map<String, dynamic> json)
-      : id = json['id'] as String,
-        name = json['name'] as String,
-        jobPosition = json['jobPosition'] as String,
-        studentYear = json['studentYear'] as int,
-        studentGrade = json['studentGrade'] as String,
-        proposal = json['proposal'] as String;
+  Proposal(this.id, this.projectId, this.studentId, this.statusFlag,
+      this.disableFlag, this.coverLetter, this.project, this.student);
+  //default constructor
+  Proposal.empty()
+      : id = 0,
+        projectId = 0,
+        studentId = 0,
+        disableFlag = 0,
+        statusFlag = 0,
+        coverLetter = '',
+        project = null,
+        student = null;
+
+  Proposal.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as int,
+        coverLetter = json['coverLetter'] as String,
+        projectId = json['projectId'] as int,
+        studentId = json['studentId'] as int,
+        disableFlag = json['disableFlag'] as int,
+        statusFlag = json['statusFlag'] as int,
+        project = json['project'] != null
+            ? CompanyProject.fromJson(json['project'])
+            : null,
+        student = json['student'] != null
+            ? StudentProfile.fromJson(json['student'])
+            : null;
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'name': name,
-        'jobPosition': jobPosition,
-        'studentYear': studentYear,
-        'studentGrade': studentGrade,
-        'proposal': proposal
+        'coverLetter': coverLetter,
+        'projectId': projectId,
+        'studentId': studentId,
+        'disableFlag': disableFlag,
+        'statusFlag': statusFlag,
+        'project': project,
+        'student': student
       };
 }
