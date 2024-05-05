@@ -3,15 +3,14 @@ import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/screens/Message/message_detail_item.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+// import 'package:flutter_io_socket/flutter_io_socket.dart' as io;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_io_socket/flutter_io_socket.dart' as io;
-import 'package:flutter_io_socket/flutter_io_socket.dart' as io;
-
+import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:socket_io_common/src/util/event_emitter.dart';
 
 class MessageDetail extends StatefulWidget {
   //    final int userId;
@@ -67,7 +66,7 @@ class _MessageDetailState extends State<MessageDetail> {
           messages = result;
         });
       }
-      print(this.messages);
+      print(messages);
     } catch (e) {
       print(e);
     }
@@ -112,17 +111,14 @@ class _MessageDetailState extends State<MessageDetail> {
       'https://api.studenthub.dev',
       io.OptionBuilder()
           .setTransports(['websocket'])
+          .setExtraHeaders({'Authorization': 'Bearer $accessToken'})
+          // .setAuth({'Authorization': 'Bearer $accessToken'})
+          .setQuery({
+            'project_id': projectId.toString(),
+          })
           .disableAutoConnect()
           .build(),
     );
-    socket.io.options['extraHeaders'] = {
-      'Authorization':
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImZ1bGxuYW1lIjoiR2lhIEh1eSIsImVtYWlsIjoicmV4ZnVyeTEyMUBnbWFpbC5jb20iLCJyb2xlcyI6WzBdLCJpYXQiOjE3MTQ4OTM5NzUsImV4cCI6MTcxNjEwMzU3NX0.o48lN9Qhhg7ch5mbKZMh-DMrgZ04PWHfc7bTKTlDBSE',
-    };
-    socket.io.options['query'] = {
-      'project_id': projectId.toString(),
-    };
-    print(socket);
     socket.connect();
     socket.onConnect((data) => print('Connected'));
     socket.onDisconnect((data) => print('Disconnected'));
@@ -131,7 +127,7 @@ class _MessageDetailState extends State<MessageDetail> {
     socket.onError((data) => print('error: $data'));
     socket.on('RECEIVE_MESSAGE', (data) => print(data));
     socket.on('RECEIVE_INTERVIEW', (data) => print(data));
-    socket.on('ERROR', (data) => print(data));
+    socket.on('ERROR', (data) => print('ERROR: $data'));
 
     setState(() {
       socketInitialized = true;
