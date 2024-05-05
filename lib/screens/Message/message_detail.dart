@@ -1,13 +1,24 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/screens/Message/message_detail_item.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_io_socket/flutter_io_socket.dart' as io;
+import 'package:flutter_io_socket/flutter_io_socket.dart' as io;
+
 
 class MessageDetail extends StatefulWidget {
+  //    final int userId;
+  // final int receiverId;
+  // final int projectId;
+  // final String receiverName;
+
   const MessageDetail({super.key});
 
   @override
@@ -15,9 +26,201 @@ class MessageDetail extends StatefulWidget {
 }
 
 class _MessageDetailState extends State<MessageDetail> {
+  late io.Socket socket;
   final interviewTitleController = TextEditingController();
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
+
+  final int userId = 139;
+  final int receiverId = 139;
+  final int projectId = 2;
+  final String receiverName = 'Luis Pham ';
+  bool socketInitialized = false;
+  late final dynamic messages;
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  Future<void> getMessage(receiverId, projectId) async {
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      final endpoint =
+          '${Constant.baseURL}/api/message/$projectId/user/$receiverId';
+      final Response response = await dio.get(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      print(result);
+      if (mounted) {
+        setState(() {
+          messages = result;
+        });
+      }
+      print(this.messages);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> init() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
+    //get message
+    await getMessage(receiverId, projectId);
+    if (socketInitialized == false) {
+      print(socketInitialized);
+      await connectSocket();
+      socketInitialized = true;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    print(socket.connected);
+    socket.disconnect();
+    print(socket.connected);
+
+    print('Socket Disconnected');
+  }
+
+  Future<void> connectSocket() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
+    // Initialize socket with server URL
+
+    // var map = new Map<String, dynamic>();
+    // map['Authorization'] = clientID;
+    // map['project_id'] = clientSecret;
+    // map['grant_type'] = grantType;
+    // map['redirect_uri'] = rediUrl;
+    // map['code'] = _accessCode;
+
+    print('Bearer $accessToken');
+    socket = io.io(
+      'https://api.studenthub.dev',
+      io.OptionBuilder()
+          .setTransports(['websocket'])
+          .disableAutoConnect()
+          .build(),
+    );
+    socket.io.options['extraHeaders'] = {
+      'Authorization':
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDUsImZ1bGxuYW1lIjoiR2lhIEh1eSIsImVtYWlsIjoicmV4ZnVyeTEyMUBnbWFpbC5jb20iLCJyb2xlcyI6WzBdLCJpYXQiOjE3MTQ4OTM5NzUsImV4cCI6MTcxNjEwMzU3NX0.o48lN9Qhhg7ch5mbKZMh-DMrgZ04PWHfc7bTKTlDBSE',
+    };
+    socket.io.options['query'] = {
+      'project_id': projectId.toString(),
+    };
+    print(socket);
+    socket.connect();
+    socket.onConnect((data) => print('Connected'));
+    socket.onDisconnect((data) => print('Disconnected'));
+
+    socket.onConnectError((data) => print('connect error: $data'));
+    socket.onError((data) => print('error: $data'));
+    socket.on('RECEIVE_MESSAGE', (data) => print(data));
+    socket.on('RECEIVE_INTERVIEW', (data) => print(data));
+    socket.on('ERROR', (data) => print(data));
+
+    setState(() {
+      socketInitialized = true;
+    });
+//     socket = IO.io(
+//         'https://api.studenthub.dev',
+//         IO.OptionBuilder()
+//             .setTransports(['websocket', 'polling'])
+//             .disableAutoConnect()
+//             .setExtraHeaders({"Authorization": "Bearer $accessToken"})
+//             .build());
+
+// //Add query param to url
+//     socket.io.options?['query'] = {'project_id': 2};
+
+//     print(IO.OptionBuilder()
+//         .setTransports(['websocket', 'polling'])
+//         .disableAutoConnect()
+//         .setExtraHeaders({"Authorization": "Bearer $accessToken"})
+//         .build());
+//     print("Connecting to socket.io server");
+//     // socket.io.options?['query'] = {'project_id': projectId};
+
+//     // Add authorization to header
+//     print('Bearer $accessToken');
+//     print(socket.io.options);
+//     // socket.io.options?['extraHeaders'] = {
+//     //   'Authorization': 'Bearer $accessToken',
+//     // };
+//     // print(socket.io.options?['extraHeaders']);
+// // Connect to the socket.io server
+// //     socket.connect();
+// //     socket.on('RECEIVE_MESSAGE', (data) {
+// //       print(data);
+// //       // Update the state with the received message
+// //     });
+// //     socket.onConnect((data) => {
+// //           print('Connected'),
+// //         });
+
+// //     socket.onDisconnect((data) => {
+// //           print('Disconnected'),
+// //         });
+// //     // Listen to socket events
+// //     socket.onAny((String event, data) {
+// //       print([event, data]);
+// //     });
+
+// // Add authorization to header
+//     print(socket.io.options?['extraHeaders']);
+
+//     socket.io.options?['extraHeaders'] = {
+//       'Authorization': 'Bearer ${accessToken}',
+//     };
+//     print(socket.io.options?['extraHeaders']);
+
+//     socket.connect();
+
+//     socket.onConnect((data) => {
+//           print('Connected'),
+//         });
+
+//     socket.onDisconnect((data) => {
+//           print('Disconnected'),
+//         });
+
+//     socket.onConnectError((data) => print('$data connect error error error'));
+//     socket.onError((data) => print(data));
+//     // socket.onConnectTimeout((data) => print('$data connect timeout'));
+// //Listen to channel receive message
+//     socket.on('RECEIVE_MESSAGE', (data) {
+//       // Your code to update ui
+//       print(data);
+//     });
+// //Listen for error from socket
+//     socket.on("ERROR", (data) => print('$data error'));
+//     socket.on("NOTI_1", (data) => print(data));
+  }
+
+  void sendMessage(String message) {
+    final form = {
+      "senderId": userId,
+      "receiverId": receiverId,
+      "projectId": projectId,
+      "content": message,
+      "messageFlag": 0,
+    };
+    socket.emit('SEND_MESSAGE', form);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -334,7 +537,15 @@ class _MessageDetailState extends State<MessageDetail> {
                   ),
                   IconButton(
                     icon: const Icon(Icons.send),
-                    onPressed: () {},
+                    onPressed: () {
+                      socket.emit('SEND_MESSAGE', {
+                        'content': 'Hello World',
+                        'projectId': 1,
+                        'senderId': 139,
+                        'receiverId': 2,
+                        'messageFlag': 0,
+                      });
+                    },
                   ),
                 ],
               ),

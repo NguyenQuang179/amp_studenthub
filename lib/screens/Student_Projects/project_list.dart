@@ -110,6 +110,10 @@ class _ProjectListState extends State<ProjectList> {
 
     final dio = Dio();
     try {
+      if (!mounted) {
+        return;
+      }
+
       if (mounted) {
         setState(() {
           isLoading = true;
