@@ -1,7 +1,12 @@
+import 'dart:math';
+
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
+
+var userID = Random().nextInt(1000).toString();
 
 class VideoCallScreen extends StatelessWidget {
   const VideoCallScreen({super.key});
@@ -30,58 +35,16 @@ class VideoCallScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Center(
-            child: Column(
-          children: [
-            Expanded(
-                child: Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.grey[500]!),
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 16),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.grey[500]!),
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 16),
-                  ),
-                )
-              ],
-            )),
-            //userInput
-            SizedBox(
-              height: 72,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const FaIcon(FontAwesomeIcons.microphone),
-                    onPressed: () {},
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    child: IconButton(
-                      icon: const FaIcon(FontAwesomeIcons.camera),
-                      onPressed: () {},
-                    ),
-                  ),
-                  IconButton(
-                    icon: const FaIcon(FontAwesomeIcons.phoneSlash),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
-          ],
-        )),
+        child: ZegoUIKitPrebuiltVideoConference(
+          appID:
+              301809692, // Fill in the appID that you get from ZEGOCLOUD Admin Console.
+          appSign:
+              '6847d07a0f58a41c1a72bf864fc8f9d22d39700611c94f9f1f30ba2d521d0f24', // Fill in the appSign that you get from ZEGOCLOUD Admin Console.
+          userID: userID,
+          userName: 'user_$userID',
+          conferenceID: '123',
+          config: ZegoUIKitPrebuiltVideoConferenceConfig(),
+        ),
       ),
     );
   }

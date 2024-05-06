@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/screens/Message/message_detail_item.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class MessageDetail extends StatefulWidget {
   const MessageDetail({super.key});
@@ -18,6 +23,53 @@ class _MessageDetailState extends State<MessageDetail> {
   final interviewTitleController = TextEditingController();
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
+
+  Future<void> scheduleInterview(BuildContext context, String title,
+      String startTime, String endTime) async {
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      const endpoint = '${Constant.baseURL}/api/interview';
+      var data = {
+        "title": title,
+        "content": "string",
+        "startTime": startTime,
+        "endTime": endTime,
+        "projectId": 835,
+        "senderId": 341,
+        "receiverId": 227,
+        "meeting_room_code": "string",
+        "meeting_room_id": "string",
+        "expired_at": "2024-05-05T08:25:33.581Z"
+      };
+
+      final Response response = await dio.post(
+        endpoint,
+        data: jsonEncode(data),
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      if (result != null) {
+      } else {
+        print('User data not found in the response');
+      }
+    } on DioError catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        final responseData = e.response?.data;
+        print(responseData);
+      } else {
+        print(e.message);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -275,10 +327,18 @@ class _MessageDetailState extends State<MessageDetail> {
                                                               .all<Color>(Constant
                                                                   .onPrimaryColor)),
                                                   onPressed: () {
+                                                    scheduleInterview(
+                                                        context,
+                                                        interviewTitleController
+                                                            .text,
+                                                        startDateController
+                                                            .text,
+                                                        endDateController.text);
                                                     interviewTitleController
                                                         .clear();
                                                     startDateController.clear();
                                                     endDateController.clear();
+
                                                     context.pop();
                                                   },
                                                   child: const Text("Confirm"),
