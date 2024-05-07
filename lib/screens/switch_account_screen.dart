@@ -86,36 +86,25 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                   "newPassword": newPasswordController.text,
                 };
                 try {
+                  print(submitData);
                   final Response response = await dio.put(endpoint,
                       data: submitData,
                       options: Options(headers: {
                         'Authorization': 'Bearer $accessToken',
                       }));
 
-                  final responseData = response.data;
-                  final String? message = responseData['result']['message'];
-                  if (message != null) {
-                    Fluttertoast.showToast(
-                        msg: message,
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0);
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: 'An error occurred',
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.red,
-                        textColor: Colors.white,
-                        fontSize: 16.0);
-                  }
-                } catch (error) {
                   Fluttertoast.showToast(
-                      msg: 'An error occurred',
+                      msg: "Pass change successfully",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                } catch (error) {
+                  print(error);
+                  Fluttertoast.showToast(
+                      msg: 'Incorrect Old Pass',
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,
@@ -318,6 +307,29 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     Icon(Icons.settings),
                     SizedBox(width: 8),
                     Text('Settings'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+            child: SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  _displayTextInputDialog();
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                ),
+                child: const Row(
+                  children: [
+                    SizedBox(width: 16),
+                    Icon(Icons.lock),
+                    SizedBox(width: 8),
+                    Text('Change Password'),
                   ],
                 ),
               ),
