@@ -87,12 +87,11 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 10),
                     const Center(
                       child: Text(
-                        'CV & Resume',
+                        'Your Resume',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                     const Padding(

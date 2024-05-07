@@ -27,6 +27,19 @@ class Project {
     required this.createdDate,
   });
 
+  Project.empty()
+      : id = 0,
+        companyId = '',
+        companyName = '',
+        projectScopeFlag = 0,
+        title = '',
+        description = '',
+        numberOfStudents = 0,
+        typeFlag = 0,
+        countProposals = 0,
+        isFavorite = false,
+        createdDate = '';
+
   Project.fromJson(Map<String, dynamic> json)
       : id = json['id'] as num,
         companyId = json['companyId'] as String,

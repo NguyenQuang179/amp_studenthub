@@ -22,6 +22,8 @@ class AccountListView extends StatefulWidget {
 }
 
 class _AccountListViewState extends State<AccountListView> {
+  final expansionTileController = ExpansionTileController();
+
   @override
   Widget build(BuildContext context) {
     return Flexible(
@@ -43,6 +45,7 @@ class _AccountListViewState extends State<AccountListView> {
       borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
       child: ExpansionTile(
+          controller: expansionTileController,
           collapsedBackgroundColor: Constant.backgroundColor,
           backgroundColor: Constant.backgroundColor,
           shape: const Border(top: BorderSide(color: Colors.white)),
@@ -64,7 +67,11 @@ class _AccountListViewState extends State<AccountListView> {
                           userProvider.updateAccountList(list);
                           var role = account.type == 0 ? 'Student' : 'Company';
                           userProvider.updateRole(role);
+                          if (expansionTileController.isExpanded) {
+                            expansionTileController.collapse();
+                          }
                           widget.onAccountChange(account);
+                          setState(() {});
                         },
                         child: AccountCard(account: account)))
                   ],

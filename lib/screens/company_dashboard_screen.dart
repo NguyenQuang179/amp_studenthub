@@ -32,12 +32,12 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   Future<void> fetchCompanyProjects(int? typeFlag) async {
     final dio = Dio();
     try {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      print(userProvider.userInfo);
-      print(userProvider.userInfo['company']?['id']);
       final accessToken = userProvider.userToken;
       int companyId = userProvider.userInfo['company']?['id'];
       String endpoint = '${Constant.baseURL}/api/project/company/$companyId';
@@ -59,17 +59,21 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         companyList.add(companyProject);
       }
       print(companyList.length);
-      setState(() {
-        allCompanyProjects = companyList;
-      });
+      if (mounted) {
+        setState(() {
+          allCompanyProjects = companyList;
+        });
+      }
     } on DioException catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
       if (e.response != null) {
         if (e.response?.statusCode == 404) {
-          setState(() {
-            allCompanyProjects = [];
-          });
+          if (mounted) {
+            setState(() {
+              allCompanyProjects = [];
+            });
+          }
         }
         print(e.response?.statusCode);
         print(e.response?.data);
@@ -81,18 +85,22 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         print(e.message);
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
   Future<void> removeCompanyProject(int projectId) async {
     final dio = Dio();
     try {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final accessToken = userProvider.userToken;
       String endpoint = '${Constant.baseURL}/api/project/$projectId';
@@ -116,19 +124,23 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         print(e.message);
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
-  Future<void> startWorkingCompanyProject(
-      int projectId, int numberOfStudents) async {
+  Future<void> updateCompanyProjectTypeFlag(
+      int typeFlag, int projectId, int numberOfStudents) async {
     final dio = Dio();
     try {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final accessToken = userProvider.userToken;
       String endpoint = '${Constant.baseURL}/api/project/$projectId';
@@ -136,7 +148,7 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
           options: Options(headers: {
             'Authorization': 'Bearer $accessToken',
           }),
-          data: {"numberOfStudents": numberOfStudents, "typeFlag": 1});
+          data: {"numberOfStudents": numberOfStudents, "typeFlag": typeFlag});
     } on DioException catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
@@ -151,9 +163,11 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
         print(e.message);
       }
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -170,18 +184,19 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     Navigator.pop(context);
   }
 
-  handleStartWorkingProject(int projectId, int numberOfStudents) {
-    startWorkingCompanyProject(projectId, numberOfStudents);
-    int? typeFlag;
+  handleUpdateProjectTypeFlag(
+      int typeFlag, int projectId, int numberOfStudents) {
+    updateCompanyProjectTypeFlag(typeFlag, projectId, numberOfStudents);
+    int? viewTypeFlag;
     if (selectedFilterOptions.single == DashboardFilterOptions.working) {
-      typeFlag = 1;
+      viewTypeFlag = Constant.projectTypeFlag['working'];
     } else if (selectedFilterOptions.single ==
         DashboardFilterOptions.archived) {
-      typeFlag = 2;
+      viewTypeFlag = Constant.projectTypeFlag['archived'];
     }
-    fetchCompanyProjects(typeFlag);
+    fetchCompanyProjects(viewTypeFlag);
     Fluttertoast.showToast(
-        msg: 'Start Working Successfully',
+        msg: 'Update Project Successfully',
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.TOP,
         timeInSecForIosWeb: 3,
@@ -282,9 +297,11 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                           typeFlag = 1;
                         } else if (newSelection.single ==
                             DashboardFilterOptions.archived) typeFlag = 2;
-                        setState(() {
-                          selectedFilterOptions = newSelection;
-                        });
+                        if (mounted) {
+                          setState(() {
+                            selectedFilterOptions = newSelection;
+                          });
+                        }
                         fetchCompanyProjects(typeFlag);
                       },
                     ),
@@ -346,7 +363,10 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                     allCompanyProjects[index];
                                 return InkWell(
                                   onTap: () => GoRouter.of(context).pushNamed(
-                                      RouteConstants.companyProjectDetails),
+                                      RouteConstants.companyProjectDetails,
+                                      pathParameters: {
+                                        'projectId': project.id.toString()
+                                      }),
                                   child: Container(
                                     margin:
                                         const EdgeInsets.symmetric(vertical: 8),
@@ -372,6 +392,9 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                   children: [
                                                     Text(
                                                       project.title,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       style: const TextStyle(
                                                           color: Constant
                                                               .secondaryColor,
@@ -405,6 +428,45 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                           return Wrap(
                                                             children: [
                                                               TextButton(
+                                                                onPressed: () =>
+                                                                    handleUpdateProjectTypeFlag(
+                                                                        Constant.projectTypeFlag[
+                                                                            'working']!,
+                                                                        project
+                                                                            .id,
+                                                                        project
+                                                                            .numberOfStudents),
+                                                                child:
+                                                                    const ListTile(
+                                                                  leading: FaIcon(
+                                                                      FontAwesomeIcons
+                                                                          .diagramNext),
+                                                                  title: Text(
+                                                                      'Start Working'),
+                                                                ),
+                                                              ),
+                                                              const Divider(),
+                                                              TextButton(
+                                                                onPressed: () =>
+                                                                    handleUpdateProjectTypeFlag(
+                                                                        Constant.projectTypeFlag[
+                                                                            'archived']!,
+                                                                        project
+                                                                            .id,
+                                                                        project
+                                                                            .numberOfStudents),
+                                                                child:
+                                                                    const ListTile(
+                                                                  leading: FaIcon(
+                                                                      FontAwesomeIcons
+                                                                          .boxArchive),
+                                                                  title: Text(
+                                                                    'Archive Project',
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              const Divider(),
+                                                              TextButton(
                                                                 onPressed:
                                                                     () {},
                                                                 child:
@@ -431,23 +493,6 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                                       'Remove Project'),
                                                                 ),
                                                               ),
-                                                              const Divider(),
-                                                              TextButton(
-                                                                onPressed: () =>
-                                                                    handleStartWorkingProject(
-                                                                        project
-                                                                            .id,
-                                                                        project
-                                                                            .numberOfStudents),
-                                                                child:
-                                                                    const ListTile(
-                                                                  leading: FaIcon(
-                                                                      FontAwesomeIcons
-                                                                          .diagramNext),
-                                                                  title: Text(
-                                                                      'Start Working'),
-                                                                ),
-                                                              ),
                                                             ],
                                                           );
                                                         });
@@ -471,6 +516,8 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                               ),
                                               Text(
                                                 project.description,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.justify,
                                               )
                                             ],

@@ -147,7 +147,6 @@ class _LoginPageState extends State<LoginPage> {
         final Map<String, dynamic> userResponseData =
             userResponse.data as Map<String, dynamic>;
         final dynamic userData = userResponseData['result'];
-        print(userData);
 
         Provider.of<UserProvider>(context, listen: false)
             .updateUserInfo(userData);
