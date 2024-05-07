@@ -152,12 +152,12 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
           const SizedBox(
             height: 5,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
             child: SizedBox(
-              height: 50,
+              height: 52,
               width: double.infinity,
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: () {
                   bool isStudent = role == 'Student';
                   print("profile new:$isNewProfile");
@@ -166,7 +166,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     if (!isNewProfile) {
                       context.pushNamed(RouteConstants.createStudentProfile1);
                     } else {
-                      context.pushNamed(RouteConstants.studentProfile);
+                      context.pushNamed(RouteConstants.createStudentProfile3);
                     }
                   } else {
                     if (!isNewProfile) {
@@ -176,42 +176,74 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     }
                   }
                 },
-                style: ElevatedButton.styleFrom(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   padding: EdgeInsets.zero,
                 ),
                 child: const Row(
                   children: [
                     SizedBox(width: 16),
-                    Icon(Icons.person),
-                    SizedBox(width: 8),
-                    Text('Profile'),
+                    Icon(
+                      Icons.person,
+                      color: Constant.textColor,
+                    ),
+                    SizedBox(width: 16),
+                    Text(
+                      'Profile',
+                      style: TextStyle(
+                          color: Constant.textColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
             child: SizedBox(
-              height: 50,
+              height: 52,
               width: double.infinity,
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: () {
                   context.pushNamed(RouteConstants.settings);
                 },
-                style: ElevatedButton.styleFrom(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   padding: EdgeInsets.zero,
                 ),
                 child: const Row(
                   children: [
                     SizedBox(width: 16),
-                    Icon(Icons.settings),
-                    SizedBox(width: 8),
-                    Text('Settings'),
+                    Icon(
+                      Icons.settings,
+                      color: Constant.textColor,
+                    ),
+                    SizedBox(width: 16),
+                    Text(
+                      'Settings',
+                      style: TextStyle(
+                          color: Constant.textColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ],
                 ),
               ),
             ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
@@ -225,7 +257,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                 style: TextButton.styleFrom(
                     backgroundColor: Constant.onPrimaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100)),
+                        borderRadius: BorderRadius.circular(12)),
                     side: const BorderSide(
                         color: Constant.primaryColor, width: 1),
                     foregroundColor: Constant.primaryColor),

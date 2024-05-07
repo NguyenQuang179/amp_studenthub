@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/student_profile.dart';
@@ -7,7 +8,9 @@ import 'package:amp_studenthub/network/dio.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:dio/dio.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -34,6 +37,10 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
   List<dynamic> educationList = [];
   List<dynamic> languageList = [];
   List<Map<String, dynamic>> experienceList = [];
+    File? cvFile;
+  File? transcriptFile;
+  PlatformFile? cvFileDetails;
+  PlatformFile? transcriptFileDetails;
 
   final MultiSelectController<dynamic> _controller = MultiSelectController();
   late TextEditingController languageNameController;
@@ -109,7 +116,6 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
             'skillSets': newSkillsetList
           };
         }).toList();
-        print(newExpList);
         experienceList = [...newExpList];
       });
     } on DioException catch (e) {
@@ -486,6 +492,31 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                       child: const Text("Confirm"))
                 ],
               ));
+
+Future<void> pickFile(bool isCv) async {
+    List<String> extensionType = ['doc', 'docx', 'pdf'];
+    try {
+      FilePickerResult? result = await FilePicker.platform
+          .pickFiles(type: FileType.custom, allowedExtensions: extensionType);
+      if (result != null) {
+        PlatformFile file = result.files.first;
+        setState(() {
+          if (isCv) {
+            cvFile = File(result.files.single.path!);
+            cvFileDetails = file;
+          } else {
+            transcriptFile = File(result.files.single.path!);
+            transcriptFileDetails = file;
+          }
+        });
+      } else {
+        // User canceled the picker
+      }
+    } catch (e) {
+      print('Error picking file: $e');
+    }
+  }
+
 
   @override
   void initState() {
@@ -1257,7 +1288,139 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                 const Divider()
                               ],
                             )),
-
+// Resume & Trascript
+const Text(
+                      'CV (*)',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Stack(
+                      children: [
+                        if (cvFile == null)
+                          Positioned.fill(
+                            child: Icon(
+                              Icons.insert_drive_file,
+                              size: 100,
+                              color: Colors.grey[300], // Adjust color as needed
+                            ),
+                          ),
+                        DottedBorder(
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(8),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 100,
+                            child: Center(
+                              child: cvFile == null
+                                  ? ElevatedButton(
+                                      onPressed: () => pickFile(true),
+                                      child: const Text('Choose file'),
+                                    )
+                                  : cvFileDetails != null
+                                      ? Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5),
+                                          child: Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Text(
+                                                    cvFileDetails!.name,
+                                                    style: const TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Text(cvFileDetails!
+                                                          .extension ??
+                                                      '')
+                                                ],
+                                              ),
+                                              const Spacer(),
+                                              Text(cvFileDetails!.size
+                                                  .toString())
+                                            ],
+                                          ),
+                                        )
+                                      : Container(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    const Text(
+                      'Transcript (*)',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Stack(
+                      children: [
+                        if (transcriptFile == null)
+                          Positioned.fill(
+                            child: Icon(
+                              Icons.insert_drive_file,
+                              size: 100,
+                              color: Colors.grey[300], // Adjust color as needed
+                            ),
+                          ),
+                        DottedBorder(
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(8),
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 100,
+                            child: Center(
+                              child: transcriptFile == null
+                                  ? ElevatedButton(
+                                      onPressed: () => pickFile(false),
+                                      child: const Text('Choose file'),
+                                    )
+                                  : transcriptFileDetails != null
+                                      ? Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5),
+                                          child: Row(
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  Text(
+                                                    transcriptFileDetails!.name,
+                                                    style: const TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Text(transcriptFileDetails!
+                                                          .extension ??
+                                                      '')
+                                                ],
+                                              ),
+                                              const Spacer(),
+                                              Text(transcriptFileDetails!.size
+                                                  .toString())
+                                            ],
+                                          ),
+                                        )
+                                      : Container(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    
                         // Button Edit & Cancel
                         Container(
                             alignment: Alignment.bottomCenter,
