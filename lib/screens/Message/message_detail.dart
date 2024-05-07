@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/models/message.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/screens/Message/message_detail_item.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 // import 'package:flutter_io_socket/flutter_io_socket.dart' as io;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +14,6 @@ import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-import 'package:socket_io_common/src/util/event_emitter.dart';
 
 class MessageDetail extends StatefulWidget {
   //    final int userId;
@@ -30,16 +33,29 @@ class _MessageDetailState extends State<MessageDetail> {
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
 
-  final int userId = 139;
-  final int receiverId = 139;
+  final sendMessageDetailController = TextEditingController();
+  final _ListScrollController = ScrollController();
+
+  final int userId = 45;
+  final int receiverId = 38;
   final int projectId = 2;
-  final String receiverName = 'Luis Pham ';
+  String receiverName = ' ';
+  String senderName = '';
+
   bool socketInitialized = false;
-  late final dynamic messages;
+  List<dynamic> messages = [];
   @override
   void initState() {
     super.initState();
     init();
+  }
+
+  void scrollToBottom() {
+    _ListScrollController.animateTo(
+      _ListScrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
   }
 
   Future<void> getMessage(receiverId, projectId) async {
@@ -48,6 +64,7 @@ class _MessageDetailState extends State<MessageDetail> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
+
       final endpoint =
           '${Constant.baseURL}/api/message/$projectId/user/$receiverId';
       final Response response = await dio.get(
@@ -61,10 +78,33 @@ class _MessageDetailState extends State<MessageDetail> {
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
       print(result);
+      final List<Message> fetchedMessages = [];
+      final fetchedReceiverId = result[0]['receiver']['id'];
+      final fetchedSenderId = result[0]['sender']['id'];
+      if (receiverId == fetchedReceiverId) {
+        receiverName = result[0]['receiver']['fullname'];
+        senderName = result[0]['sender']['fullname'];
+      } else if (receiverId == fetchedSenderId) {
+        receiverName = result[0]['sender']['fullname'];
+        senderName = result[0]['receiver']['fullname'];
+      } else {
+        receiverName = 'errorName';
+        senderName = 'errorName';
+      }
+      print(receiverName);
+      print(senderName);
+      for (var message in result) {
+        Message detailMsg = Message.fromJson(message);
+        detailMsg.senderId = message['sender']['id'];
+        print(detailMsg.senderId);
+        fetchedMessages.add(detailMsg);
+      }
+
       if (mounted) {
         setState(() {
-          messages = result;
+          messages = fetchedMessages;
         });
+        Timer(Duration(milliseconds: 500), () => scrollToBottom());
       }
       print(messages);
     } catch (e) {
@@ -84,12 +124,25 @@ class _MessageDetailState extends State<MessageDetail> {
     }
   }
 
+  addMessage(message) {
+    setState(() {
+      messages.add(message);
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
     print(socket.connected);
     socket.disconnect();
+    socket.dispose();
     print(socket.connected);
+    _ListScrollController.dispose();
+    interviewTitleController.dispose();
+    startDateController.dispose();
+    endDateController.dispose();
+
+    sendMessageDetailController.dispose();
 
     print('Socket Disconnected');
   }
@@ -125,89 +178,47 @@ class _MessageDetailState extends State<MessageDetail> {
 
     socket.onConnectError((data) => print('connect error: $data'));
     socket.onError((data) => print('error: $data'));
-    socket.on('RECEIVE_MESSAGE', (data) => print(data));
+    socket.on('NOTI_$userId', (data) {
+      print(data);
+      print(data["notification"]);
+
+      try {
+        // final notification = NotificationModel.fromJson(data);
+        // print(notification);
+        final newMsg = Message.fromJson(data["notification"]["message"]);
+        addMessage(newMsg);
+        print(messages);
+        // print(notification.sender.fullname);
+        // print(notification.receiver.fullname);
+        scrollToBottom();
+      } catch (e) {
+        print(e);
+      }
+    });
     socket.on('RECEIVE_INTERVIEW', (data) => print(data));
     socket.on('ERROR', (data) => print('ERROR: $data'));
 
     setState(() {
       socketInitialized = true;
     });
-//     socket = IO.io(
-//         'https://api.studenthub.dev',
-//         IO.OptionBuilder()
-//             .setTransports(['websocket', 'polling'])
-//             .disableAutoConnect()
-//             .setExtraHeaders({"Authorization": "Bearer $accessToken"})
-//             .build());
-
-// //Add query param to url
-//     socket.io.options?['query'] = {'project_id': 2};
-
-//     print(IO.OptionBuilder()
-//         .setTransports(['websocket', 'polling'])
-//         .disableAutoConnect()
-//         .setExtraHeaders({"Authorization": "Bearer $accessToken"})
-//         .build());
-//     print("Connecting to socket.io server");
-//     // socket.io.options?['query'] = {'project_id': projectId};
-
-//     // Add authorization to header
-//     print('Bearer $accessToken');
-//     print(socket.io.options);
-//     // socket.io.options?['extraHeaders'] = {
-//     //   'Authorization': 'Bearer $accessToken',
-//     // };
-//     // print(socket.io.options?['extraHeaders']);
-// // Connect to the socket.io server
-// //     socket.connect();
-// //     socket.on('RECEIVE_MESSAGE', (data) {
-// //       print(data);
-// //       // Update the state with the received message
-// //     });
-// //     socket.onConnect((data) => {
-// //           print('Connected'),
-// //         });
-
-// //     socket.onDisconnect((data) => {
-// //           print('Disconnected'),
-// //         });
-// //     // Listen to socket events
-// //     socket.onAny((String event, data) {
-// //       print([event, data]);
-// //     });
-
-// // Add authorization to header
-//     print(socket.io.options?['extraHeaders']);
-
-//     socket.io.options?['extraHeaders'] = {
-//       'Authorization': 'Bearer ${accessToken}',
-//     };
-//     print(socket.io.options?['extraHeaders']);
-
-//     socket.connect();
-
-//     socket.onConnect((data) => {
-//           print('Connected'),
-//         });
-
-//     socket.onDisconnect((data) => {
-//           print('Disconnected'),
-//         });
-
-//     socket.onConnectError((data) => print('$data connect error error error'));
-//     socket.onError((data) => print(data));
-//     // socket.onConnectTimeout((data) => print('$data connect timeout'));
-// //Listen to channel receive message
-//     socket.on('RECEIVE_MESSAGE', (data) {
-//       // Your code to update ui
-//       print(data);
-//     });
-// //Listen for error from socket
-//     socket.on("ERROR", (data) => print('$data error'));
-//     socket.on("NOTI_1", (data) => print(data));
   }
 
-  void sendMessage(String message) {
+  // here we set the timer to call the event
+  Future<void> sendMessage(String message) async {
+    final newMessage = Message(
+      1,
+      DateTime.now(),
+      userId,
+      receiverId,
+      projectId,
+      null, //interviewId
+      message,
+      0, //messageFlag
+      null, //interview
+    );
+    //optimistic
+    addMessage(newMessage);
+
     final form = {
       "senderId": userId,
       "receiverId": receiverId,
@@ -215,7 +226,36 @@ class _MessageDetailState extends State<MessageDetail> {
       "content": message,
       "messageFlag": 0,
     };
-    socket.emit('SEND_MESSAGE', form);
+
+    final dio = Dio();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
+
+    const endpoint = '${Constant.baseURL}/api/message/sendMessage';
+    try {
+      final Response response = await dio.post(
+        endpoint,
+        data: form,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final responseData = response.data;
+      print(responseData);
+
+      scrollToBottom();
+    } catch (error) {
+      print(error);
+      Fluttertoast.showToast(
+          msg: 'An error occurred',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   @override
@@ -505,12 +545,17 @@ class _MessageDetailState extends State<MessageDetail> {
           children: [
             Expanded(
                 child: ListView.builder(
-              itemCount: 6,
+              controller: _ListScrollController,
+              itemCount: messages.length,
               itemBuilder: (BuildContext context, int index) {
+                final message = messages[index];
+                final isCurrentUser = message.senderId == userId;
                 return MessageDetailItem(
-                  isCurrentUser: index.isEven,
-                  message: 'Hello World',
-                  isScheduleItem: index % 3 == 0 ? true : false,
+                  isCurrentUser: isCurrentUser,
+                  fullname: isCurrentUser ? senderName : receiverName,
+                  timeCreated: message.createdAt,
+                  message: message.content ?? "empty??",
+                  isScheduleItem: false,
                 );
               },
             )),
@@ -521,7 +566,7 @@ class _MessageDetailState extends State<MessageDetail> {
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: TextEditingController(),
+                      controller: sendMessageDetailController,
                       obscureText: false,
                       decoration: InputDecoration(
                         hintText: 'Type a message',
@@ -532,17 +577,13 @@ class _MessageDetailState extends State<MessageDetail> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.send),
-                    onPressed: () {
-                      socket.emit('SEND_MESSAGE', {
-                        'content': 'Hello World',
-                        'projectId': 1,
-                        'senderId': 139,
-                        'receiverId': 2,
-                        'messageFlag': 0,
-                      });
-                    },
-                  ),
+                      icon: const Icon(Icons.send),
+                      onPressed: () {
+                        sendMessage
+                            // (messageController.text);
+                            (sendMessageDetailController.text);
+                        sendMessageDetailController.clear();
+                      }),
                 ],
               ),
             ),
