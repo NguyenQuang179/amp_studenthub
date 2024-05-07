@@ -247,7 +247,9 @@ class AppRouter {
           name: RouteConstants.submitProposal,
           path: '/submitProposal',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: StudentSubmitProposal());
+            final projectId = state.uri.queryParameters['id'] ?? '0';
+            return MaterialPage(
+                child: StudentSubmitProposal(projectId: projectId));
           }),
       GoRoute(
           name: RouteConstants.settings,

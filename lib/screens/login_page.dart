@@ -11,14 +11,101 @@ import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({
+    super.key,
+  });
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
 
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  TextEditingController _textFieldController = TextEditingController();
+
+  Future<void> _displayTextInputDialog() async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Reset password'),
+          content: TextField(
+            controller: _textFieldController,
+            decoration: InputDecoration(hintText: "username"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: Text('OK'),
+              onPressed: () async {
+                //api request
+                final dio = Dio();
+                if (_textFieldController.text.isEmpty) {
+                  Fluttertoast.showToast(
+                    msg: 'Please fill in all fields',
+                  );
+                  return;
+                }
+
+                const endpoint = '${Constant.baseURL}/api/user/forgotPassword';
+                final submitData = {
+                  "email": _textFieldController.text,
+                };
+                try {
+                  final Response response = await dio.post(
+                    endpoint,
+                    data: submitData,
+                  );
+
+                  final responseData = response.data;
+                  final String? message = responseData['result']['message'];
+                  if (message != null) {
+                    Fluttertoast.showToast(
+                        msg: message,
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  } else {
+                    Fluttertoast.showToast(
+                        msg: 'An error occurred',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  }
+                } catch (error) {
+                  Fluttertoast.showToast(
+                      msg: 'An error occurred',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // signin
-  Future<void> signIn(BuildContext context) async {
+  Future<void> signIn() async {
     final dio = Dio();
     try {
       if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
@@ -72,11 +159,18 @@ class LoginPage extends StatelessWidget {
           Fluttertoast.showToast(
             msg: errorDetails,
           );
+        } else {
+          Fluttertoast.showToast(
+            msg: 'Login failed',
+          );
         }
       }
     } on DioException catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
+      Fluttertoast.showToast(
+        msg: 'Login Failed',
+      );
       if (e.response != null) {
         print(e.response?.data);
         print(e.response?.headers);
@@ -136,9 +230,10 @@ class LoginPage extends StatelessWidget {
                       ),
                       //password textfield
                       Textfield(
-                          controller: passwordController,
-                          hintText: 'Password',
-                          obscureText: true),
+                        controller: passwordController,
+                        hintText: 'Password',
+                        obscureText: true,
+                      ),
                     ],
                   ))
                 ],
@@ -159,7 +254,7 @@ class LoginPage extends StatelessWidget {
                       //sign in button
                       Button(
                           onTap: () {
-                            signIn(context);
+                            signIn();
                           },
                           text: 'Sign In'),
                       //forgot password?
@@ -169,14 +264,7 @@ class LoginPage extends StatelessWidget {
                             onTap: () {
                               // Handle click on Forgot Password
                               // For example, navigate to the Forgot Password screen
-                              Fluttertoast.showToast(
-                                  msg: 'Forgot Password',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
+                              _displayTextInputDialog();
                             },
                             child: const Text(
                               'Forgot Password?',
