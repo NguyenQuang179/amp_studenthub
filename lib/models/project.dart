@@ -10,7 +10,7 @@ class Project {
   final int numberOfStudents;
   final int? typeFlag;
   final int countProposals;
-  late final bool isFavorite;
+  bool isFavorite = false;
   final String createdDate;
 
   Project({

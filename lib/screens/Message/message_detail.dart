@@ -16,15 +16,24 @@ import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class MessageDetail extends StatefulWidget {
-  //    final int userId;
-  // final int receiverId;
-  // final int projectId;
-  // final String receiverName;
+  final int userId;
+  final int receiverId;
+  final int projectId;
+  String? receiverName;
 
-  const MessageDetail({super.key});
+  MessageDetail(
+      {super.key,
+      required this.userId,
+      required this.receiverId,
+      required this.projectId,
+      this.receiverName});
 
   @override
-  State<MessageDetail> createState() => _MessageDetailState();
+  State<MessageDetail> createState() => _MessageDetailState(
+      userId: userId,
+      receiverId: receiverId,
+      projectId: projectId,
+      receiverName: receiverName);
 }
 
 class _MessageDetailState extends State<MessageDetail> {
@@ -36,11 +45,17 @@ class _MessageDetailState extends State<MessageDetail> {
   final sendMessageDetailController = TextEditingController();
   final _ListScrollController = ScrollController();
 
-  final int userId = 45;
-  final int receiverId = 38;
-  final int projectId = 2;
-  String receiverName = ' ';
+  final int userId;
+  final int receiverId;
+  final int projectId;
+  String? receiverName = ' ';
   String senderName = '';
+
+  _MessageDetailState(
+      {required this.userId,
+      required this.receiverId,
+      required this.projectId,
+      this.receiverName});
 
   bool socketInitialized = false;
   List<dynamic> messages = [];
@@ -74,6 +89,7 @@ class _MessageDetailState extends State<MessageDetail> {
         }),
       );
 
+      print(endpoint);
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
@@ -226,7 +242,7 @@ class _MessageDetailState extends State<MessageDetail> {
       "content": message,
       "messageFlag": 0,
     };
-
+    print(form);
     final dio = Dio();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final accessToken = userProvider.userToken;
@@ -265,8 +281,8 @@ class _MessageDetailState extends State<MessageDetail> {
       appBar: AppBar(
         backgroundColor: Constant.backgroundColor,
         toolbarHeight: 60,
-        title: const Text(
-          'Luis Pham Irecnus',
+        title: Text(
+          receiverName ?? "",
           style: TextStyle(
               color: Constant.primaryColor, fontWeight: FontWeight.w600),
         ),
@@ -552,8 +568,9 @@ class _MessageDetailState extends State<MessageDetail> {
                 final isCurrentUser = message.senderId == userId;
                 return MessageDetailItem(
                   isCurrentUser: isCurrentUser,
-                  fullname: isCurrentUser ? senderName : receiverName,
-                  timeCreated: message.createdAt,
+                  fullname: isCurrentUser ? senderName : receiverName ?? "",
+                  timeCreated: DateFormat('HH:mm MM-dd')
+                      .format(DateTime.parse(message.createdAt.toString())),
                   message: message.content ?? "empty??",
                   isScheduleItem: false,
                 );
