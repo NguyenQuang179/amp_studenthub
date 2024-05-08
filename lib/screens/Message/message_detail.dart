@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
@@ -40,9 +41,9 @@ class _MessageDetailState extends State<MessageDetail> {
         "projectId": 835,
         "senderId": 341,
         "receiverId": 227,
-        "meeting_room_code": "string",
-        "meeting_room_id": "string",
-        "expired_at": "2024-05-05T08:25:33.581Z"
+        "meeting_room_code": Random().nextInt(1000000).toString(),
+        "meeting_room_id": Random().nextInt(1000000).toString(),
+        "expired_at": endTime
       };
 
       final Response response = await dio.post(
