@@ -1,25 +1,56 @@
 class StudentProfile {
   final num id;
-  final String fullname;
-  final int studentYear;
-  final String studentGrade;
-  final String proposal;
+  final num techStackId;
+  final String? resume;
+  final String? transcript;
+  final dynamic proposals;
+  final dynamic techStack;
+  final List<dynamic> educations;
+  final List<dynamic> languages;
+  final List<dynamic> experiences;
+  final List<dynamic> skillSets;
+  final dynamic user;
+  final dynamic userId;
 
-  StudentProfile(this.id, this.fullname, this.studentYear, this.studentGrade,
-      this.proposal);
+  StudentProfile(
+      this.id,
+      this.techStackId,
+      this.resume,
+      this.transcript,
+      this.proposals,
+      this.techStack,
+      this.educations,
+      this.languages,
+      this.experiences,
+      this.skillSets,
+      this.user,
+      this.userId);
 
-  // StudentProfile.fromJson(Map<String, dynamic> json)
-  //     : id = json['id'] as num,
-  //       fullname = json['name'] as String,
-  //       studentYear = json['studentYear'] as int,
-  //       studentGrade = json['studentGrade'] as String,
-  //       proposal = json['proposal'] as String;
+  StudentProfile.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as num,
+        techStackId = json['techStackId'] as num,
+        resume = json['resume'],
+        transcript = json['transcript'],
+        proposals = json['proposals'] as dynamic,
+        techStack = json['techStack'] as dynamic,
+        educations = json['educations'] ?? [],
+        languages = json['languages'] ?? [],
+        experiences = json['experiences'] ?? [],
+        skillSets = json['skillSets'] ?? [],
+        user = json['user'] as dynamic,
+        userId = json['userId'] as dynamic;
 
-  // Map<String, dynamic> toJson() => {
-  //       'id': id,
-  //       'fullname': fullname,
-  //       'studentYear': studentYear,
-  //       'studentGrade': studentGrade,
-  //       'proposal': proposal
-  //     };
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'techStackId': techStackId,
+        'resume': resume,
+        'transcript': transcript,
+        'proposals': proposals,
+        'techStack': techStack,
+        'educations': educations,
+        'languages': languages,
+        'experiences': experiences,
+        'skillSets': skillSets,
+        'user': user
+      };
 }

@@ -1,4 +1,5 @@
-import 'package:amp_studenthub/models/company_dashboard_project.dart';
+import 'dart:developer';
+
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/Message/message_detail.dart';
@@ -6,10 +7,12 @@ import 'package:amp_studenthub/screens/Message/message_list.dart';
 import 'package:amp_studenthub/screens/Student_Profile/profile_input_1.dart';
 import 'package:amp_studenthub/screens/Student_Profile/profile_input_2.dart';
 import 'package:amp_studenthub/screens/Student_Profile/profile_input_3.dart';
+import 'package:amp_studenthub/screens/Student_Profile/view_student_profile.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_detail.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list_filtered.dart';
 import 'package:amp_studenthub/screens/Student_Projects/project_list_saved.dart';
+import 'package:amp_studenthub/screens/account_settings.dart';
 import 'package:amp_studenthub/screens/bottom_navbar_scaffold/company_bottom_navbar.dart';
 import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
 import 'package:amp_studenthub/screens/edit_company_profile.dart';
@@ -167,9 +170,13 @@ class AppRouter {
           }),
       GoRoute(
           name: RouteConstants.companyProjectDetails,
-          path: '/jobDetails',
+          path: '/jobDetails/:projectId',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: JobDetailsScreen());
+            // Extract id from the URI query parameters
+            final id = state.pathParameters['projectId'] ?? '0';
+            log('ProjectID: $id');
+            // Create the ProjectDetail widget with the extracted id
+            return MaterialPage(child: JobDetailsScreen(projectId: id));
           }),
       GoRoute(
           name: RouteConstants.projectListSaved,
@@ -193,7 +200,21 @@ class AppRouter {
           name: RouteConstants.messageDetail,
           path: '/messageDetail',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: MessageDetail());
+            final userId =
+                int.parse(state.uri.queryParameters['userId'] ?? '0');
+            final receiverId =
+                int.parse(state.uri.queryParameters['receiverId'] ?? '0');
+            final projectId =
+                int.parse(state.uri.queryParameters['projectId'] ?? '0');
+            final receiverName =
+                state.uri.queryParameters['receiverName'] ?? '';
+            return MaterialPage(
+                child: MessageDetail(
+              userId: userId,
+              receiverId: receiverId,
+              projectId: projectId,
+              receiverName: receiverName,
+            ));
           }),
       GoRoute(
           name: RouteConstants.videoCall,
@@ -220,6 +241,12 @@ class AppRouter {
             return const MaterialPage(child: EditCompanyProfile());
           }),
       GoRoute(
+          name: RouteConstants.studentProfile,
+          path: '/studentProfile',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: ViewStudentProfile());
+          }),
+      GoRoute(
           name: RouteConstants.createStudentProfile1,
           path: '/createStudentProfile1',
           pageBuilder: (context, state) {
@@ -241,7 +268,15 @@ class AppRouter {
           name: RouteConstants.submitProposal,
           path: '/submitProposal',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: StudentSubmitProposal());
+            final projectId = state.uri.queryParameters['id'] ?? '0';
+            return MaterialPage(
+                child: StudentSubmitProposal(projectId: projectId));
+          }),
+      GoRoute(
+          name: RouteConstants.settings,
+          path: '/settings',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: AccountSettings());
           }),
     ],
     // errorPageBuilder: (context, state) {

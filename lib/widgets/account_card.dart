@@ -48,7 +48,12 @@ class AccountCard extends StatelessWidget {
                   children: [
                     Text(
                       account.fullName,
-                      style: const TextStyle(color: Constant.onPrimaryColor),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: Constant.onPrimaryColor,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
                     ),
                     Text(
                       role,

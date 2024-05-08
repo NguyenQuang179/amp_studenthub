@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MessageItem extends StatelessWidget {
   final String messageReceiver;
+  final String message;
   final String jobCreatedDate;
   final String receiverPosition;
   final onClick;
@@ -14,7 +15,8 @@ class MessageItem extends StatelessWidget {
       required this.jobCreatedDate,
       required this.receiverPosition,
       required this.onClick,
-      required this.isSaved});
+      required this.isSaved,
+      required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +53,20 @@ class MessageItem extends StatelessWidget {
                           ),
                         ),
                         Container(
-                            margin: EdgeInsets.only(bottom: 8),
+                          margin: EdgeInsets.only(bottom: 6),
+                          child: Text(
+                            //make this truncated and elipsis
+
+                            "Lastest: $message",
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            softWrap: false,
+                          ),
+                        ),
+                        Container(
+                            margin: EdgeInsets.only(bottom: 6),
                             child: Text(
-                              " ${receiverPosition}",
+                              "For Project: ${receiverPosition}",
                               style: TextStyle(color: Colors.grey[600]),
                             )),
                         Text("Created at $jobCreatedDate",

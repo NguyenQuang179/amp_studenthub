@@ -12,7 +12,7 @@ class Constant {
   static const String baseURL = "http://34.16.137.128";
   // static const String baseURL = "http://localhost:4567";
   static const String token =
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZnVsbG5hbWUiOiJOZ3V5ZW4gTmdvYyBRdWFuZyIsImVtYWlsIjoibm5xdWFuZzIwQGNsYy5maXR1cy5lZHUudm4iLCJyb2xlcyI6WzBdLCJpYXQiOjE3MTI5NDA3NjksImV4cCI6MTcxNDE1MDM2OX0.ccOxnGWHxg89-vv9m3TrrKPQsrsFFQqu73QniRQPzOw";
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzY3LCJmdWxsbmFtZSI6IlF1YW5nIDYiLCJlbWFpbCI6Im5ucXVhbmcyMCs2QGNsYy5maXR1cy5lZHUudm4iLCJyb2xlcyI6WzAsMV0sImlhdCI6MTcxNDUzODM2NCwiZXhwIjoxNzE1NzQ3OTY0fQ.BwYt0sUM8UWgM94lW7_AMQ4RS6Zu8wfiS9JLMUAoWyI";
   static const int apiTimeOut = 60000;
 
   static const appId = 301809692;
@@ -36,4 +36,18 @@ class Constant {
   static const String strDefaultError = "default_error";
   static const String strCacheError = "cache_error";
   static const String strNoInternetError = "no_internet_error";
+
+  // Project Type Flag
+  static const Map<String, int> projectTypeFlag = {
+    "new": 0,
+    "working": 1,
+    "archived": 2
+  };
+
+  static const List<String> timelineOptions = [
+    'Less than 1 month',
+    '1 to 3 months',
+    '3 to 6 months',
+    'More than 6 month'
+  ];
 }

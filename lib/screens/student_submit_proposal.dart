@@ -1,19 +1,27 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class StudentSubmitProposal extends StatefulWidget {
-  const StudentSubmitProposal({super.key});
+  final String projectId;
+  const StudentSubmitProposal({super.key, required this.projectId});
 
   @override
-  State<StudentSubmitProposal> createState() => _StudentSubmitProposalState();
+  State<StudentSubmitProposal> createState() =>
+      _StudentSubmitProposalState(projectId: projectId);
 }
 
 class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
+  _StudentSubmitProposalState({required this.projectId});
   TextEditingController? controller;
   FocusNode? focusNode;
+  final String projectId;
 
   @override
   void initState() {
@@ -25,6 +33,73 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> submitProposal() async {
+    // Implement submit proposal logic here
+    //api request
+    final dio = Dio();
+    if (controller == null) {
+      return;
+    }
+    if (controller!.text.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Please write a cover letter',
+      );
+      return;
+    }
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
+
+    const endpoint = '${Constant.baseURL}/api/proposal';
+    final submitData = {
+      "projectId": int.parse(projectId),
+      "studentId": userProvider.userInfo['student']?['id'],
+      "coverLetter": controller!.text
+    };
+    print(submitData);
+    try {
+      final Response response = await dio.post(
+        endpoint,
+        data: submitData,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final responseData = response.data;
+      print(responseData);
+      if (responseData['result'] != null) {
+        Fluttertoast.showToast(
+            msg: "Apply Successfully",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        GoRouter.of(context).goNamed(RouteConstants.companyProject);
+      } else {
+        Fluttertoast.showToast(
+            msg: 'An error occurred',
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    } catch (error) {
+      print(error);
+      Fluttertoast.showToast(
+          msg: 'An error occurred',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
   }
 
   @override
@@ -40,7 +115,9 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () {},
+          onPressed: () {
+            GoRouter.of(context).pop();
+          },
         ),
         actions: [
           Padding(
@@ -110,7 +187,9 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
               alignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    GoRouter.of(context).pop();
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
@@ -121,7 +200,8 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    context.goNamed(RouteConstants.company);
+                    // context.goNamed(RouteConstants.company);
+                    submitProposal();
                   },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
