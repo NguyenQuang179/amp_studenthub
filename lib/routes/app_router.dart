@@ -199,7 +199,21 @@ class AppRouter {
           name: RouteConstants.messageDetail,
           path: '/messageDetail',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: MessageDetail());
+            final userId =
+                int.parse(state.uri.queryParameters['userId'] ?? '0');
+            final receiverId =
+                int.parse(state.uri.queryParameters['receiverId'] ?? '0');
+            final projectId =
+                int.parse(state.uri.queryParameters['projectId'] ?? '0');
+            final receiverName =
+                state.uri.queryParameters['receiverName'] ?? '';
+            return MaterialPage(
+                child: MessageDetail(
+              userId: userId,
+              receiverId: receiverId,
+              projectId: projectId,
+              receiverName: receiverName,
+            ));
           }),
       GoRoute(
           name: RouteConstants.videoCall,

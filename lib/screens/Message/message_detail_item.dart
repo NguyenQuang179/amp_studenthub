@@ -7,7 +7,7 @@ class MessageDetailItem extends StatelessWidget {
   final bool isScheduleItem;
   final String message;
   final String fullname;
-  final DateTime timeCreated;
+  final String timeCreated;
   MessageDetailItem(
       {super.key,
       required this.isCurrentUser,
@@ -34,13 +34,13 @@ class MessageDetailItem extends StatelessWidget {
                 meetingName: 'Meeting',
                 duration: '1 hour',
                 isCancelled: isCurrentUser,
-                timeCreated: timeCreated.toLocal().toIso8601String(),
+                timeCreated: timeCreated,
               )
             : ChatBubble(
                 isCurrentUser: isCurrentUser,
                 message: message,
                 username: fullname,
-                timeCreated: timeCreated.toLocal().toIso8601String(),
+                timeCreated: timeCreated,
               ));
   }
 }

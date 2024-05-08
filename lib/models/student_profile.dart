@@ -10,6 +10,7 @@ class StudentProfile {
   final List<dynamic> experiences;
   final List<dynamic> skillSets;
   final dynamic user;
+  final dynamic userId;
 
   StudentProfile(
       this.id,
@@ -22,7 +23,8 @@ class StudentProfile {
       this.languages,
       this.experiences,
       this.skillSets,
-      this.user);
+      this.user,
+      this.userId);
 
   StudentProfile.fromJson(Map<String, dynamic> json)
       : id = json['id'] as num,
@@ -35,7 +37,8 @@ class StudentProfile {
         languages = json['languages'] ?? [],
         experiences = json['experiences'] ?? [],
         skillSets = json['skillSets'] ?? [],
-        user = json['user'] as dynamic;
+        user = json['user'] as dynamic,
+        userId = json['userId'] as dynamic;
 
   Map<String, dynamic> toJson() => {
         'id': id,

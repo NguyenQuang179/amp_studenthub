@@ -8,6 +8,7 @@ class RouteConstants {
   static String companyPostProject = 'companyPostProject';
   static String companyProjectDetails = 'companyProjectDetails';
   static String projectDetails = 'projectDetails';
+  static String projectDetailsSaved = 'projectDetailsSaved';
   static String projectListSaved = 'projectListSaved';
   static String projectListFiltered = 'projectListFiltered';
   static String messageList = 'messageList';
