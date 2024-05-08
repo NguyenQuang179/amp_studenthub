@@ -172,7 +172,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                       context.pushNamed(RouteConstants.createCompanyProfile);
                       // ignore: dead_code
                     } else {
-                      context.pushNamed(RouteConstants.editCompanyProfile);
+                      context.pushNamed(RouteConstants.viewCompanyProfile);
                     }
                   }
                 },

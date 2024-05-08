@@ -21,6 +21,7 @@ class RouteConstants {
   static String companyMessage = 'companyMessage';
   static String companyNotification = 'companyNotification';
   static String createCompanyProfile = 'createCompanyProfile';
+  static String viewCompanyProfile = 'viewCompanyProfile';
   static String editCompanyProfile = 'editCompanyProfile';
 
   static String createStudentProfile1 = 'createStudentProfile1';
