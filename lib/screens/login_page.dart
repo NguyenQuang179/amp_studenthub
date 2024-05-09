@@ -1,6 +1,7 @@
 import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/core/socket_manager.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
@@ -150,6 +151,13 @@ class _LoginPageState extends State<LoginPage> {
 
         Provider.of<UserProvider>(context, listen: false)
             .updateUserInfo(userData);
+        // connect to socket
+        final socketManager = SocketManager();
+        final socket =
+            await socketManager.connectSocket(context, userData['id']);
+        print(userData['id']);
+        print(socket);
+
         context.goNamed(RouteConstants.companyProject);
       } else {
         final String? errorDetails = responseData['errorDetails'];

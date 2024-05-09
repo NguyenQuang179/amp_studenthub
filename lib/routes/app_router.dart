@@ -207,6 +207,12 @@ class AppRouter {
                 int.parse(state.uri.queryParameters['projectId'] ?? '0');
             final receiverName =
                 state.uri.queryParameters['receiverName'] ?? '';
+            print({
+              'userId': userId,
+              'receiverId': receiverId,
+              'projectId': projectId,
+              'receiverName': receiverName
+            });
             return MaterialPage(
                 child: MessageDetail(
               userId: userId,

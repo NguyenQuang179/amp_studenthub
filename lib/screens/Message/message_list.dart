@@ -124,7 +124,9 @@ class _MessageListState extends State<MessageList> {
                 final isCurrentUser = message["sender"]["id"] ==
                     Provider.of<UserProvider>(context, listen: false)
                         .userInfo['id'];
-
+                final receiverId = isCurrentUser
+                    ? message["receiver"]["id"]
+                    : message["sender"]["id"];
                 return MessageItem(
                     jobCreatedDate: DateFormat('yyyy-MM-dd').format(
                         DateTime.parse(message["project"]['createdAt'])),
@@ -133,8 +135,8 @@ class _MessageListState extends State<MessageList> {
                         : message["sender"]["fullname"],
                     message: message["content"],
                     receiverPosition: message["project"]["title"],
-                    onClick: () => checkDetail(
-                        message["sender"]["id"], message["project"]["id"]),
+                    onClick: () =>
+                        checkDetail(receiverId, message["project"]["id"]),
                     isSaved: false);
               },
             )),

@@ -9,9 +9,9 @@ class NotificationModel {
   final dynamic typeNotifyFlag;
   final dynamic proposalId;
   final dynamic content;
-  final Message message;
-  final Chatter sender;
-  final Chatter receiver;
+  final dynamic message;
+  final dynamic sender;
+  final dynamic receiver;
   final dynamic proposal;
 
   NotificationModel(
@@ -32,20 +32,20 @@ class NotificationModel {
   );
 
   NotificationModel.fromJson(Map<String, dynamic> json)
-      : id = json['notification']['id'],
-        createdAt = DateTime.parse(json['notification']['createdAt']),
-        receiverId = json['notification']['receiverId'],
-        senderId = json['notification']['senderId'],
-        messageId = json['notification']['messageId'],
-        title = json['notification']['title'],
-        notifyFlag = json['notification']['notifyFlag'],
-        typeNotifyFlag = json['notification']['typeNotifyFlag'],
-        proposalId = json['notification']['proposalId'],
-        content = json['notification']['content'],
-        message = Message.fromJson(json['notification']['message']),
-        sender = Chatter.fromJson(json['notification']['sender']),
-        receiver = Chatter.fromJson(json['notification']['receiver']),
-        proposal = json['notification']['proposal'];
+      : id = json['id'],
+        createdAt = DateTime.parse(json['createdAt']),
+        receiverId = json['receiverId'],
+        senderId = json['senderId'],
+        messageId = json['messageId'],
+        title = json['title'],
+        notifyFlag = json['notifyFlag'],
+        typeNotifyFlag = int.parse(json['typeNotifyFlag']),
+        proposalId = json['proposalId'],
+        content = json['content'],
+        message = json['message'],
+        sender = json['sender'],
+        receiver = json['receiver'],
+        proposal = json['proposal'];
 }
 
 class Message {
