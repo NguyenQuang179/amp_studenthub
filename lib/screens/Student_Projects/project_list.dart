@@ -119,13 +119,13 @@ class _ProjectListState extends State<ProjectList> {
       // Get access token from provider
       final accessToken = userProvider.userToken;
       const endpoint = '${Constant.baseURL}/api/project';
+      print(endpoint);
       final Response response = await dio.get(
         endpoint,
         options: Options(headers: {
           'Authorization': 'Bearer $accessToken',
         }),
       );
-
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];

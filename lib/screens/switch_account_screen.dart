@@ -1,4 +1,5 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/core/socket_manager.dart';
 import 'package:amp_studenthub/models/account.dart';
 import 'package:amp_studenthub/models/user.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
@@ -342,6 +343,8 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
+                  //disconnect socket
+                  SocketManager().disconnectSocket();
                   context.goNamed(RouteConstants.home);
                 },
                 style: TextButton.styleFrom(

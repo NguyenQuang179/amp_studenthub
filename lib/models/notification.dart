@@ -1,8 +1,9 @@
 class NotificationType {
-  static String activity = 'activity';
-  static String interview = 'interview';
-  static String offer = 'offer';
-  static String message = 'message';
+  static int activity = 0;
+  static int interview = 1;
+  static int offer = 2;
+  static int message = 3;
+  static int hired = 4;
 }
 
 class UserNotification {

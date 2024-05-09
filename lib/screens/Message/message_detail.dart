@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:async';
 
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/core/socket_manager.dart';
 import 'package:amp_studenthub/models/message.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/screens/Message/message_detail_item.dart';
@@ -197,71 +198,52 @@ class _MessageDetailState extends State<MessageDetail> {
   @override
   void dispose() {
     super.dispose();
-    print(socket.connected);
-    socket.disconnect();
-    socket.dispose();
-    print(socket.connected);
+    // print(socket.connected);
+    // socket.disconnect();
+    // socket.dispose();
+    // print(socket.connected);
     _ListScrollController.dispose();
     interviewTitleController.dispose();
     startDateController.dispose();
     endDateController.dispose();
 
     sendMessageDetailController.dispose();
+    SocketManager().unregisterSocketListener(onReceiveMessage);
 
     print('Socket Disconnected');
   }
 
-  Future<void> connectSocket() async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final accessToken = userProvider.userToken;
-    // Initialize socket with server URL
+  void onReceiveMessage(data) {
+    print(data);
+    print(data["notification"]);
 
-    // var map = new Map<String, dynamic>();
-    // map['Authorization'] = clientID;
-    // map['project_id'] = clientSecret;
-    // map['grant_type'] = grantType;
-    // map['redirect_uri'] = rediUrl;
-    // map['code'] = _accessCode;
-
-    print('Bearer $accessToken');
-    socket = io.io(
-      'https://api.studenthub.dev',
-      io.OptionBuilder()
-          .setTransports(['websocket'])
-          .setExtraHeaders({'Authorization': 'Bearer $accessToken'})
-          // .setAuth({'Authorization': 'Bearer $accessToken'})
-          .setQuery({
-            'project_id': projectId.toString(),
-          })
-          .disableAutoConnect()
-          .build(),
-    );
-    socket.connect();
-    socket.onConnect((data) => print('Connected'));
-    socket.onDisconnect((data) => print('Disconnected'));
-
-    socket.onConnectError((data) => print('connect error: $data'));
-    socket.onError((data) => print('error: $data'));
-    socket.on('NOTI_$userId', (data) {
-      print(data);
-      print(data["notification"]);
-
-      try {
-        // final notification = NotificationModel.fromJson(data);
-        // print(notification);
-        final newMsg = Message.fromJson(data["notification"]["message"]);
-        addMessage(newMsg);
-        print(messages);
-        // print(notification.sender.fullname);
-        // print(notification.receiver.fullname);
-        scrollToBottom();
-      } catch (e) {
-        print(e);
+    try {
+      // final notification = NotificationModel.fromJson(data);
+      // print(notification);
+      final newMsg = Message.fromJson(data["notification"]["message"]);
+      if (newMsg.senderId != receiverId ||
+          newMsg.receiverId != userId ||
+          projectId != newMsg.projectId) {
+        print(
+            "rejected ${newMsg.senderId != receiverId} || ${newMsg.receiverId != userId} || ${projectId != newMsg.projectId}");
+        return;
       }
-    });
-    socket.on('RECEIVE_INTERVIEW', (data) => print(data));
-    socket.on('ERROR', (data) => print('ERROR: $data'));
+      addMessage(newMsg);
+      print(messages);
+      // print(notification.sender.fullname);
+      // print(notification.receiver.fullname);
+      scrollToBottom();
+    } catch (e) {
+      print(e);
+    }
+    ;
+  }
 
+  Future<void> connectSocket() async {
+    final socketManager = SocketManager();
+    socket = await socketManager.connectSocket(context, userId);
+    SocketManager().registerSocketListener(onReceiveMessage);
+    print(socket);
     setState(() {
       socketInitialized = true;
     });
