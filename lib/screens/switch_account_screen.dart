@@ -272,7 +272,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     if (!isNewProfile) {
                       context.pushNamed(RouteConstants.createCompanyProfile);
                     } else {
-                      context.pushNamed(RouteConstants.editCompanyProfile);
+                      context.pushNamed(RouteConstants.viewCompanyProfile);
                     }
                   }
                 },

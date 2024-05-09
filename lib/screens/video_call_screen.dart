@@ -1,87 +1,35 @@
-import 'package:amp_studenthub/configs/constant.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
+
+import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 
 class VideoCallScreen extends StatelessWidget {
-  const VideoCallScreen({super.key});
+  final String conferenceId;
+
+  const VideoCallScreen({
+    super.key,
+    required this.conferenceId,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: Constant.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
-        toolbarHeight: 60,
-        title: const Text(
-          'Luis Pham Irecnus',
-          style: TextStyle(
-              color: Constant.primaryColor, fontWeight: FontWeight.w600),
-        ),
-        actions: [
-          Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-              child: IconButton.outlined(
-                  onPressed: () {},
-                  icon: const FaIcon(
-                    FontAwesomeIcons.ellipsis,
-                    size: 16,
-                  ))),
-        ],
-      ),
       body: SafeArea(
-        child: Center(
-            child: Column(
-          children: [
-            Expanded(
-                child: Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.grey[500]!),
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 16),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        color: Colors.grey[500]!),
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 16),
-                  ),
-                )
-              ],
-            )),
-            //userInput
-            SizedBox(
-              height: 72,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const FaIcon(FontAwesomeIcons.microphone),
-                    onPressed: () {},
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
-                    child: IconButton(
-                      icon: const FaIcon(FontAwesomeIcons.camera),
-                      onPressed: () {},
-                    ),
-                  ),
-                  IconButton(
-                    icon: const FaIcon(FontAwesomeIcons.phoneSlash),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
-          ],
-        )),
+        child: ZegoUIKitPrebuiltVideoConference(
+          appID: Constant.appId,
+          appSign: Constant.appSign,
+          userID: userProvider.userInfo['id'],
+          userName: userProvider.userInfo['fullname'],
+          conferenceID: conferenceId,
+          config: ZegoUIKitPrebuiltVideoConferenceConfig(),
+        ),
       ),
     );
   }

@@ -2,8 +2,11 @@ import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/company_profile.dart';
 import 'package:amp_studenthub/models/user.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class ProfileInputView extends StatefulWidget {
@@ -26,6 +29,7 @@ class _ProfileInputViewState extends State<ProfileInputView> {
   void initState() {
     super.initState();
     option = optionList[0]!;
+    getCompanyProfile(context);
   }
 
   @override
@@ -57,10 +61,12 @@ class _ProfileInputViewState extends State<ProfileInputView> {
       print(result);
       if (result != null) {
         var user = User.fromJson(result);
-        setState(() {
-          _companyProfile = CompanyProfile.fromJson(result['company']);
-          option = optionList[_companyProfile.size] ?? optionList[0]!;
-        });
+        if (mounted) {
+          setState(() {
+            _companyProfile = CompanyProfile.fromJson(result['company']);
+            option = optionList[_companyProfile.size] ?? optionList[0]!;
+          });
+        }
       } else {
         print('User data not found in the response');
       }
@@ -79,23 +85,25 @@ class _ProfileInputViewState extends State<ProfileInputView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Constant.backgroundColor,
+        toolbarHeight: 56,
         title: const Text(
-          "Profile",
-          style: TextStyle(color: Constant.onPrimaryColor),
+          'StudentHub',
+          style: TextStyle(
+              color: Constant.primaryColor, fontWeight: FontWeight.bold),
         ),
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.arrow_back),
-          color: Constant.onPrimaryColor,
-        ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.person),
-            color: Constant.onPrimaryColor,
-          )
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            child: IconButton.outlined(
+              onPressed: () {},
+              icon: const FaIcon(
+                FontAwesomeIcons.user,
+                size: 16,
+              ),
+            ),
+          ),
         ],
-        backgroundColor: const Color(0xFF3F72AF),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -252,7 +260,11 @@ class _ProfileInputViewState extends State<ProfileInputView> {
               width: 130,
               margin: const EdgeInsets.only(right: 10),
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () async {
+                  context
+                      .pushReplacementNamed(RouteConstants.editCompanyProfile);
+                  getCompanyProfile(context);
+                },
                 icon: const Icon(Icons.edit),
                 label: const Text('Edit'),
               ),

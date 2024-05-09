@@ -15,6 +15,7 @@ import 'package:amp_studenthub/screens/Student_Projects/project_list_saved.dart'
 import 'package:amp_studenthub/screens/account_settings.dart';
 import 'package:amp_studenthub/screens/bottom_navbar_scaffold/company_bottom_navbar.dart';
 import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
+import 'package:amp_studenthub/screens/edit_company_profile.dart';
 import 'package:amp_studenthub/screens/home_screen.dart';
 import 'package:amp_studenthub/screens/job_details_screen.dart';
 import 'package:amp_studenthub/screens/login_page.dart';
@@ -225,7 +226,7 @@ class AppRouter {
           name: RouteConstants.videoCall,
           path: '/videoCall',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: VideoCallScreen());
+            return const MaterialPage(child: VideoCallScreen(conferenceId: ''));
           }),
       GoRoute(
           name: RouteConstants.createCompanyProfile,
@@ -234,10 +235,16 @@ class AppRouter {
             return const MaterialPage(child: ProfileInputNew());
           }),
       GoRoute(
+          name: RouteConstants.viewCompanyProfile,
+          path: '/viewCompanyProfile',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: ProfileInputView());
+          }),
+      GoRoute(
           name: RouteConstants.editCompanyProfile,
           path: '/editCompanyProfile',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: ProfileInputView());
+            return const MaterialPage(child: EditCompanyProfile());
           }),
       GoRoute(
           name: RouteConstants.studentProfile,
