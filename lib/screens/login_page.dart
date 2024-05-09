@@ -95,7 +95,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: SafeArea(
           child: Center(
               child: Column(children: [
@@ -107,10 +107,10 @@ class LoginPage extends StatelessWidget {
                   //logo
                   Container(
                     margin: const EdgeInsets.only(top: 16),
-                    child: const Text(
+                    child: Text(
                       'StudentHub',
                       style: TextStyle(
-                          color: Constant.primaryColor,
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
                           fontSize: 28),
                     ),
@@ -123,8 +123,8 @@ class LoginPage extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 24),
                         child: Text(
                           AppLocalizations.of(context)!.signInTitle,
-                          style: const TextStyle(
-                              color: Constant.secondaryColor,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.w800,
                               fontSize: 32),
                         ),
@@ -155,7 +155,7 @@ class LoginPage extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.only(top: 52),
                   width: 500,
-                  color: Constant.primaryColor,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                   child: Center(
                       child: Column(
                     children: [
@@ -183,9 +183,10 @@ class LoginPage extends StatelessWidget {
                             },
                             child: Text(
                               AppLocalizations.of(context)!.forgotPassword,
-                              style: const TextStyle(
-                                color: Constant
-                                    .onPrimaryColor, // Change color as needed
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer, // Change color as needed
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
                               ),
@@ -199,8 +200,10 @@ class LoginPage extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(AppLocalizations.of(context)!.newToStudentHub,
-                                style: const TextStyle(
-                                    color: Constant.onPrimaryColor)),
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer)),
                             const SizedBox(width: 16),
                             TextButton(
                               onPressed: () {
@@ -208,8 +211,10 @@ class LoginPage extends StatelessWidget {
                                 context.pushNamed(RouteConstants.signUp1);
                               },
                               child: Text(AppLocalizations.of(context)!.joinNow,
-                                  style: const TextStyle(
-                                      color: Constant.onPrimaryColor,
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimaryContainer,
                                       fontWeight: FontWeight.normal)),
                             )
                           ]),

@@ -21,12 +21,13 @@ class _AccountSettingsState extends State<AccountSettings> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Constant.backgroundColor,
+          backgroundColor: Theme.of(context).colorScheme.background,
           toolbarHeight: 56,
-          title: const Text(
+          title: Text(
             'StudentHub',
             style: TextStyle(
-                color: Constant.primaryColor, fontWeight: FontWeight.bold),
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
         ),
@@ -40,12 +41,12 @@ class _AccountSettingsState extends State<AccountSettings> {
                   Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(bottom: 16),
-                      child: const Text(
+                      child: Text(
                         "Settings:",
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
-                            color: Constant.primaryColor),
+                            color: Theme.of(context).colorScheme.primary),
                       )),
                   Container(
                     margin: const EdgeInsets.only(bottom: 8),
@@ -67,16 +68,19 @@ class _AccountSettingsState extends State<AccountSettings> {
                           const EdgeInsets.only(top: 8, left: 8, right: 8),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              color: Constant.primaryColor, width: 1)),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 1)),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              color: Constant.primaryColor, width: 2)),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              color: Constant.secondaryColor, width: 1)),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                              width: 1)),
                       labelStyle: TextStyle(color: Colors.grey[600]),
                     ),
                     hint: const Text(
@@ -106,10 +110,10 @@ class _AccountSettingsState extends State<AccountSettings> {
                         selectedLocales = value;
                       });
                     },
-                    iconStyleData: const IconStyleData(
+                    iconStyleData: IconStyleData(
                       icon: Icon(
                         Icons.arrow_drop_down,
-                        color: Colors.black45,
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                       iconSize: 24,
                     ),

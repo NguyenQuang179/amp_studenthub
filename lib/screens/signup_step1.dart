@@ -1,11 +1,10 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignUpStepOne extends StatelessWidget {
   SignUpStepOne({super.key});
@@ -16,17 +15,17 @@ class SignUpStepOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: SafeArea(
           child: Center(
               child: Column(
             children: [
               Container(
                 margin: const EdgeInsets.only(top: 16),
-                child: const Text(
+                child: Text(
                   'StudentHub',
                   style: TextStyle(
-                      color: Constant.primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
                       fontSize: 28),
                 ),
@@ -35,8 +34,8 @@ class SignUpStepOne extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(vertical: 24),
                 child: Text(
                   AppLocalizations.of(context)!.signUpTitle,
-                  style: const TextStyle(
-                      color: Constant.secondaryColor,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.secondary,
                       fontWeight: FontWeight.w800,
                       fontSize: 32),
                 ),
@@ -50,8 +49,9 @@ class SignUpStepOne extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 20),
                           child: Text(
                             AppLocalizations.of(context)!.joinWithUsAs,
-                            style: const TextStyle(
-                                color: Constant.textColor,
+                            style: TextStyle(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500),
                           )),
@@ -74,9 +74,13 @@ class SignUpStepOne extends StatelessWidget {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(12)),
-                                    side: const BorderSide(
-                                        color: Constant.primaryColor, width: 2),
-                                    foregroundColor: Constant.primaryColor),
+                                    side: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        width: 2),
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.primary),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -106,9 +110,13 @@ class SignUpStepOne extends StatelessWidget {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(12)),
-                                    side: const BorderSide(
-                                        color: Constant.primaryColor, width: 2),
-                                    foregroundColor: Constant.primaryColor),
+                                    side: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        width: 2),
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.primary),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -130,7 +138,7 @@ class SignUpStepOne extends StatelessWidget {
               ClipPath(
                 clipper: OvalTopBorderClipper(),
                 child: Container(
-                  color: Constant.primaryColor,
+                  color: Theme.of(context).colorScheme.primaryContainer,
                   padding: const EdgeInsets.symmetric(vertical: 32),
                   child: Column(
                     children: [
@@ -138,8 +146,11 @@ class SignUpStepOne extends StatelessWidget {
                         margin: const EdgeInsets.only(top: 24, bottom: 16),
                         child: Text(
                           AppLocalizations.of(context)!.alreadyHaveAccount,
-                          style: const TextStyle(
-                              fontSize: 16, color: Constant.onPrimaryColor),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer),
                         ),
                       ),
                       TextButton(
@@ -151,8 +162,10 @@ class SignUpStepOne extends StatelessWidget {
                             children: [
                               Text(
                                 AppLocalizations.of(context)!.signInNow,
-                                style: const TextStyle(
-                                  color: Constant.onPrimaryColor,
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
                                   decoration: TextDecoration.underline,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,

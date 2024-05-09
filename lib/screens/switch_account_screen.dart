@@ -124,12 +124,13 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         toolbarHeight: 56,
-        title: const Text(
+        title: Text(
           'StudentHub',
           style: TextStyle(
-              color: Constant.primaryColor, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -183,18 +184,18 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                   ),
                   padding: EdgeInsets.zero,
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Icon(
                       Icons.person,
-                      color: Constant.textColor,
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Text(
                       'Profile',
                       style: TextStyle(
-                          color: Constant.textColor,
+                          color: Theme.of(context).colorScheme.onBackground,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
                     ),
@@ -222,18 +223,18 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                   ),
                   padding: EdgeInsets.zero,
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Icon(
                       Icons.settings,
-                      color: Constant.textColor,
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Text(
                       'Settings',
                       style: TextStyle(
-                          color: Constant.textColor,
+                          color: Theme.of(context).colorScheme.onBackground,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
                     ),
@@ -258,24 +259,28 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                   context.goNamed(RouteConstants.home);
                 },
                 style: TextButton.styleFrom(
-                    backgroundColor: Constant.onPrimaryColor,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
-                    side: const BorderSide(
-                        color: Constant.primaryColor, width: 1),
-                    foregroundColor: Constant.primaryColor),
-                child: const Row(
+                    side: BorderSide(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        width: 1),
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onPrimaryContainer),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.logout,
-                      color: Constant.primaryColor,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Text(
                       'Sign Out',
                       style: TextStyle(
-                          color: Constant.primaryColor,
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
                     ),

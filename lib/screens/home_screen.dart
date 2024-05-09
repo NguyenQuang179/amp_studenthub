@@ -1,11 +1,10 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -26,9 +25,8 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
+                      SizedBox(
                         width: double.infinity,
-                        color: Constant.backgroundColor,
                         child: Center(
                           child: Image.asset(
                             'assets/logo.png',
@@ -44,16 +42,20 @@ class HomeScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 24),
                               child: RichText(
                                   text: TextSpan(
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   height: 1.8,
-                                  color: Constant.textColor,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground,
                                 ),
                                 children: <TextSpan>[
-                                  const TextSpan(
+                                  TextSpan(
                                       text: 'StudentHub ',
                                       style: TextStyle(
-                                          color: Constant.primaryColor,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                           fontWeight: FontWeight.w500)),
                                   TextSpan(
                                     text: AppLocalizations.of(context)!
@@ -67,17 +69,20 @@ class HomeScreen extends StatelessWidget {
             Flexible(
               fit: FlexFit.loose,
               child: Container(
-                  decoration: const BoxDecoration(
-                      color: Constant.backgroundColor,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
                       border: BorderDirectional(
                           top: BorderSide(
-                              width: 2, color: Constant.primaryColor),
+                              width: 2,
+                              color: Theme.of(context).colorScheme.primary),
                           start: BorderSide(
-                              width: 2, color: Constant.primaryColor),
+                              width: 2,
+                              color: Theme.of(context).colorScheme.primary),
                           end: BorderSide(
-                              width: 2, color: Constant.primaryColor)),
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(32))),
+                              width: 2,
+                              color: Theme.of(context).colorScheme.primary)),
+                      borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(32))),
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -87,10 +92,10 @@ class HomeScreen extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 24),
                         child: RichText(
                           text: TextSpan(
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 24,
                                 height: 1.8,
-                                color: Constant.primaryColor,
+                                color: Theme.of(context).colorScheme.primary,
                               ),
                               children: <TextSpan>[
                                 TextSpan(
@@ -109,10 +114,10 @@ class HomeScreen extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 24),
                         child: RichText(
                             text: TextSpan(
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             height: 1.8,
-                            color: Constant.textColor,
+                            color: Theme.of(context).colorScheme.onBackground,
                           ),
                           children: <TextSpan>[
                             TextSpan(
@@ -152,7 +157,10 @@ class HomeScreen extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 child: Text(
                                   AppLocalizations.of(context)!.joinWithUsAs,
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -174,9 +182,12 @@ class HomeScreen extends StatelessWidget {
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12)),
-                                        backgroundColor: Constant.primaryColor,
-                                        foregroundColor:
-                                            Constant.onPrimaryColor),
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        foregroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
                                     child: Text(
                                       AppLocalizations.of(context)!.roleStudent,
                                       style: const TextStyle(
@@ -197,15 +208,20 @@ class HomeScreen extends StatelessWidget {
                                           .goNamed(RouteConstants.login);
                                     },
                                     style: TextButton.styleFrom(
-                                        side: const BorderSide(
+                                        side: BorderSide(
                                             width: 1,
-                                            color: Constant.primaryColor),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary),
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12)),
-                                        backgroundColor:
-                                            Constant.backgroundColor,
-                                        foregroundColor: Constant.primaryColor),
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .background,
+                                        foregroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
                                     child: Text(
                                       AppLocalizations.of(context)!.roleCompany,
                                       style: const TextStyle(

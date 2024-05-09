@@ -1,4 +1,3 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
 
 class Textfield extends StatelessWidget {
@@ -25,14 +24,15 @@ class Textfield extends StatelessWidget {
           controller: controller,
           obscureText: obscureText,
           decoration: InputDecoration(
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Constant.primaryColor),
+            enabledBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: Theme.of(context).colorScheme.primary),
             ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Constant.secondaryColor),
+            focusedBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: Theme.of(context).colorScheme.secondary),
             ),
             labelText: hintText,
-            fillColor: Constant.backgroundWithOpacity,
             filled: true,
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

@@ -1,3 +1,4 @@
+import 'package:amp_studenthub/configs/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/l10n/l10n.dart';
@@ -37,6 +38,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final brightness = View.of(context).platformDispatcher.platformBrightness;
+    TextTheme textTheme = GoogleFonts.poppinsTextTheme();
+    MaterialTheme theme = MaterialTheme(textTheme);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => CompanyProjectProvider()),
@@ -47,7 +51,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         title: 'StudentHub',
         debugShowCheckedModeBanner: false,
-        theme: _buildTheme(Brightness.light),
+        theme: theme.dark(),
+        //  brightness == Brightness.light ? theme.light() :
+
         supportedLocales: l10n.all,
         locale: const Locale('en'),
         localizationsDelegates: const [
