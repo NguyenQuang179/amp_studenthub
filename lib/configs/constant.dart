@@ -15,6 +15,10 @@ class Constant {
       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzY3LCJmdWxsbmFtZSI6IlF1YW5nIDYiLCJlbWFpbCI6Im5ucXVhbmcyMCs2QGNsYy5maXR1cy5lZHUudm4iLCJyb2xlcyI6WzAsMV0sImlhdCI6MTcxNDUzODM2NCwiZXhwIjoxNzE1NzQ3OTY0fQ.BwYt0sUM8UWgM94lW7_AMQ4RS6Zu8wfiS9JLMUAoWyI";
   static const int apiTimeOut = 60000;
 
+  static const appId = 301809692;
+  static const appSign =
+      '6847d07a0f58a41c1a72bf864fc8f9d22d39700611c94f9f1f30ba2d521d0f24';
+
 // Response Handler
   static const strNoRouteFound = "no_route_found";
   static const strAppName = "app_name";

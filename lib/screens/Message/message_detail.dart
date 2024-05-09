@@ -1,3 +1,6 @@
+
+import 'dart:convert';
+import 'dart:math';
 import 'dart:async';
 
 import 'package:amp_studenthub/configs/constant.dart';
@@ -14,6 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+
 
 class MessageDetail extends StatefulWidget {
   final int userId;
@@ -41,7 +45,6 @@ class _MessageDetailState extends State<MessageDetail> {
   final interviewTitleController = TextEditingController();
   final startDateController = TextEditingController();
   final endDateController = TextEditingController();
-
   final sendMessageDetailController = TextEditingController();
   final _ListScrollController = ScrollController();
 
@@ -72,6 +75,53 @@ class _MessageDetailState extends State<MessageDetail> {
       curve: Curves.easeOut,
     );
   }
+  
+  Future<void> scheduleInterview(BuildContext context, String title,
+      String startTime, String endTime) async {
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      const endpoint = '${Constant.baseURL}/api/interview';
+      var data = {
+        "title": title,
+        "content": "string",
+        "startTime": startTime,
+        "endTime": endTime,
+        "projectId": 835,
+        "senderId": 341,
+        "receiverId": 227,
+        "meeting_room_code": Random().nextInt(1000000).toString(),
+        "meeting_room_id": Random().nextInt(1000000).toString(),
+        "expired_at": endTime
+      };
+
+      final Response response = await dio.post(
+        endpoint,
+        data: jsonEncode(data),
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      if (result != null) {
+      } else {
+        print('User data not found in the response');
+      }
+    } on DioError catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        final responseData = e.response?.data;
+        print(responseData);
+      } else {
+        print(e.message);
+      }
+    }
+  }
 
   Future<void> getMessage(receiverId, projectId) async {
     final dio = Dio();
@@ -79,7 +129,6 @@ class _MessageDetailState extends State<MessageDetail> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
-
       final endpoint =
           '${Constant.baseURL}/api/message/$projectId/user/$receiverId';
       final Response response = await dio.get(
@@ -88,7 +137,6 @@ class _MessageDetailState extends State<MessageDetail> {
           'Authorization': 'Bearer $accessToken',
         }),
       );
-
       print(endpoint);
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
@@ -530,10 +578,18 @@ class _MessageDetailState extends State<MessageDetail> {
                                                               .all<Color>(Constant
                                                                   .onPrimaryColor)),
                                                   onPressed: () {
+                                                    scheduleInterview(
+                                                        context,
+                                                        interviewTitleController
+                                                            .text,
+                                                        startDateController
+                                                            .text,
+                                                        endDateController.text);
                                                     interviewTitleController
                                                         .clear();
                                                     startDateController.clear();
                                                     endDateController.clear();
+
                                                     context.pop();
                                                   },
                                                   child: const Text("Confirm"),
