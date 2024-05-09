@@ -31,7 +31,4 @@ class LocalStorage {
   }
 }
 
-enum StorageKey {
-  accessToken,
-  refreshToken,
-}
+enum StorageKey { accessToken, refreshToken, languageCode }

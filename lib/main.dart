@@ -1,4 +1,6 @@
 import 'package:amp_studenthub/configs/theme.dart';
+import 'package:amp_studenthub/providers/language_provider.dart';
+import 'package:amp_studenthub/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/l10n/l10n.dart';
@@ -42,30 +44,36 @@ class MyApp extends StatelessWidget {
     TextTheme textTheme = GoogleFonts.poppinsTextTheme();
     MaterialTheme theme = MaterialTheme(textTheme);
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => CompanyProjectProvider()),
-        ChangeNotifierProvider(create: (context) => UserProvider()),
-        ChangeNotifierProvider(create: (context) => RoleProvider()),
-        ChangeNotifierProvider(create: (context) => StudentProjectProvider())
-      ],
-      child: MaterialApp.router(
-        title: 'StudentHub',
-        debugShowCheckedModeBanner: false,
-        theme: theme.dark(),
-        //  brightness == Brightness.light ? theme.light() :
-
-        supportedLocales: l10n.all,
-        locale: const Locale('en'),
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate
+        providers: [
+          ChangeNotifierProvider(create: (context) => CompanyProjectProvider()),
+          ChangeNotifierProvider(create: (context) => UserProvider()),
+          ChangeNotifierProvider(create: (context) => RoleProvider()),
+          ChangeNotifierProvider(create: (context) => StudentProjectProvider()),
+          ChangeNotifierProvider(create: (context) => ThemeProvider()),
+          ChangeNotifierProvider(create: (context) => LanguageProvider()),
         ],
-        routeInformationProvider: appRouter.router.routeInformationProvider,
-        routeInformationParser: appRouter.router.routeInformationParser,
-        routerDelegate: appRouter.router.routerDelegate,
-      ),
-    );
+        child: Consumer2<ThemeProvider, LanguageProvider>(
+          builder: (context, themeObject, languageProvider, _) =>
+              MaterialApp.router(
+            title: 'StudentHub',
+            debugShowCheckedModeBanner: false,
+            themeMode: themeObject.mode,
+            theme: theme.light(),
+            darkTheme: theme.dark(),
+            //  brightness == Brightness.light ? theme.light() :
+
+            supportedLocales: l10n.all,
+            locale: languageProvider.appLocal,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate
+            ],
+            routeInformationProvider: appRouter.router.routeInformationProvider,
+            routeInformationParser: appRouter.router.routeInformationParser,
+            routerDelegate: appRouter.router.routerDelegate,
+          ),
+        ));
   }
 }
