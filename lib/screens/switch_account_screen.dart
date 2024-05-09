@@ -3,6 +3,7 @@ import 'package:amp_studenthub/models/account.dart';
 import 'package:amp_studenthub/models/user.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:amp_studenthub/utilities/local_storage.dart';
 import 'package:amp_studenthub/widgets/account_list_view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -166,7 +167,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     if (!isNewProfile) {
                       context.pushNamed(RouteConstants.createStudentProfile1);
                     } else {
-                      context.pushNamed(RouteConstants.createStudentProfile3);
+                      context.pushNamed(RouteConstants.studentProfile);
                     }
                   } else {
                     if (!isNewProfile) {
@@ -252,6 +253,8 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
+                  LocalStorage pref = LocalStorage.instance;
+                  pref.clearStorage();
                   context.goNamed(RouteConstants.home);
                 },
                 style: TextButton.styleFrom(

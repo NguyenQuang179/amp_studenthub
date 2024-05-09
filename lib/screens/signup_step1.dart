@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignUpStepOne extends StatelessWidget {
   SignUpStepOne({super.key});
@@ -32,9 +33,9 @@ class SignUpStepOne extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 24),
-                child: const Text(
-                  'SIGN UP',
-                  style: TextStyle(
+                child: Text(
+                  AppLocalizations.of(context)!.signUpTitle,
+                  style: const TextStyle(
                       color: Constant.secondaryColor,
                       fontWeight: FontWeight.w800,
                       fontSize: 32),
@@ -47,9 +48,9 @@ class SignUpStepOne extends StatelessWidget {
                     children: [
                       Container(
                           margin: const EdgeInsets.only(bottom: 20),
-                          child: const Text(
-                            "Join with us as",
-                            style: TextStyle(
+                          child: Text(
+                            AppLocalizations.of(context)!.joinWithUsAs,
+                            style: const TextStyle(
                                 color: Constant.textColor,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500),
@@ -76,12 +77,12 @@ class SignUpStepOne extends StatelessWidget {
                                     side: const BorderSide(
                                         color: Constant.primaryColor, width: 2),
                                     foregroundColor: Constant.primaryColor),
-                                child: const Row(
+                                child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'Student',
-                                      style: TextStyle(
+                                      AppLocalizations.of(context)!.roleStudent,
+                                      style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -108,12 +109,12 @@ class SignUpStepOne extends StatelessWidget {
                                     side: const BorderSide(
                                         color: Constant.primaryColor, width: 2),
                                     foregroundColor: Constant.primaryColor),
-                                child: const Row(
+                                child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'Company',
-                                      style: TextStyle(
+                                      AppLocalizations.of(context)!.roleCompany,
+                                      style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w500),
                                     ),
@@ -135,9 +136,9 @@ class SignUpStepOne extends StatelessWidget {
                     children: [
                       Container(
                         margin: const EdgeInsets.only(top: 24, bottom: 16),
-                        child: const Text(
-                          "Already have an account?",
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.alreadyHaveAccount,
+                          style: const TextStyle(
                               fontSize: 16, color: Constant.onPrimaryColor),
                         ),
                       ),
@@ -145,12 +146,12 @@ class SignUpStepOne extends StatelessWidget {
                           onPressed: () {
                             context.goNamed(RouteConstants.login);
                           },
-                          child: const Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Sign In Now',
-                                style: TextStyle(
+                                AppLocalizations.of(context)!.signInNow,
+                                style: const TextStyle(
                                   color: Constant.onPrimaryColor,
                                   decoration: TextDecoration.underline,
                                   fontSize: 20,

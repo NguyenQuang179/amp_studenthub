@@ -3,6 +3,7 @@ import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:amp_studenthub/utilities/local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
@@ -10,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -20,31 +22,41 @@ class LoginPage extends StatelessWidget {
   // signin
   Future<void> signIn(BuildContext context) async {
     final dio = Dio();
+    String? accessToken;
     try {
-      if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
-        Fluttertoast.showToast(
-          msg: 'Please fill in all fields',
+      LocalStorage localStorage = await LocalStorage.init();
+      String? storageAccessToken =
+          localStorage.getString(key: StorageKey.accessToken);
+      if (storageAccessToken != null && storageAccessToken != "") {
+        accessToken = storageAccessToken;
+      } else {
+        if (usernameController.text.isEmpty ||
+            passwordController.text.isEmpty) {
+          Fluttertoast.showToast(
+            msg: 'Please fill in all fields',
+          );
+          return;
+        }
+        const endpoint = '${Constant.baseURL}/api/auth/sign-in';
+        final submitData = {
+          "email": usernameController.text,
+          "password": passwordController.text
+        };
+
+        final Response response = await dio.post(
+          endpoint,
+          data: submitData,
         );
-        return;
+
+        final responseData = response.data;
+
+        // Extract the access token from the response
+        accessToken = responseData['result']['token'];
       }
 
-      const endpoint = '${Constant.baseURL}/api/auth/sign-in';
-      final submitData = {
-        "email": usernameController.text,
-        "password": passwordController.text
-      };
-
-      final Response response = await dio.post(
-        endpoint,
-        data: submitData,
-      );
-
-      final responseData = response.data;
-
-      // Extract the access token from the response
-      final String? accessToken = responseData['result']['token'];
-
       if (accessToken != null) {
+        localStorage.saveString(
+            key: StorageKey.accessToken, value: accessToken);
         // Use Provider to set the access token
         Provider.of<UserProvider>(context, listen: false)
             .updateToken(accessToken);
@@ -64,15 +76,6 @@ class LoginPage extends StatelessWidget {
         Provider.of<UserProvider>(context, listen: false)
             .updateUserInfo(userData);
         context.goNamed(RouteConstants.companyProject);
-      } else {
-        final String? errorDetails = responseData['errorDetails'];
-
-        // Handle case where access token is not present in the response
-        if (errorDetails != null) {
-          Fluttertoast.showToast(
-            msg: errorDetails,
-          );
-        }
       }
     } on DioException catch (e) {
       // The request was made and the server responded with a status code
@@ -118,9 +121,9 @@ class LoginPage extends StatelessWidget {
                     children: [
                       Container(
                         margin: const EdgeInsets.only(bottom: 24),
-                        child: const Text(
-                          'SIGN IN',
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.signInTitle,
+                          style: const TextStyle(
                               color: Constant.secondaryColor,
                               fontWeight: FontWeight.w800,
                               fontSize: 32),
@@ -131,13 +134,13 @@ class LoginPage extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 16),
                         child: Textfield(
                             controller: usernameController,
-                            hintText: 'Username',
+                            hintText: AppLocalizations.of(context)!.emailLabel,
                             obscureText: false),
                       ),
                       //password textfield
                       Textfield(
                           controller: passwordController,
-                          hintText: 'Password',
+                          hintText: AppLocalizations.of(context)!.passwordLabel,
                           obscureText: true),
                     ],
                   ))
@@ -161,7 +164,7 @@ class LoginPage extends StatelessWidget {
                           onTap: () {
                             signIn(context);
                           },
-                          text: 'Sign In'),
+                          text: AppLocalizations.of(context)!.signInButton),
                       //forgot password?
                       Container(
                           margin: const EdgeInsets.only(top: 32),
@@ -178,9 +181,9 @@ class LoginPage extends StatelessWidget {
                                   textColor: Colors.white,
                                   fontSize: 16.0);
                             },
-                            child: const Text(
-                              'Forgot Password?',
-                              style: TextStyle(
+                            child: Text(
+                              AppLocalizations.of(context)!.forgotPassword,
+                              style: const TextStyle(
                                 color: Constant
                                     .onPrimaryColor, // Change color as needed
                                 fontWeight: FontWeight.bold,
@@ -195,17 +198,17 @@ class LoginPage extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text('New to StudentsHub?',
-                                style:
-                                    TextStyle(color: Constant.onPrimaryColor)),
+                            Text(AppLocalizations.of(context)!.newToStudentHub,
+                                style: const TextStyle(
+                                    color: Constant.onPrimaryColor)),
                             const SizedBox(width: 16),
                             TextButton(
                               onPressed: () {
                                 print(context.read<UserProvider>().userToken);
                                 context.pushNamed(RouteConstants.signUp1);
                               },
-                              child: const Text('Join Now',
-                                  style: TextStyle(
+                              child: Text(AppLocalizations.of(context)!.joinNow,
+                                  style: const TextStyle(
                                       color: Constant.onPrimaryColor,
                                       fontWeight: FontWeight.normal)),
                             )

@@ -25,6 +25,7 @@ import 'package:amp_studenthub/screens/profile_input_view_screen.dart';
 import 'package:amp_studenthub/screens/signup_step1.dart';
 import 'package:amp_studenthub/screens/signup_step2.dart';
 import 'package:amp_studenthub/screens/student_dashboard.dart';
+import 'package:amp_studenthub/screens/student_proposal_details.dart';
 import 'package:amp_studenthub/screens/student_submit_proposal.dart';
 import 'package:amp_studenthub/screens/switch_account_screen.dart';
 import 'package:amp_studenthub/screens/video_call_screen.dart';
@@ -74,26 +75,27 @@ class AppRouter {
           },
           routes: [
             GoRoute(
-                name: RouteConstants.companyProject,
-                parentNavigatorKey: _bottomNavbarNavigatorKey,
-                path: '/project',
-                pageBuilder: (context, state) {
-                  return const MaterialPage(child: ProjectList());
-                },
-                routes: [
-                  GoRoute(
-                      name: RouteConstants.projectDetails,
-                      path: 'details',
-                      pageBuilder: (context, state) {
-                        // Extract id from the URI query parameters
-                        final id = state.uri.queryParameters['id'] ?? '0';
+              name: RouteConstants.companyProject,
+              parentNavigatorKey: _bottomNavbarNavigatorKey,
+              path: '/project',
+              pageBuilder: (context, state) {
+                return const MaterialPage(child: ProjectList());
+              },
+              // routes: [
+              //   GoRoute(
+              //       name: RouteConstants.projectDetails,
+              //       path: 'details',
+              //       pageBuilder: (context, state) {
+              //         // Extract id from the URI query parameters
+              //         final id = state.uri.queryParameters['id'] ?? '0';
 
-                        // Create the ProjectDetail widget with the extracted id
-                        return MaterialPage(
-                          child: ProjectDetail(id: id),
-                        );
-                      }),
-                ]),
+              //         // Create the ProjectDetail widget with the extracted id
+              //         return MaterialPage(
+              //           child: ProjectDetail(id: id),
+              //         );
+              //       }),
+              // ]
+            ),
             GoRoute(
               name: RouteConstants.studentDashboard,
               parentNavigatorKey: _bottomNavbarNavigatorKey,
@@ -168,6 +170,18 @@ class AppRouter {
             return const MaterialPage(child: PostJobScreen());
           }),
       GoRoute(
+          name: RouteConstants.projectDetails,
+          path: '/project/details',
+          pageBuilder: (context, state) {
+            // Extract id from the URI query parameters
+            final id = state.uri.queryParameters['id'] ?? '0';
+
+            // Create the ProjectDetail widget with the extracted id
+            return MaterialPage(
+              child: ProjectDetail(id: id),
+            );
+          }),
+      GoRoute(
           name: RouteConstants.companyProjectDetails,
           path: '/jobDetails/:projectId',
           pageBuilder: (context, state) {
@@ -176,6 +190,16 @@ class AppRouter {
             log('ProjectID: $id');
             // Create the ProjectDetail widget with the extracted id
             return MaterialPage(child: JobDetailsScreen(projectId: id));
+          }),
+      GoRoute(
+          name: RouteConstants.studentProposalDetails,
+          path: '/proposalDetails/:proposalId',
+          pageBuilder: (context, state) {
+            // Extract id from the URI query parameters
+            final id = state.pathParameters['proposalId'] ?? '0';
+            log('ProposalID: $id');
+            // Create the ProjectDetail widget with the extracted id
+            return MaterialPage(child: StudentProposalDetails(proposalId: id));
           }),
       GoRoute(
           name: RouteConstants.projectListSaved,

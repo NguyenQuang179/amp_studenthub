@@ -1,12 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/l10n/l10n.dart';
 import 'package:amp_studenthub/providers/company_project_provider.dart';
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
 import 'package:amp_studenthub/providers/student_project_provider.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/app_router.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   runApp(MyApp());
@@ -45,6 +48,14 @@ class MyApp extends StatelessWidget {
         title: 'StudentHub',
         debugShowCheckedModeBanner: false,
         theme: _buildTheme(Brightness.light),
+        supportedLocales: l10n.all,
+        locale: const Locale('en'),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate
+        ],
         routeInformationProvider: appRouter.router.routeInformationProvider,
         routeInformationParser: appRouter.router.routeInformationParser,
         routerDelegate: appRouter.router.routerDelegate,

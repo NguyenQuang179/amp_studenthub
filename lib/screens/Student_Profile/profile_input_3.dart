@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:amp_studenthub/configs/constant.dart';
@@ -9,9 +7,7 @@ import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -434,8 +430,7 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
                         width: double.infinity,
                         child: TextButton(
                           onPressed: () {
-                            context.pushNamed(
-                                RouteConstants.createStudentProfile3);
+                            context.goNamed(RouteConstants.welcome);
                           },
                           style: TextButton.styleFrom(
                               shape: RoundedRectangleBorder(

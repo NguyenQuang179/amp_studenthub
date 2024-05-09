@@ -31,4 +31,5 @@ class RouteConstants {
 
   static String studentDashboard = 'studentDashboard';
   static String submitProposal = 'submitProposal';
+  static String studentProposalDetails = 'studentProposalDetails';
 }

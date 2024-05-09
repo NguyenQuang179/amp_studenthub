@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:amp_studenthub/configs/constant.dart';
@@ -37,7 +36,9 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
   List<dynamic> educationList = [];
   List<dynamic> languageList = [];
   List<Map<String, dynamic>> experienceList = [];
-    File? cvFile;
+  String viewCVFileName = "";
+  String viewTranscriptFileName = "";
+  File? cvFile;
   File? transcriptFile;
   PlatformFile? cvFileDetails;
   PlatformFile? transcriptFileDetails;
@@ -101,6 +102,11 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
             .where((skill) => skillsetList.contains(skill))
             .toList();
         _controller.setSelectedOptions(selectedSkillsetList);
+
+        if (profile.resume != null) viewCVFileName = profile.resume ?? "";
+        if (profile.transcript != null) {
+          viewTranscriptFileName = profile.transcript ?? "";
+        }
 
         studentProfile = profile;
         selectedTechStackId = profile.techStackId.toString();
@@ -181,7 +187,6 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
       String updateEducationEndpoint =
           '${Constant.baseURL}/api/education/updateByStudentId/$studentProfileId';
       var updateEducationData = {"education": educationList};
-      print(educationList);
       // final Response updateEducationResponse =
       await dio.put(updateEducationEndpoint,
           data: jsonEncode(updateEducationData));
@@ -194,6 +199,28 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
       // final Response updateExperienceResponse =
       await dio.put(updateExperienceEndpoint,
           data: jsonEncode(updateExperienceData));
+
+      // Update Resume
+      if (cvFileDetails != null) {
+        String updateResumeEndpoint =
+            '${Constant.baseURL}/api/profile/student/$studentProfileId/resume';
+        FormData resumeFormData = FormData.fromMap({
+          "file": await MultipartFile.fromFile(cvFileDetails!.path ?? "",
+              filename: cvFileDetails!.name),
+        });
+        await dio.put(updateResumeEndpoint, data: resumeFormData);
+      }
+      // Update Transcript
+      if (transcriptFileDetails != null) {
+        String updateTranscriptEndpoint =
+            '${Constant.baseURL}/api/profile/student/$studentProfileId/transcript';
+        FormData transcriptFormData = FormData.fromMap({
+          "file": await MultipartFile.fromFile(
+              transcriptFileDetails!.path ?? "",
+              filename: transcriptFileDetails!.name),
+        });
+        await dio.put(updateTranscriptEndpoint, data: transcriptFormData);
+      }
 
       Fluttertoast.showToast(
           msg: "Update Student Profile Successfully",
@@ -493,7 +520,7 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                 ],
               ));
 
-Future<void> pickFile(bool isCv) async {
+  Future<void> pickFile(bool isCv) async {
     List<String> extensionType = ['doc', 'docx', 'pdf'];
     try {
       FilePickerResult? result = await FilePicker.platform
@@ -516,7 +543,6 @@ Future<void> pickFile(bool isCv) async {
       print('Error picking file: $e');
     }
   }
-
 
   @override
   void initState() {
@@ -680,35 +706,70 @@ Future<void> pickFile(bool isCv) async {
                             ],
                           ),
                         ),
-                        MultiSelectDropDown(
-                          controller: _controller,
-                          onOptionSelected: (options) {
-                            debugPrint(options.toString());
-                            debugPrint(_controller.selectedOptions.toString());
-                          },
-                          radiusGeometry: BorderRadius.circular(12),
-                          options: skillsetList,
-                          hint: "Select skillset",
-                          hintStyle:
-                              TextStyle(fontSize: 16, color: Colors.grey[600]!),
-                          selectionType: SelectionType.multi,
-                          chipConfig: const ChipConfig(
-                              wrapType: WrapType.scroll,
+                        if (isEditing)
+                          MultiSelectDropDown(
+                            controller: _controller,
+                            onOptionSelected: (options) {
+                              debugPrint(options.toString());
+                              debugPrint(
+                                  _controller.selectedOptions.toString());
+                            },
+                            radiusGeometry: BorderRadius.circular(12),
+                            options: skillsetList,
+                            hint: "Select skillset",
+                            hintStyle: TextStyle(
+                                fontSize: 16, color: Colors.grey[600]!),
+                            selectionType: SelectionType.multi,
+                            chipConfig: const ChipConfig(
+                                wrapType: WrapType.scroll,
+                                spacing: 8,
+                                runSpacing: 4,
+                                radius: 8,
+                                backgroundColor: Constant.primaryColor,
+                                labelColor: Constant.onPrimaryColor,
+                                deleteIconColor: Constant.onPrimaryColor),
+                            dropdownHeight: 300,
+                            optionTextStyle: const TextStyle(fontSize: 16),
+                            selectedOptionBackgroundColor: Colors.grey.shade200,
+                            selectedOptionTextColor: Constant.primaryColor,
+                            selectedOptionIcon: const Icon(
+                              Icons.check_circle,
+                              color: Constant.primaryColor,
+                            ),
+                          )
+                        else
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 16),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey[600]!),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(12)),
+                              color: Colors.transparent,
+                            ),
+                            child: Wrap(
                               spacing: 8,
                               runSpacing: 4,
-                              radius: 8,
-                              backgroundColor: Constant.primaryColor,
-                              labelColor: Constant.onPrimaryColor,
-                              deleteIconColor: Constant.onPrimaryColor),
-                          dropdownHeight: 300,
-                          optionTextStyle: const TextStyle(fontSize: 16),
-                          selectedOptionBackgroundColor: Colors.grey.shade200,
-                          selectedOptionTextColor: Constant.primaryColor,
-                          selectedOptionIcon: const Icon(
-                            Icons.check_circle,
-                            color: Constant.primaryColor,
+                              children: <Widget>[
+                                ..._controller.selectedOptions.map((skillset) =>
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 4),
+                                      child: Chip(
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8))),
+                                        label: Text(
+                                          skillset.label,
+                                          style: const TextStyle(
+                                              color: Constant.onPrimaryColor),
+                                        ),
+                                        backgroundColor: Constant.primaryColor,
+                                      ),
+                                    )),
+                              ],
+                            ),
                           ),
-                        ),
                         Container(
                           margin: const EdgeInsets.only(top: 16, bottom: 8),
                           child: Row(
@@ -1092,6 +1153,7 @@ Future<void> pickFile(bool isCv) async {
                         ),
                         if (experienceList.isEmpty)
                           Container(
+                            margin: const EdgeInsets.only(bottom: 16),
                             alignment: Alignment.center,
                             child: Text(
                               "No Experience Found",
@@ -1288,139 +1350,354 @@ Future<void> pickFile(bool isCv) async {
                                 const Divider()
                               ],
                             )),
-// Resume & Trascript
-const Text(
-                      'CV (*)',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Stack(
-                      children: [
-                        if (cvFile == null)
-                          Positioned.fill(
-                            child: Icon(
-                              Icons.insert_drive_file,
-                              size: 100,
-                              color: Colors.grey[300], // Adjust color as needed
-                            ),
-                          ),
-                        DottedBorder(
-                          borderType: BorderType.RRect,
-                          radius: const Radius.circular(8),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 100,
-                            child: Center(
-                              child: cvFile == null
-                                  ? ElevatedButton(
-                                      onPressed: () => pickFile(true),
-                                      child: const Text('Choose file'),
-                                    )
-                                  : cvFileDetails != null
-                                      ? Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 5),
-                                          child: Row(
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    cvFileDetails!.name,
-                                                    style: const TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(cvFileDetails!
-                                                          .extension ??
-                                                      '')
-                                                ],
-                                              ),
-                                              const Spacer(),
-                                              Text(cvFileDetails!.size
-                                                  .toString())
-                                            ],
-                                          ),
-                                        )
-                                      : Container(),
-                            ),
-                          ),
+                        // Resume & Trascript
+                        const Text(
+                          'CV (*)',
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    const Text(
-                      'Transcript (*)',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Stack(
-                      children: [
-                        if (transcriptFile == null)
-                          Positioned.fill(
-                            child: Icon(
-                              Icons.insert_drive_file,
-                              size: 100,
-                              color: Colors.grey[300], // Adjust color as needed
-                            ),
-                          ),
-                        DottedBorder(
-                          borderType: BorderType.RRect,
-                          radius: const Radius.circular(8),
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 100,
-                            child: Center(
-                              child: transcriptFile == null
-                                  ? ElevatedButton(
-                                      onPressed: () => pickFile(false),
-                                      child: const Text('Choose file'),
-                                    )
-                                  : transcriptFileDetails != null
-                                      ? Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 5),
-                                          child: Row(
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    transcriptFileDetails!.name,
-                                                    style: const TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  Text(transcriptFileDetails!
-                                                          .extension ??
-                                                      '')
-                                                ],
-                                              ),
-                                              const Spacer(),
-                                              Text(transcriptFileDetails!.size
-                                                  .toString())
-                                            ],
-                                          ),
-                                        )
-                                      : Container(),
-                            ),
-                          ),
+                        const SizedBox(
+                          height: 10,
                         ),
-                      ],
-                    ),
-                    
+                        Stack(
+                          children: [
+                            if (cvFile == null)
+                              Positioned.fill(
+                                child: Icon(
+                                  Icons.insert_drive_file,
+                                  size: 100,
+                                  color: Colors
+                                      .grey[300], // Adjust color as needed
+                                ),
+                              ),
+                            DottedBorder(
+                                borderType: BorderType.RRect,
+                                radius: const Radius.circular(8),
+                                child: isEditing
+                                    ? SizedBox(
+                                        width: double.infinity,
+                                        height: 100,
+                                        child: Center(
+                                          child: cvFile == null
+                                              ? ElevatedButton(
+                                                  onPressed: () =>
+                                                      pickFile(true),
+                                                  child:
+                                                      const Text('Choose File'),
+                                                )
+                                              : cvFileDetails != null
+                                                  ? Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 16,
+                                                          vertical: 8),
+                                                      child: Row(
+                                                        children: [
+                                                          Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 8,
+                                                                    right: 16),
+                                                            child: cvFileDetails!
+                                                                        .extension ==
+                                                                    "pdf"
+                                                                ? const FaIcon(
+                                                                    FontAwesomeIcons
+                                                                        .filePdf)
+                                                                : const FaIcon(
+                                                                    FontAwesomeIcons
+                                                                        .file),
+                                                          ),
+                                                          Expanded(
+                                                            child: Container(
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    cvFileDetails!
+                                                                        .name,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                  // Text(cvFileDetails!
+                                                                  //         .extension ??
+                                                                  //     ''),
+                                                                  Text(!cvFileDetails!
+                                                                          .size
+                                                                          .isNaN
+                                                                      ? '${(cvFileDetails!.size / 1024).toStringAsPrecision(3)}MB'
+                                                                      : "")
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 16),
+                                                            child: IconButton
+                                                                .outlined(
+                                                                    onPressed:
+                                                                        () {
+                                                                      setState(
+                                                                          () {
+                                                                        cvFile =
+                                                                            null;
+                                                                        cvFileDetails =
+                                                                            null;
+                                                                      });
+                                                                    },
+                                                                    icon:
+                                                                        FaIcon(
+                                                                      FontAwesomeIcons
+                                                                          .xmark,
+                                                                      color: Colors
+                                                                              .red[
+                                                                          800]!,
+                                                                      size: 20,
+                                                                    )),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                        ),
+                                      )
+                                    : SizedBox(
+                                        width: double.infinity,
+                                        height: 100,
+                                        child: Center(
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 8),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      left: 8, right: 16),
+                                                  child: const FaIcon(
+                                                      FontAwesomeIcons.file),
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          viewCVFileName,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Text(
+                          'Transcript (*)',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Stack(
+                          children: [
+                            if (transcriptFile == null)
+                              Positioned.fill(
+                                child: Icon(
+                                  Icons.insert_drive_file,
+                                  size: 100,
+                                  color: Colors
+                                      .grey[300], // Adjust color as needed
+                                ),
+                              ),
+                            DottedBorder(
+                                borderType: BorderType.RRect,
+                                radius: const Radius.circular(8),
+                                child: isEditing
+                                    ? SizedBox(
+                                        width: double.infinity,
+                                        height: 100,
+                                        child: Center(
+                                          child: transcriptFile == null
+                                              ? ElevatedButton(
+                                                  onPressed: () =>
+                                                      pickFile(false),
+                                                  child:
+                                                      const Text('Choose File'),
+                                                )
+                                              : transcriptFileDetails != null
+                                                  ? Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 16,
+                                                          vertical: 8),
+                                                      child: Row(
+                                                        children: [
+                                                          Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 8,
+                                                                    right: 16),
+                                                            child: transcriptFileDetails!
+                                                                        .extension ==
+                                                                    "pdf"
+                                                                ? const FaIcon(
+                                                                    FontAwesomeIcons
+                                                                        .filePdf)
+                                                                : const FaIcon(
+                                                                    FontAwesomeIcons
+                                                                        .file),
+                                                          ),
+                                                          Expanded(
+                                                            child: Container(
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    transcriptFileDetails!
+                                                                        .name,
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
+                                                                  Text(!transcriptFileDetails!
+                                                                          .size
+                                                                          .isNaN
+                                                                      ? '${(transcriptFileDetails!.size / 1024).toStringAsPrecision(3)}MB'
+                                                                      : "")
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    left: 16),
+                                                            child: IconButton
+                                                                .outlined(
+                                                                    onPressed:
+                                                                        () {
+                                                                      setState(
+                                                                          () {
+                                                                        transcriptFile =
+                                                                            null;
+                                                                        transcriptFileDetails =
+                                                                            null;
+                                                                      });
+                                                                    },
+                                                                    icon:
+                                                                        FaIcon(
+                                                                      FontAwesomeIcons
+                                                                          .xmark,
+                                                                      color: Colors
+                                                                              .red[
+                                                                          800]!,
+                                                                      size: 20,
+                                                                    )),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(),
+                                        ),
+                                      )
+                                    : SizedBox(
+                                        width: double.infinity,
+                                        height: 100,
+                                        child: Center(
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 8),
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      left: 8, right: 16),
+                                                  child: const FaIcon(
+                                                      FontAwesomeIcons.file),
+                                                ),
+                                                Expanded(
+                                                  child: Container(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          viewTranscriptFileName,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: const TextStyle(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )),
+                          ],
+                        ),
+
                         // Button Edit & Cancel
                         Container(
                             alignment: Alignment.bottomCenter,
