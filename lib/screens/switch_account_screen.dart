@@ -20,6 +20,7 @@ class SwitchAccountScreen extends StatefulWidget {
 
 class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
   late User user;
+  String? _passwordErrorText;
   late Account currentAccount;
   late List<Account> accountList = [];
   bool _isLoading = true;
@@ -53,9 +54,19 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
               ),
               TextField(
                   controller: newPasswordController,
+                  onChanged: (value) {
+                    setState(() {
+                      // Update the error text dynamically when the text changes
+                      // by calling setState to trigger a rebuild
+                      // validatePassword returns null if the password is valid
+                      // or a validation error message if the password is invalid
+                      // Update the error text accordingly
+                      _passwordErrorText =
+                          validatePassword(newPasswordController.text);
+                    });
+                  },
                   decoration: InputDecoration(
-                      hintText: "new password",
-                      errorText: validatePassword(newPasswordController.text))),
+                      hintText: "new password", errorText: _passwordErrorText)),
             ],
           ),
           actions: <Widget>[

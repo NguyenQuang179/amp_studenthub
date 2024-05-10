@@ -259,6 +259,30 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
     }
   }
 
+  markAsRead(notification) async {
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final accessToken = userProvider.userToken;
+      final dio = Dio();
+      final endpoint =
+          '${Constant.baseURL}/api/notification/readNoti/${notification.id}';
+      final Response response = await dio.patch(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      print(endpoint);
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      print("successful + $response");
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -330,6 +354,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                       if (notification.typeNotifyFlag ==
                                           NotificationType.message) {
                                         checkMessageDetail(notification);
+                                        markAsRead(notification);
                                       }
                                     },
                                     child: Container(
