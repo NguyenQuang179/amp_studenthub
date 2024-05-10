@@ -10,6 +10,7 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignupStepTwo extends StatefulWidget {
   final int role;
@@ -97,167 +98,144 @@ class _SignupStepTowState extends State<SignupStepTwo> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Constant.backgroundColor,
         appBar: const AuthAppBar(),
-        body: SafeArea(
-          child: Center(
-              child: Column(children: [
-            Expanded(
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 24),
-                    child: const Text(
-                      'SIGN UP',
-                      style: TextStyle(
-                          color: Constant.secondaryColor,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 32),
+        body: Column(children: [
+          Expanded(
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 24),
+                  child: Text(
+                    AppLocalizations.of(context)!.signUpTitle,
+                    style: const TextStyle(
+                        color: Constant.secondaryColor,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 32),
+                  ),
+                ),
+
+                //username texfield
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Textfield(
+                      controller: fullnameController,
+                      hintText: AppLocalizations.of(context)!.fullNameLabel,
+                      obscureText: false),
+                ),
+
+                //password textfield
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Textfield(
+                      controller: usernameController,
+                      hintText: AppLocalizations.of(context)!.emailLabel,
+                      obscureText: false),
+                ),
+
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Textfield(
+                      controller: passwordController,
+                      hintText: AppLocalizations.of(context)!.passwordLabel,
+                      obscureText: true),
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //Todo add check and link term and condition
+                    Checkbox(
+                      value: _isChecked,
+                      onChanged: (value) {
+                        setState(() {
+                          _isChecked = value as bool;
+                        });
+                      },
                     ),
-                  ),
-
-                  //username texfield
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Textfield(
-                        controller: fullnameController,
-                        hintText: 'Fullname',
-                        obscureText: false),
-                  ),
-
-                  //password textfield
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Textfield(
-                        controller: usernameController,
-                        hintText: 'Email Address',
-                        obscureText: false),
-                  ),
-
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: TextField(
-                        controller: passwordController,
-                        decoration: InputDecoration(
-                            hintText: "new password",
-                            errorText:
-                                validatePassword(passwordController.text))),
-                  ),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      //Todo add check and link term and condition
-                      Checkbox(
-                        value: _isChecked,
-                        onChanged: (value) {
-                          if (mounted) {
-                            setState(() {
-                              _isChecked = value as bool;
-                            });
-                          }
-                        },
+                    Text(
+                      AppLocalizations.of(context)!.iHaveRead,
+                      style: const TextStyle(
+                        color: Constant.secondaryColor,
                       ),
-                      const Text(
-                        'I have read & accept the ',
-                        style: TextStyle(
-                          color: Constant.secondaryColor,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // Handle click on Terms & Conditions
+                        // Example: Navigate to a Terms & Conditions page
+                        Fluttertoast.showToast(msg: 'Terms & Conditions');
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.termConditions,
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          // Handle click on Terms & Conditions
-                          // Example: Navigate to a Terms & Conditions page
-                          Fluttertoast.showToast(msg: 'Terms & Conditions');
-                        },
-                        child: const Text(
-                          'Terms & Conditions',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            Expanded(
-              child: ClipPath(
-                clipper:
-                    OvalTopBorderClipper(), // Custom clipper for rounded cone
-                child: Container(
-                  width: 500,
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  color: Constant.primaryColor,
-                  child: Center(
-                      child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 60,
-                      ),
-                      //sign in button
-                      Container(
-                          margin: const EdgeInsets.only(bottom: 32),
-                          child: Button(onTap: signUp, text: 'Sign Up')),
+          ),
+          Expanded(
+            child: ClipPath(
+              clipper:
+                  OvalTopBorderClipper(), // Custom clipper for rounded cone
+              child: Container(
+                width: 500,
+                height: MediaQuery.of(context).size.height * 0.5,
+                color: Constant.primaryColor,
+                child: Center(
+                    child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 60,
+                    ),
+                    //sign in button
+                    Container(
+                        margin: const EdgeInsets.only(bottom: 32),
+                        child: Button(
+                            onTap: signUp,
+                            text: AppLocalizations.of(context)!.signUpButton)),
 
-                      //forgot password?
+                    //forgot password?
 
-                      //not a member? register
-                      Row(
+                    //not a member? register
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(AppLocalizations.of(context)!.lookingProject,
+                          style:
+                              const TextStyle(color: Constant.onPrimaryColor)),
+                      const SizedBox(width: 20),
+                      TextButton(
+                        onPressed: () {
+                          Provider.of<RoleProvider>(context, listen: false)
+                              .setRole(1 - widget.role); // For student
+                          context.pushNamed(RouteConstants.signUp2);
+                        },
+                        style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            side: const BorderSide(
+                                color: Constant.onPrimaryColor, width: 2),
+                            foregroundColor: Constant.onPrimaryColor),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text('Looking for projects?',
-                                style:
-                                    TextStyle(color: Constant.onPrimaryColor)),
-                            const SizedBox(width: 20),
-                            TextButton(
-                              onPressed: () {
-                                Provider.of<RoleProvider>(context,
-                                        listen: false)
-                                    .setRole(1 - widget.role); // For student
-                                context.pushNamed(RouteConstants.signUp2);
-                              },
-                              style: TextButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  side: const BorderSide(
-                                      color: Constant.onPrimaryColor, width: 2),
-                                  foregroundColor: Constant.onPrimaryColor),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    widget.role == 1
-                                        ? 'Join as student'
-                                        : 'Join as company',
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
+                            Text(
+                              widget.role == 1
+                                  ? AppLocalizations.of(context)!.joinAsStudent
+                                  : AppLocalizations.of(context)!.joinAsCompany,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
                             ),
-                            // Container(
-                            //   padding: const EdgeInsets.symmetric(
-                            //       vertical: 8, horizontal: 12),
-                            //   decoration: BoxDecoration(
-                            //     color: Colors.transparent,
-                            //     borderRadius: BorderRadius.circular(10),
-                            //     border: Border.all(
-                            //         color: Constant.onPrimaryColor, width: 2),
-                            //   ),
-                            //   child: const Text('Join as student',
-                            //       style: TextStyle(
-                            //           color: Constant.onPrimaryColor,
-                            //           fontWeight: FontWeight.normal)),
-                            // )
-                          ]),
-                    ],
-                  )),
-                ),
+                          ],
+                        ),
+                      ),
+                    ]),
+                  ],
+                )),
               ),
             ),
-          ])),
-        ));
+          ),
+        ]));
   }
 }
