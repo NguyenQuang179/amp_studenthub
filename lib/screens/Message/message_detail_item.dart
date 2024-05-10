@@ -6,11 +6,15 @@ class MessageDetailItem extends StatelessWidget {
   final bool isCurrentUser;
   final bool isScheduleItem;
   final String message;
+  final String fullname;
+  final String timeCreated;
   MessageDetailItem(
       {super.key,
       required this.isCurrentUser,
       required this.message,
-      required this.isScheduleItem});
+      required this.isScheduleItem,
+      required this.fullname,
+      required this.timeCreated});
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +28,19 @@ class MessageDetailItem extends StatelessWidget {
             ? ChatVideoSchedule(
                 isCurrentUser: isCurrentUser,
                 message: message,
-                username: 'John Doe',
+                username: fullname,
                 startTime: '10:00',
                 endTime: '11:00',
                 meetingName: 'Meeting',
                 duration: '1 hour',
                 isCancelled: isCurrentUser,
-                timeCreated: '12:30am',
+                timeCreated: timeCreated,
               )
             : ChatBubble(
                 isCurrentUser: isCurrentUser,
                 message: message,
-                username: 'John Doe',
-                timeCreated: '12:30am',
+                username: fullname,
+                timeCreated: timeCreated,
               ));
   }
 }

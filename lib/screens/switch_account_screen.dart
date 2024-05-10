@@ -1,4 +1,5 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/core/socket_manager.dart';
 import 'package:amp_studenthub/models/account.dart';
 import 'package:amp_studenthub/models/user.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
@@ -7,6 +8,7 @@ import 'package:amp_studenthub/utilities/local_storage.dart';
 import 'package:amp_studenthub/widgets/account_list_view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +24,104 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
   late Account currentAccount;
   late List<Account> accountList = [];
   bool _isLoading = true;
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  String? validatePassword(String password) {
+    // Define a regular expression pattern
+    final RegExp passwordPattern = RegExp(
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$',
+    );
+
+    // Check if the password matches the pattern
+    if (!passwordPattern.hasMatch(password)) {
+      return 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit';
+    }
+    // Return null if password is valid
+    return null;
+  }
+
+  Future<void> _displayTextInputDialog() async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Change password'),
+          content: Column(
+            children: [
+              TextField(
+                controller: oldPasswordController,
+                decoration: const InputDecoration(hintText: "old password"),
+              ),
+              TextField(
+                  controller: newPasswordController,
+                  decoration: InputDecoration(
+                      hintText: "new password",
+                      errorText: validatePassword(newPasswordController.text))),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () async {
+                //api request
+                final dio = Dio();
+                if (oldPasswordController.text.isEmpty ||
+                    newPasswordController.text.isEmpty) {
+                  Fluttertoast.showToast(
+                    msg: 'Please fill in all fields',
+                  );
+                  return;
+                }
+                final userProvider =
+                    Provider.of<UserProvider>(context, listen: false);
+                final accessToken = userProvider.userToken;
+
+                const endpoint = '${Constant.baseURL}/api/user/changePassword';
+                final submitData = {
+                  "oldPassword": oldPasswordController.text,
+                  "newPassword": newPasswordController.text,
+                };
+                try {
+                  print(submitData);
+                  final Response response = await dio.put(endpoint,
+                      data: submitData,
+                      options: Options(headers: {
+                        'Authorization': 'Bearer $accessToken',
+                      }));
+
+                  Fluttertoast.showToast(
+                      msg: "Pass change successfully",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                } catch (error) {
+                  print(error);
+                  Fluttertoast.showToast(
+                      msg: 'Incorrect Old Pass',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -174,7 +274,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     if (!isNewProfile) {
                       context.pushNamed(RouteConstants.createCompanyProfile);
                     } else {
-                      context.pushNamed(RouteConstants.editCompanyProfile);
+                      context.pushNamed(RouteConstants.viewCompanyProfile);
                     }
                   }
                 },
@@ -248,7 +348,30 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
             child: Divider(),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+            child: SizedBox(
+              height: 50,
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  _displayTextInputDialog();
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                ),
+                child: const Row(
+                  children: [
+                    SizedBox(width: 16),
+                    Icon(Icons.lock),
+                    SizedBox(width: 8),
+                    Text('Change Password'),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
             child: SizedBox(
               height: 52,
               width: double.infinity,
@@ -256,6 +379,8 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                 onPressed: () {
                   LocalStorage pref = LocalStorage.instance;
                   pref.clearStorage();
+                  //disconnect socket
+                  SocketManager().disconnectSocket();
                   context.goNamed(RouteConstants.home);
                 },
                 style: TextButton.styleFrom(

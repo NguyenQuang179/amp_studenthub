@@ -1,6 +1,7 @@
 import 'package:amp_studenthub/components/button.dart';
 import 'package:amp_studenthub/components/textfield.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/core/socket_manager.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/utilities/local_storage.dart';
@@ -13,14 +14,101 @@ import 'package:dio/dio.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({
+    super.key,
+  });
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
 
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  final TextEditingController _textFieldController = TextEditingController();
+
+  Future<void> _displayTextInputDialog() async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Reset password'),
+          content: TextField(
+            controller: _textFieldController,
+            decoration: const InputDecoration(hintText: "username"),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () async {
+                //api request
+                final dio = Dio();
+                if (_textFieldController.text.isEmpty) {
+                  Fluttertoast.showToast(
+                    msg: 'Please fill in all fields',
+                  );
+                  return;
+                }
+
+                const endpoint = '${Constant.baseURL}/api/user/forgotPassword';
+                final submitData = {
+                  "email": _textFieldController.text,
+                };
+                try {
+                  final Response response = await dio.post(
+                    endpoint,
+                    data: submitData,
+                  );
+
+                  final responseData = response.data;
+                  final String? message = responseData['result']['message'];
+                  if (message != null) {
+                    Fluttertoast.showToast(
+                        msg: message,
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  } else {
+                    Fluttertoast.showToast(
+                        msg: 'An error occurred',
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  }
+                } catch (error) {
+                  Fluttertoast.showToast(
+                      msg: 'An error occurred',
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // signin
-  Future<void> signIn(BuildContext context) async {
+  Future<void> signIn() async {
     final dio = Dio();
     String? accessToken;
     try {
@@ -75,11 +163,21 @@ class LoginPage extends StatelessWidget {
 
         Provider.of<UserProvider>(context, listen: false)
             .updateUserInfo(userData);
+        // connect to socket
+        final socketManager = SocketManager();
+        final socket =
+            await socketManager.connectSocket(context, userData['id']);
+        print(userData['id']);
+        print(socket);
+
         context.goNamed(RouteConstants.companyProject);
       }
     } on DioException catch (e) {
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
+      Fluttertoast.showToast(
+        msg: 'Login Failed',
+      );
       if (e.response != null) {
         print(e.response?.data);
         print(e.response?.headers);
@@ -162,7 +260,7 @@ class LoginPage extends StatelessWidget {
                       //sign in button
                       Button(
                           onTap: () {
-                            signIn(context);
+                            signIn();
                           },
                           text: AppLocalizations.of(context)!.signInButton),
                       //forgot password?
@@ -172,14 +270,7 @@ class LoginPage extends StatelessWidget {
                             onTap: () {
                               // Handle click on Forgot Password
                               // For example, navigate to the Forgot Password screen
-                              Fluttertoast.showToast(
-                                  msg: 'Forgot Password',
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
+                              _displayTextInputDialog();
                             },
                             child: Text(
                               AppLocalizations.of(context)!.forgotPassword,

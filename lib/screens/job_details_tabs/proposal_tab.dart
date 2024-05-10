@@ -406,7 +406,24 @@ class _ProposalTabState extends State<ProposalTab> {
                                                                             onPressed: () {
                                                                               if (proposal.statusFlag == 0) {
                                                                                 updateProposalStatusFlag(1, proposal.id);
+                                                                                //send MEssage to client
                                                                               }
+                                                                              //move to chat details
+                                                                              final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                                                              final userId = userProvider.userInfo['id'];
+                                                                              print("P1 " + userId.toString());
+                                                                              print(proposal.student?.userId);
+                                                                              print("P3 " + proposal.projectId.toString());
+
+                                                                              GoRouter.of(context).pushNamed(
+                                                                                RouteConstants.messageDetail,
+                                                                                queryParameters: {
+                                                                                  'userId': userId.toString(),
+                                                                                  'receiverId': proposal.student?.userId.toString(),
+                                                                                  'projectId': proposal.projectId.toString(),
+                                                                                  'receiverName': proposal.student?.user['fullname'] ?? 'user',
+                                                                                },
+                                                                              );
                                                                             },
                                                                             child: const Text("Message")),
                                                                       ),

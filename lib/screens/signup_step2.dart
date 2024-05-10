@@ -33,6 +33,20 @@ class _SignupStepTowState extends State<SignupStepTwo> {
   //   print('Password: ${passwordController.text}');
   //   print('Role: ${role}');
   // }
+  String? validatePassword(String password) {
+    // Define a regular expression pattern
+    final RegExp passwordPattern = RegExp(
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$',
+    );
+
+    // Check if the password matches the pattern
+    if (!passwordPattern.hasMatch(password)) {
+      return 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit';
+    }
+    // Return null if password is valid
+    return null;
+  }
+
   Future<void> signUp() async {
     if (!_isChecked) {
       Fluttertoast.showToast(msg: 'Please accept the Terms & Conditions');
@@ -81,6 +95,7 @@ class _SignupStepTowState extends State<SignupStepTwo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Constant.backgroundColor,
         appBar: const AuthAppBar(),
         body: Column(children: [
