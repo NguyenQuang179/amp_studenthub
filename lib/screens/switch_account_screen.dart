@@ -45,19 +45,28 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Change password'),
-          content: Column(
-            children: [
-              TextField(
-                controller: oldPasswordController,
-                decoration: const InputDecoration(hintText: "old password"),
-              ),
-              TextField(
-                  controller: newPasswordController,
-                  decoration: InputDecoration(
-                      hintText: "new password",
-                      errorText: validatePassword(newPasswordController.text))),
-            ],
+          backgroundColor: Constant.backgroundColor,
+          surfaceTintColor: Constant.backgroundColor,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 8),
+          title: const Text('Change Password'),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: oldPasswordController,
+                  decoration: const InputDecoration(hintText: "Old Password"),
+                ),
+                TextField(
+                    controller: newPasswordController,
+                    decoration: InputDecoration(
+                        errorMaxLines: 5,
+                        hintText: "New Password",
+                        errorText:
+                            validatePassword(newPasswordController.text))),
+              ],
+            ),
           ),
           actions: <Widget>[
             TextButton(
@@ -96,7 +105,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                       }));
 
                   Fluttertoast.showToast(
-                      msg: "Pass change successfully",
+                      msg: "Change Password Successfully",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,
@@ -106,7 +115,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                 } catch (error) {
                   print(error);
                   Fluttertoast.showToast(
-                      msg: 'Incorrect Old Pass',
+                      msg: 'Incorrect Old Password',
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,
@@ -347,28 +356,44 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Divider(),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
             child: SizedBox(
-              height: 50,
+              height: 52,
               width: double.infinity,
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: () {
                   _displayTextInputDialog();
                 },
-                style: ElevatedButton.styleFrom(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   padding: EdgeInsets.zero,
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(width: 16),
-                    Icon(Icons.lock),
-                    SizedBox(width: 8),
-                    Text('Change Password'),
+                    const SizedBox(width: 16),
+                    Icon(
+                      Icons.lock,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      'Change Password',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ],
                 ),
               ),
             ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
