@@ -1,4 +1,3 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
 
 class Textfield extends StatelessWidget {
@@ -18,41 +17,25 @@ class Textfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 50.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
+        padding: const EdgeInsets.symmetric(horizontal: 50.0),
+        child: SizedBox(
             height: 50,
             child: TextField(
-              controller: controller,
-              obscureText: obscureText,
-              decoration: InputDecoration(
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Constant.primaryColor),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Constant.secondaryColor),
-                ),
-                labelText: hintText,
-                fillColor: Constant.backgroundWithOpacity,
-                filled: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                errorText: errorText, // Set errorText here
-              ),
-            ),
-          ),
-          if (errorText != null) // Display error text if provided
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text(
-                errorText!,
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-        ],
-      ),
-    );
+                controller: controller,
+                obscureText: obscureText,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary),
+                  ),
+                  labelText: hintText,
+                  filled: true,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                ))));
   }
 }

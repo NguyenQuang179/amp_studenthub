@@ -316,7 +316,17 @@ class _ProposalTabState extends State<ProposalTab> {
                                                             .symmetric(
                                                             vertical: 8),
                                                         child: InkWell(
-                                                          onTap: () {},
+                                                          onTap: () {
+                                                            context.pushNamed(
+                                                                RouteConstants
+                                                                    .studentProposalDetails,
+                                                                pathParameters: {
+                                                                  'proposalId':
+                                                                      proposal
+                                                                          .id
+                                                                          .toString()
+                                                                });
+                                                          },
                                                           child: Container(
                                                             padding:
                                                                 const EdgeInsets

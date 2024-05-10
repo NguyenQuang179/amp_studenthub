@@ -46,9 +46,8 @@ class _AccountListViewState extends State<AccountListView> {
           bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
       child: ExpansionTile(
           controller: expansionTileController,
-          collapsedBackgroundColor: Constant.backgroundColor,
-          backgroundColor: Constant.backgroundColor,
-          shape: const Border(top: BorderSide(color: Colors.white)),
+          collapsedBackgroundColor: Theme.of(context).colorScheme.background,
+          backgroundColor: Theme.of(context).colorScheme.background,
           title: AccountCard(
             account: currentAcc,
           ),

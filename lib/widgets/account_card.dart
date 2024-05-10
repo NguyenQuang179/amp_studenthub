@@ -21,7 +21,7 @@ class AccountCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(0),
       child: Card(
-        color: Constant.primaryColor,
+        color: Theme.of(context).colorScheme.primary,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           child: Row(
@@ -50,14 +50,15 @@ class AccountCard extends StatelessWidget {
                       account.fullName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          color: Constant.onPrimaryColor,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
                           fontSize: 16,
                           fontWeight: FontWeight.w600),
                     ),
                     Text(
                       role,
-                      style: const TextStyle(color: Constant.onPrimaryColor),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary),
                     )
                   ],
                 ),
