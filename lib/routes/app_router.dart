@@ -324,42 +324,46 @@ class AppRouter {
     // },
     redirect: (context, state) async {
       // final dio = Dio();
-      LocalStorage localStorage = await LocalStorage.init();
-      String? token = localStorage.getString(key: StorageKey.accessToken);
-      log(token ?? "No Token");
-      bool isAuth = token != null ? true : false;
+      // LocalStorage localStorage = await LocalStorage.init();
+      // String? token = localStorage.getString(key: StorageKey.accessToken);
+      // log(token ?? "No Token");
+      // bool isAuth = token != null ? true : false;
+      // // ignore: dead_code
+      // if (!isAuth && state.matchedLocation != '/') {
+      //   return state.namedLocation(RouteConstants.home);
+      //   // ignore: dead_code
+      // } else if (isAuth && state.matchedLocation == '/') {
+      //   // Provider.of<UserProvider>(context, listen: false).updateToken(token);
+      //   // // Get and store user data to provider
+      //   // const endpoint = '${Constant.baseURL}/api/auth/me';
+      //   // final Response userResponse = await dio.get(
+      //   //   endpoint,
+      //   //   options: Options(headers: {
+      //   //     'Authorization': 'Bearer $token',
+      //   //   }),
+      //   // );
+
+      //   // final Map<String, dynamic> userResponseData =
+      //   //     userResponse.data as Map<String, dynamic>;
+      //   // final dynamic userData = userResponseData['result'];
+
+      //   // Provider.of<UserProvider>(context, listen: false)
+      //   //     .updateUserInfo(userData);
+      //   // // connect to socket
+      //   // final socketManager = SocketManager();
+      //   // final socket =
+      //   //     await socketManager.connectSocket(context, userData['id']);
+      //   // return state.namedLocation(RouteConstants.companyProject);
+      // }
+      // // ignore: dead_code
+      bool isAuth = false;
       // ignore: dead_code
-      if (!isAuth && state.matchedLocation != '/') {
+      if (!isAuth && state.matchedLocation == '/') {
         return state.namedLocation(RouteConstants.home);
         // ignore: dead_code
-      } else if (isAuth && state.matchedLocation == '/') {
-        // Provider.of<UserProvider>(context, listen: false).updateToken(token);
-        // // Get and store user data to provider
-        // const endpoint = '${Constant.baseURL}/api/auth/me';
-        // final Response userResponse = await dio.get(
-        //   endpoint,
-        //   options: Options(headers: {
-        //     'Authorization': 'Bearer $token',
-        //   }),
-        // );
-
-        // final Map<String, dynamic> userResponseData =
-        //     userResponse.data as Map<String, dynamic>;
-        // final dynamic userData = userResponseData['result'];
-
-        // Provider.of<UserProvider>(context, listen: false)
-        //     .updateUserInfo(userData);
-        // // connect to socket
-        // final socketManager = SocketManager();
-        // final socket =
-        //     await socketManager.connectSocket(context, userData['id']);
-        // return state.namedLocation(RouteConstants.companyProject);
+      } else if (state.matchedLocation == '/') {
+        return state.namedLocation(RouteConstants.company);
       }
-
-      if (state.matchedLocation == '/project') {
-        log("Redirect");
-      }
-      // ignore: dead_code
       return null;
     },
   );
