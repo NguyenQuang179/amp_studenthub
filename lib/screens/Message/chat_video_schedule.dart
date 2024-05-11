@@ -47,7 +47,7 @@ class ChatVideoSchedule extends StatelessWidget {
                     ),
                   ),
             Text(
-              " $username",
+              " $username ",
               style: const TextStyle(
                 color: Constant.textColor,
                 fontSize: 12,
