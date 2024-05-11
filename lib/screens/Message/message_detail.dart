@@ -85,7 +85,7 @@ class _MessageDetailState extends State<MessageDetail> {
       const endpoint = '${Constant.baseURL}/api/interview';
       var data = {
         "title": title,
-        "content": "string",
+        "content": "Interview",
         "startTime": startTime,
         "endTime": endTime,
         "projectId": projectId,
@@ -108,6 +108,8 @@ class _MessageDetailState extends State<MessageDetail> {
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
       if (result != null) {
+        print("INTERVIEW DATA: ");
+        print(result);
       } else {
         print('User data not found in the response');
       }
@@ -167,7 +169,7 @@ class _MessageDetailState extends State<MessageDetail> {
         setState(() {
           messages = fetchedMessages;
         });
-        Timer(Duration(milliseconds: 500), () => scrollToBottom());
+        Timer(const Duration(milliseconds: 500), () => scrollToBottom());
       }
       print(messages);
     } catch (e) {
@@ -234,7 +236,6 @@ class _MessageDetailState extends State<MessageDetail> {
     } catch (e) {
       print(e);
     }
-    ;
   }
 
   Future<void> connectSocket() async {
@@ -251,7 +252,7 @@ class _MessageDetailState extends State<MessageDetail> {
   Future<void> sendMessage(String message) async {
     final newMessage = Message(
       1,
-      DateTime.now(),
+      DateTime.now().add(-DateTime.now().timeZoneOffset),
       userId,
       receiverId,
       projectId,
@@ -262,6 +263,7 @@ class _MessageDetailState extends State<MessageDetail> {
     );
     //optimistic
     addMessage(newMessage);
+    print(DateTime.now());
 
     final form = {
       "senderId": userId,
@@ -311,7 +313,7 @@ class _MessageDetailState extends State<MessageDetail> {
         toolbarHeight: 60,
         title: Text(
           receiverName ?? "",
-          style: TextStyle(
+          style: const TextStyle(
               color: Constant.primaryColor, fontWeight: FontWeight.w600),
         ),
         actions: [
@@ -602,10 +604,12 @@ class _MessageDetailState extends State<MessageDetail> {
                 return MessageDetailItem(
                   isCurrentUser: isCurrentUser,
                   fullname: isCurrentUser ? senderName : receiverName ?? "",
-                  timeCreated: DateFormat('HH:mm MM-dd')
-                      .format(DateTime.parse(message.createdAt.toString())),
+                  timeCreated: DateFormat('HH:mm dd/MM').format(
+                      DateTime.parse(message.createdAt.toString())
+                          .add(DateTime.now().timeZoneOffset)),
                   message: message.content ?? "empty??",
-                  isScheduleItem: false,
+                  isScheduleItem: message.interview != null,
+                  interview: message.interview,
                 );
               },
             )),

@@ -1,7 +1,7 @@
 class NotificationType {
-  static int activity = 0;
+  static int offer = 0;
   static int interview = 1;
-  static int offer = 2;
+  static int submitted = 2;
   static int message = 3;
   static int hired = 4;
 }

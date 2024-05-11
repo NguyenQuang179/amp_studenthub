@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/Message/message_detail.dart';
 import 'package:amp_studenthub/screens/Message/message_list.dart';
@@ -31,6 +32,7 @@ import 'package:amp_studenthub/screens/student_submit_proposal.dart';
 import 'package:amp_studenthub/screens/switch_account_screen.dart';
 import 'package:amp_studenthub/screens/video_call_screen.dart';
 import 'package:amp_studenthub/screens/welcome_screen.dart';
+import 'package:amp_studenthub/utilities/local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -110,7 +112,12 @@ class AppRouter {
               parentNavigatorKey: _bottomNavbarNavigatorKey,
               path: '/dashboard',
               pageBuilder: (context, state) {
-                return const MaterialPage(child: CompanyDashboardScreen());
+                final userProvider =
+                    Provider.of<UserProvider>(context, listen: false);
+                final userRole = userProvider.userRole;
+                return userRole == "Student"
+                    ? const MaterialPage(child: StudentDashboard())
+                    : const MaterialPage(child: CompanyDashboardScreen());
               },
             ),
             GoRoute(
@@ -134,7 +141,7 @@ class AppRouter {
         name: RouteConstants.login,
         path: '/login',
         pageBuilder: (context, state) {
-          return MaterialPage(child: LoginPage());
+          return const MaterialPage(child: LoginPage());
         },
       ),
       GoRoute(
@@ -250,7 +257,10 @@ class AppRouter {
           name: RouteConstants.videoCall,
           path: '/videoCall',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: VideoCallScreen(conferenceId: ''));
+            final meetingRoomCode =
+                state.uri.queryParameters['meetingRoomCode'] ?? '0';
+            return MaterialPage(
+                child: VideoCallScreen(conferenceId: meetingRoomCode));
           }),
       GoRoute(
           name: RouteConstants.createCompanyProfile,
@@ -312,14 +322,42 @@ class AppRouter {
     // errorPageBuilder: (context, state) {
     //   return MaterialPage(child: null);
     // },
-    redirect: (context, state) {
-      bool isAuth = false;
+    redirect: (context, state) async {
+      // final dio = Dio();
+      LocalStorage localStorage = await LocalStorage.init();
+      String? token = localStorage.getString(key: StorageKey.accessToken);
+      log(token ?? "No Token");
+      bool isAuth = token != null ? true : false;
       // ignore: dead_code
-      if (!isAuth && state.matchedLocation == '/') {
+      if (!isAuth && state.matchedLocation != '/') {
         return state.namedLocation(RouteConstants.home);
         // ignore: dead_code
-      } else if (state.matchedLocation == '/') {
-        return state.namedLocation(RouteConstants.company);
+      } else if (isAuth && state.matchedLocation == '/') {
+        // Provider.of<UserProvider>(context, listen: false).updateToken(token);
+        // // Get and store user data to provider
+        // const endpoint = '${Constant.baseURL}/api/auth/me';
+        // final Response userResponse = await dio.get(
+        //   endpoint,
+        //   options: Options(headers: {
+        //     'Authorization': 'Bearer $token',
+        //   }),
+        // );
+
+        // final Map<String, dynamic> userResponseData =
+        //     userResponse.data as Map<String, dynamic>;
+        // final dynamic userData = userResponseData['result'];
+
+        // Provider.of<UserProvider>(context, listen: false)
+        //     .updateUserInfo(userData);
+        // // connect to socket
+        // final socketManager = SocketManager();
+        // final socket =
+        //     await socketManager.connectSocket(context, userData['id']);
+        // return state.namedLocation(RouteConstants.companyProject);
+      }
+
+      if (state.matchedLocation == '/project') {
+        log("Redirect");
       }
       // ignore: dead_code
       return null;

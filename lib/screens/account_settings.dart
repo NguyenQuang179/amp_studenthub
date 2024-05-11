@@ -1,4 +1,3 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/providers/language_provider.dart';
 import 'package:amp_studenthub/providers/theme_provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';

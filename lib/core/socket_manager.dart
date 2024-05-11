@@ -1,9 +1,4 @@
-import 'package:amp_studenthub/models/message.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -30,10 +25,10 @@ class SocketManager {
   }
 
   void triggerSocketEvent(dynamic data) {
-    _socketListeners.forEach((listener) {
+    for (var listener in _socketListeners) {
       print('triggering socket event');
       listener(data);
-    });
+    }
   }
 
   Future<io.Socket> connectSocket(BuildContext context, int userId) async {
