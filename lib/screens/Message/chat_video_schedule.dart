@@ -1,4 +1,5 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/models/meeting.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -13,9 +14,9 @@ class ChatVideoSchedule extends StatelessWidget {
   final String duration;
   final bool isCancelled;
   final String timeCreated;
-  final dynamic interview;
+  final Interview interview;
 
-  const ChatVideoSchedule(
+  ChatVideoSchedule(
       {super.key,
       required this.isCurrentUser,
       required this.username,
@@ -95,11 +96,11 @@ class ChatVideoSchedule extends StatelessWidget {
                 ],
               ),
               Text(
-                "Start Time: ${DateFormat('HH:mm MM-dd').format(DateTime.parse(startTime))}",
+                "Start Time: $startTime",
                 style: const TextStyle(color: Constant.textColor),
               ),
               Text(
-                "End Time: ${DateFormat('HH:mm MM-dd').format(DateTime.parse(endTime))}",
+                "End Time: $endTime",
                 style: const TextStyle(color: Constant.textColor),
               ),
               isCancelled
@@ -112,7 +113,7 @@ class ChatVideoSchedule extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () {
                             String? meetingRoomCode =
-                                interview['meetingRoom']['meeting_room_code'];
+                                interview.meetingRoom.meetingRoomCode;
                             if (meetingRoomCode != null &&
                                 meetingRoomCode != "") {
                               context.pushNamed(RouteConstants.videoCall,
