@@ -23,6 +23,8 @@ class NotificationListScreen extends StatefulWidget {
 }
 
 class _NotificationListScreenState extends State<NotificationListScreen> {
+  bool isLoading = false;
+  bool isSubmitting = false;
   Set<DashboardFilterOptions> selectedFilterOptions = {
     DashboardFilterOptions.all
   };
@@ -97,7 +99,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
         NotificationModel noti = NotificationModel.fromJson(message);
         // detailMsg.senderId = message['sender']['id'];
         print(noti);
-        fetchedNoti.insert(0, noti);
+        fetchedNoti.add(noti);
       }
       if (mounted) {
         setState(() {
@@ -124,7 +126,11 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
   }
 
   addMessage(notification) {
-    notifications.insert(0, notification);
+    final notiNew = notifications;
+    notiNew.insert(0, notification);
+    setState(() {
+      notifications = notiNew;
+    });
   }
 
   @override
@@ -153,7 +159,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
       final notification = NotificationModel.fromJson(data["notification"]);
       print(notification);
       addMessage(notification);
-      print(notifications[0]);
+      print(notifications[0].typeNotifyFlag);
       // final notification = NotificationModel.fromJson(data);
       // print(notification);
       // final newMsg = Message.fromJson(data["notification"]);
@@ -235,7 +241,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
   }
 
   getNotificationIcon(int typeNotifyFlag) {
-    if (typeNotifyFlag == NotificationType.activity) {
+    if (typeNotifyFlag == NotificationType.submitted) {
       return const FaIcon(FontAwesomeIcons.bell,
           color: Constant.onPrimaryColor);
     }
@@ -283,6 +289,47 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
     }
   }
 
+  Future<void> updateProposalStatusFlag(int statusFlag, int proposalId) async {
+    final dio = Dio();
+    try {
+      if (mounted) {
+        setState(() {
+          isSubmitting = true;
+        });
+      }
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final accessToken = userProvider.userToken;
+      String updateStatusFlagEndpoint =
+          '${Constant.baseURL}/api/proposal/$proposalId';
+      await dio.patch(updateStatusFlagEndpoint,
+          data: {'statusFlag': statusFlag},
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $accessToken',
+            },
+          ));
+    } on DioException catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        print(e.response?.statusCode);
+        print(e.response?.data);
+        print(e.response?.headers);
+        print(e.response?.requestOptions);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isSubmitting = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -321,7 +368,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                       Container(
                         margin: const EdgeInsets.only(top: 24),
                         child: const Text(
-                          "Welcome, Quang!\nYour job list is empty",
+                          "Your notification list is empty",
                           style: TextStyle(
                             color: Constant.secondaryColor,
                             fontWeight: FontWeight.w600,
@@ -450,8 +497,17 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                                           height: 48,
                                                           child: TextButton(
                                                             onPressed: () {
-                                                              print(
-                                                                  "Join Interview");
+                                                              if (notification
+                                                                      .typeNotifyFlag ==
+                                                                  NotificationType
+                                                                      .interview) {
+                                                              } else {
+                                                                updateProposalStatusFlag(
+                                                                    3,
+                                                                    notification
+                                                                            .proposal[
+                                                                        'id']);
+                                                              }
                                                             },
                                                             style: TextButton.styleFrom(
                                                                 shape: RoundedRectangleBorder(
@@ -475,7 +531,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                                                     notification.typeNotifyFlag ==
                                                                             NotificationType.interview
                                                                         ? "Join Interview"
-                                                                        : "View Offer",
+                                                                        : "Accept Offer",
                                                                     style: const TextStyle(
                                                                         fontSize:
                                                                             16,

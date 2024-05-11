@@ -53,6 +53,18 @@ class _SignupStepTowState extends State<SignupStepTwo> {
       Fluttertoast.showToast(msg: 'Please accept the Terms & Conditions');
       return;
     }
+    if (usernameController.text.isEmpty) {
+      Fluttertoast.showToast(msg: 'Email is required');
+      return;
+    }
+    if (passwordController.text.isEmpty) {
+      Fluttertoast.showToast(msg: 'Password is required');
+      return;
+    }
+    if (_passwordErrorText != null) {
+      Fluttertoast.showToast(msg: 'Invalid password');
+      return;
+    }
     final dio = Dio();
     try {
       const endpoint = '${Constant.baseURL}/api/auth/sign-up';
@@ -132,14 +144,41 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                       obscureText: false),
                 ),
 
-                Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: Textfield(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: TextField(
+                      obscureText: true,
                       controller: passwordController,
-                      hintText: AppLocalizations.of(context)!.passwordLabel,
-                      obscureText: true),
+                      onChanged: (text) {
+                        setState(() {
+                          // Update the error text dynamically when the text changes
+                          // by calling setState to trigger a rebuild
+                          // validatePassword returns null if the password is valid
+                          // or a validation error message if the password is invalid
+                          // Update the error text accordingly
+                          _passwordErrorText = validatePassword(text);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Constant.primaryColor),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Constant.secondaryColor),
+                        ),
+                        fillColor: Constant.backgroundWithOpacity,
+                        filled: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        hintText: "new password",
+                        errorText: _passwordErrorText, // Set errorText here
+                      ),
+                    ),
+                  ),
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
