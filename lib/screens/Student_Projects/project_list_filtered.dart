@@ -11,6 +11,7 @@ import 'package:amp_studenthub/utilities/constant.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +27,7 @@ class ProjectListFiltered extends StatefulWidget {
 class _ProjectListFilteredState extends State<ProjectListFiltered> {
   late List<Project> companyProjectsList = [];
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
   bool isLoading = false;
   static const perPage = 6;
   int page = 1;
@@ -179,7 +181,6 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
       if (result != null) {
-        log(result.toString());
         List<Project> newProjects = [];
         for (var project in result) {
           Project companyProject = Project.fromJson(project);
@@ -258,7 +259,16 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
           children: [
             Expanded(
               child: TextField(
-                  onChanged: (value) {},
+                  controller: _searchController,
+                  onSubmitted: (value) {
+                    final studentProjectProvider =
+                        Provider.of<StudentProjectProvider>(context,
+                            listen: false);
+                    log('submitted');
+                    studentProjectProvider.updateSearchQuery(value);
+                    context.pop();
+                    context.pushNamed(RouteConstants.projectListFiltered);
+                  },
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
                       contentPadding:
