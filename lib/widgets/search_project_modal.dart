@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/project.dart';
 import 'package:amp_studenthub/providers/student_project_provider.dart';
@@ -39,7 +41,6 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
   handleSubmit(context, value) async {
     await getSearchedProject(context);
     GoRouter.of(context).push('/projectListFiltered');
-    print(value);
   }
 
   Future<void> getSearchedProject(BuildContext context) async {
@@ -50,7 +51,9 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
-      var endpoint = '${Constant.baseURL}/api/project?title=${controller.text}';
+      studentProjectProvider.updateSearchQuery(controller.text);
+      var endpoint =
+          '${Constant.baseURL}/api/project?title=${controller.text}&page=1&perPage=6';
       final Response response = await dio.get(
         endpoint,
         options: Options(headers: {
@@ -58,6 +61,7 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
         }),
       );
 
+      print('query: ' + controller.text);
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
@@ -67,7 +71,6 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
           resultList.add(Project.fromJson(item));
         }
         studentProjectProvider.updateList(resultList);
-        studentProjectProvider.updateSearchQuery(controller.text);
       } else {
         print('User data not found in the response');
       }
@@ -129,7 +132,7 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      controller.clear();
+                                      handleSubmit(context, controller.text);
                                     },
                                     icon: const Icon(Icons.forward),
                                   ),

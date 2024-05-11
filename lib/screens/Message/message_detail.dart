@@ -519,66 +519,63 @@ class _MessageDetailState extends State<MessageDetail> {
                                         style:
                                             TextStyle(color: Colors.grey[600]!),
                                       ),
-                                      Container(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Row(
-                                            children: [
-                                              Expanded(
-                                                child: ElevatedButton(
-                                                  style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all<Color>(Constant
-                                                                  .onPrimaryColor),
-                                                      foregroundColor:
-                                                          MaterialStateProperty
-                                                              .all<Color>(Constant
-                                                                  .primaryColor)),
-                                                  onPressed: () {
-                                                    interviewTitleController
-                                                        .clear();
-                                                    startDateController.clear();
-                                                    endDateController.clear();
-                                                    context.pop();
-                                                  },
-                                                  child: const Text("Cancel"),
-                                                ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(Constant
+                                                                .onPrimaryColor),
+                                                    foregroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(Constant
+                                                                .primaryColor)),
+                                                onPressed: () {
+                                                  interviewTitleController
+                                                      .clear();
+                                                  startDateController.clear();
+                                                  endDateController.clear();
+                                                  context.pop();
+                                                },
+                                                child: const Text("Cancel"),
                                               ),
-                                              const SizedBox(
-                                                width: 16,
-                                              ),
-                                              Expanded(
-                                                child: ElevatedButton(
-                                                  style: ButtonStyle(
-                                                      backgroundColor:
-                                                          MaterialStateProperty
-                                                              .all<Color>(Constant
-                                                                  .primaryColor),
-                                                      foregroundColor:
-                                                          MaterialStateProperty
-                                                              .all<Color>(Constant
-                                                                  .onPrimaryColor)),
-                                                  onPressed: () {
-                                                    scheduleInterview(
-                                                        context,
-                                                        interviewTitleController
-                                                            .text,
-                                                        startDateController
-                                                            .text,
-                                                        endDateController.text);
-                                                    interviewTitleController
-                                                        .clear();
-                                                    startDateController.clear();
-                                                    endDateController.clear();
+                                            ),
+                                            const SizedBox(
+                                              width: 16,
+                                            ),
+                                            Expanded(
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(Constant
+                                                                .primaryColor),
+                                                    foregroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(Constant
+                                                                .onPrimaryColor)),
+                                                onPressed: () {
+                                                  scheduleInterview(
+                                                      context,
+                                                      interviewTitleController
+                                                          .text,
+                                                      startDateController.text,
+                                                      endDateController.text);
+                                                  interviewTitleController
+                                                      .clear();
+                                                  startDateController.clear();
+                                                  endDateController.clear();
 
-                                                    context.pop();
-                                                  },
-                                                  child: const Text("Confirm"),
-                                                ),
+                                                  context.pop();
+                                                },
+                                                child: const Text("Confirm"),
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ]),
