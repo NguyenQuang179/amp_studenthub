@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:amp_studenthub/screens/Message/active_interview_list.dart';
 import 'package:amp_studenthub/screens/Message/message_detail.dart';
 import 'package:amp_studenthub/screens/Message/message_list.dart';
 import 'package:amp_studenthub/screens/Student_Profile/profile_input_1.dart';
@@ -261,6 +262,12 @@ class AppRouter {
                 state.uri.queryParameters['meetingRoomCode'] ?? '0';
             return MaterialPage(
                 child: VideoCallScreen(conferenceId: meetingRoomCode));
+          }),
+      GoRoute(
+          name: RouteConstants.activeInterviewList,
+          path: '/ativeInterviewList',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: ActiveInterview());
           }),
       GoRoute(
           name: RouteConstants.createCompanyProfile,
