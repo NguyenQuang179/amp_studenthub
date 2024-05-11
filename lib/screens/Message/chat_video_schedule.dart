@@ -49,21 +49,15 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
-      const endpoint = '${Constant.baseURL}/api/interview';
+      final interview = widget.interview;
+      var endpoint = '${Constant.baseURL}/api/interview/${interview['id']}';
       var data = {
-        //   "title": title,
-        //   "content": "Interview",
-        //   "startTime": startTime,
-        //   "endTime": endTime,
-        //   "projectId": projectId,
-        //   "senderId": userId,
-        //   "receiverId": receiverId,
-        //   "meeting_room_code": Random().nextInt(1000000).toString(),
-        //   "meeting_room_id": Random().nextInt(1000000).toString(),
-        //   "expired_at": endTime
+        "title": title,
+        "startTime": startTime,
+        "endTime": endTime,
       };
 
-      final Response response = await dio.post(
+      final Response response = await dio.patch(
         endpoint,
         data: jsonEncode(data),
         options: Options(headers: {
@@ -98,24 +92,11 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
       // Get access token from provider
       final accessToken = userProvider.userToken;
       final interview = widget.interview;
-      const endpoint =
-          '${Constant.baseURL}/api/interview/${interview.id}/disable';
-      var data = {
-        //   "title": title,
-        //   "content": "Interview",
-        //   "startTime": startTime,
-        //   "endTime": endTime,
-        //   "projectId": projectId,
-        //   "senderId": userId,
-        //   "receiverId": receiverId,
-        //   "meeting_room_code": Random().nextInt(1000000).toString(),
-        //   "meeting_room_id": Random().nextInt(1000000).toString(),
-        //   "expired_at": endTime
-      };
+      var endpoint =
+          '${Constant.baseURL}/api/interview/${interview['id']}/disable';
 
-      final Response response = await dio.post(
+      final Response response = await dio.patch(
         endpoint,
-        data: jsonEncode(data),
         options: Options(headers: {
           'Authorization': 'Bearer $accessToken',
         }),
@@ -572,6 +553,7 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                             PopupMenuItem(
                               onTap: () {
                                 cancelInterview(context);
+                                setState(() {});
                               },
                               child: const Text("Cancel"),
                             ),
