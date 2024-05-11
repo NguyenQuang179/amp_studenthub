@@ -1,3 +1,5 @@
+import 'package:amp_studenthub/models/meeting.dart';
+
 class NotificationModel {
   final dynamic id;
   final DateTime createdAt;
@@ -57,7 +59,7 @@ class Message {
   final dynamic interviewId;
   final dynamic content;
   final dynamic messageFlag;
-  final dynamic interview;
+  final dynamic? interview;
 
   Message(
     this.id,
@@ -80,7 +82,9 @@ class Message {
         interviewId = json['interviewId'],
         content = json['content'],
         messageFlag = json['messageFlag'],
-        interview = json['interview'];
+        interview = json['interview'] != null
+            ? Interview.fromJson(json['interview'])
+            : null;
 }
 
 class Chatter {

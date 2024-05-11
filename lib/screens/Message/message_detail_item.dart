@@ -1,6 +1,8 @@
+import 'package:amp_studenthub/models/meeting.dart';
 import 'package:amp_studenthub/screens/Message/chat_bubble.dart';
 import 'package:amp_studenthub/screens/Message/chat_video_schedule.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MessageDetailItem extends StatelessWidget {
   final bool isCurrentUser;
@@ -8,7 +10,7 @@ class MessageDetailItem extends StatelessWidget {
   final String message;
   final String fullname;
   final String timeCreated;
-  final dynamic interview;
+  final Interview? interview;
   const MessageDetailItem(
       {super.key,
       required this.isCurrentUser,
@@ -16,7 +18,7 @@ class MessageDetailItem extends StatelessWidget {
       required this.isScheduleItem,
       required this.fullname,
       required this.timeCreated,
-      required this.interview});
+      this.interview});
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +32,16 @@ class MessageDetailItem extends StatelessWidget {
             ? ChatVideoSchedule(
                 isCurrentUser: isCurrentUser,
                 username: fullname,
-                startTime: interview['startTime'],
-                endTime: interview['endTime'],
-                meetingName: interview['title'],
-                duration: '1 hour',
-                isCancelled: false,
+                startTime: DateFormat('hh:mm a').format(interview!.startTime),
+                endTime: DateFormat('hh:mm a').format(interview!.endTime),
+                meetingName: interview!.title,
+                duration: interview!.endTime
+                    .difference(interview!.startTime)
+                    .inHours
+                    .toString(),
+                isCancelled: interview!.disableFlag == 1,
                 timeCreated: timeCreated,
-                interview: interview)
+                interview: interview!)
             : ChatBubble(
                 isCurrentUser: isCurrentUser,
                 message: message,

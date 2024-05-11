@@ -1,23 +1,27 @@
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/models/meeting.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:amp_studenthub/screens/Message/chat_video_schedule.dart';
 import 'package:amp_studenthub/screens/Message/message_item.dart';
+import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class MessageList extends StatefulWidget {
-  const MessageList({super.key});
+class ActiveInterview extends StatefulWidget {
+  const ActiveInterview({super.key});
 
   @override
-  _MessageListState createState() => _MessageListState();
+  _ActiveInterviewState createState() => _ActiveInterviewState();
 }
 
-class _MessageListState extends State<MessageList> {
+class _ActiveInterviewState extends State<ActiveInterview> {
   bool isLoading = false;
-  List<dynamic> messagesList = [];
+  List<Interview> aInterviewList = [];
 
   checkDetail(receiverId, projectId) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -38,16 +42,7 @@ class _MessageListState extends State<MessageList> {
     );
   }
 
-  checkSaved(context) {
-    GoRouter.of(context).push('/projectListSaved');
-  }
-
-  handleSubmit(context, value) {
-    GoRouter.of(context).push('/projectListFiltered');
-    print(value);
-  }
-
-  Future<void> getMessage() async {
+  Future<void> getActiveInterviewList() async {
     final dio = Dio();
     try {
       if (mounted) {
@@ -58,7 +53,8 @@ class _MessageListState extends State<MessageList> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
-      const endpoint = '${Constant.baseURL}/api/message/';
+      final userId = userProvider.userInfo['id'];
+      final endpoint = '${Constant.baseURL}/api/interview/user/$userId';
       final Response response = await dio.get(
         endpoint,
         options: Options(headers: {
@@ -70,8 +66,8 @@ class _MessageListState extends State<MessageList> {
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
       print(result);
-      final List<dynamic> fetchedMessages = [];
-      for (var message in result) {
+      final List<Interview> fetchedInterview = [];
+      for (var interview in result) {
         // Message detailMsg = Message.fromJson(message);
         // final senderID = message['sender']['id'];
         // print(senderID);
@@ -79,15 +75,17 @@ class _MessageListState extends State<MessageList> {
         // if (senderID == userId) {
         //   continue;
         // }
-        fetchedMessages.add(message);
+        final inter = Interview.fromJson(interview);
+        print(inter);
+        fetchedInterview.add(inter);
       }
 
       if (mounted) {
         setState(() {
-          messagesList = fetchedMessages;
+          aInterviewList = fetchedInterview;
         });
       }
-      print(messagesList);
+      print(aInterviewList);
     } catch (e) {
       print(e);
     } finally {
@@ -103,12 +101,13 @@ class _MessageListState extends State<MessageList> {
   void initState() {
     super.initState();
     // Fetch jobs when the widget is initialized
-    getMessage();
+    getActiveInterviewList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const AuthAppBar(),
       backgroundColor: Constant.backgroundColor,
       body: SafeArea(
         child: Center(
@@ -118,23 +117,12 @@ class _MessageListState extends State<MessageList> {
                 width: double.infinity,
                 padding:
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Messages: ",
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w600,
-                          color: Constant.primaryColor),
-                    ),
-                    Spacer(),
-                    TextButton(
-                        onPressed: () {
-                          context.pushNamed(RouteConstants.activeInterviewList);
-                        },
-                        child: Text("Active Interview")),
-                  ],
+                child: const Text(
+                  "Messages: ",
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w600,
+                      color: Constant.primaryColor),
                 )),
             isLoading
                 ? const Expanded(
@@ -146,26 +134,25 @@ class _MessageListState extends State<MessageList> {
                   )
                 : Expanded(
                     child: ListView.builder(
-                    itemCount: messagesList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final message = messagesList[index];
-                      final isCurrentUser = message["sender"]["id"] ==
-                          Provider.of<UserProvider>(context, listen: false)
-                              .userInfo['id'];
-                      final receiverId = isCurrentUser
-                          ? message["receiver"]["id"]
-                          : message["sender"]["id"];
-                      return MessageItem(
-                          messageReceiver: isCurrentUser
-                              ? message["receiver"]["fullname"]
-                              : message["sender"]["fullname"],
-                          message: message["content"],
-                          receiverPosition: message["project"]["title"],
-                          onClick: () =>
-                              checkDetail(receiverId, message["project"]["id"]),
-                          isSaved: false);
-                    },
-                  )),
+                        itemCount: aInterviewList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final interview = aInterviewList[index];
+
+                          return ChatVideoSchedule(
+                              isCurrentUser: true,
+                              username: "",
+                              startTime: DateFormat('yyyy-MM-dd HH:mm:ss')
+                                  .format(interview.startTime),
+                              endTime: DateFormat('yyyy-MM-dd HH:mm:ss')
+                                  .format(interview.endTime),
+                              meetingName: interview.title,
+                              duration:
+                                  "${interview.endTime.difference(interview.startTime).inHours.toString()} hours",
+                              isCancelled:
+                                  interview.disableFlag == 1, //enable = 0
+                              timeCreated: "",
+                              interview: interview);
+                        })),
           ],
         )),
       ),

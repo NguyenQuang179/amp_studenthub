@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/core/socket_manager.dart';
+import 'package:amp_studenthub/models/meeting.dart';
 import 'package:amp_studenthub/models/message.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/screens/Message/message_detail_item.dart';
@@ -113,6 +114,7 @@ class _MessageDetailState extends State<MessageDetail> {
       } else {
         print('User data not found in the response');
       }
+      getMessage(receiverId, projectId);
     } on DioError catch (e) {
       // Handle Dio errors
       if (e.response != null) {
@@ -159,6 +161,7 @@ class _MessageDetailState extends State<MessageDetail> {
       print(receiverName);
       print(senderName);
       for (var message in result) {
+        print(message['interview']);
         Message detailMsg = Message.fromJson(message);
         detailMsg.senderId = message['sender']['id'];
         print(detailMsg.senderId);
@@ -229,6 +232,11 @@ class _MessageDetailState extends State<MessageDetail> {
         return;
       }
       addMessage(newMsg);
+      print(newMsg);
+      // if (data["notification"]["message"]["interview"] != null) {
+      //   addInterview(
+      //       Interview.fromJson(data["notification"]["message"]["interview"]));
+      // }
       print(messages);
       // print(notification.sender.fullname);
       // print(notification.receiver.fullname);
