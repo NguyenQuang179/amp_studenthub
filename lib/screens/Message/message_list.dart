@@ -4,8 +4,8 @@ import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/Message/message_item.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class MessageList extends StatefulWidget {
@@ -16,6 +16,7 @@ class MessageList extends StatefulWidget {
 }
 
 class _MessageListState extends State<MessageList> {
+  bool isLoading = false;
   List<dynamic> messagesList = [];
 
   checkDetail(receiverId, projectId) {
@@ -49,13 +50,15 @@ class _MessageListState extends State<MessageList> {
   Future<void> getMessage() async {
     final dio = Dio();
     try {
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
-      final userInfo = userProvider.userInfo;
-      final userId = userInfo['id'];
-      print(userInfo);
-      final endpoint = '${Constant.baseURL}/api/message/';
+      const endpoint = '${Constant.baseURL}/api/message/';
       final Response response = await dio.get(
         endpoint,
         options: Options(headers: {
@@ -87,6 +90,12 @@ class _MessageListState extends State<MessageList> {
       print(messagesList);
     } catch (e) {
       print(e);
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -116,30 +125,36 @@ class _MessageListState extends State<MessageList> {
                       fontWeight: FontWeight.w600,
                       color: Constant.primaryColor),
                 )),
-            Expanded(
-                child: ListView.builder(
-              itemCount: messagesList.length,
-              itemBuilder: (BuildContext context, int index) {
-                final message = messagesList[index];
-                final isCurrentUser = message["sender"]["id"] ==
-                    Provider.of<UserProvider>(context, listen: false)
-                        .userInfo['id'];
-                final receiverId = isCurrentUser
-                    ? message["receiver"]["id"]
-                    : message["sender"]["id"];
-                return MessageItem(
-                    jobCreatedDate: DateFormat('yyyy-MM-dd').format(
-                        DateTime.parse(message["project"]['createdAt'])),
-                    messageReceiver: isCurrentUser
-                        ? message["receiver"]["fullname"]
-                        : message["sender"]["fullname"],
-                    message: message["content"],
-                    receiverPosition: message["project"]["title"],
-                    onClick: () =>
-                        checkDetail(receiverId, message["project"]["id"]),
-                    isSaved: false);
-              },
-            )),
+            isLoading
+                ? const Expanded(
+                    child: Center(
+                        child: SpinKitThreeBounce(
+                            size: 32,
+                            duration: Durations.extralong4,
+                            color: Constant.primaryColor)),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                    itemCount: messagesList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final message = messagesList[index];
+                      final isCurrentUser = message["sender"]["id"] ==
+                          Provider.of<UserProvider>(context, listen: false)
+                              .userInfo['id'];
+                      final receiverId = isCurrentUser
+                          ? message["receiver"]["id"]
+                          : message["sender"]["id"];
+                      return MessageItem(
+                          messageReceiver: isCurrentUser
+                              ? message["receiver"]["fullname"]
+                              : message["sender"]["fullname"],
+                          message: message["content"],
+                          receiverPosition: message["project"]["title"],
+                          onClick: () =>
+                              checkDetail(receiverId, message["project"]["id"]),
+                          isSaved: false);
+                    },
+                  )),
           ],
         )),
       ),

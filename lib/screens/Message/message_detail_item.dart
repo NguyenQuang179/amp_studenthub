@@ -8,13 +8,15 @@ class MessageDetailItem extends StatelessWidget {
   final String message;
   final String fullname;
   final String timeCreated;
-  MessageDetailItem(
+  final dynamic interview;
+  const MessageDetailItem(
       {super.key,
       required this.isCurrentUser,
       required this.message,
       required this.isScheduleItem,
       required this.fullname,
-      required this.timeCreated});
+      required this.timeCreated,
+      required this.interview});
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +24,19 @@ class MessageDetailItem extends StatelessWidget {
         isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
     return Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: 10),
         alignment: alignment,
         child: isScheduleItem
             ? ChatVideoSchedule(
                 isCurrentUser: isCurrentUser,
-                message: message,
                 username: fullname,
-                startTime: '10:00',
-                endTime: '11:00',
-                meetingName: 'Meeting',
+                startTime: interview['startTime'],
+                endTime: interview['endTime'],
+                meetingName: interview['title'],
                 duration: '1 hour',
-                isCancelled: isCurrentUser,
+                isCancelled: false,
                 timeCreated: timeCreated,
-              )
+                interview: interview)
             : ChatBubble(
                 isCurrentUser: isCurrentUser,
                 message: message,

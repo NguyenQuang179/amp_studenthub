@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:zego_uikit_prebuilt_video_conference/zego_uikit_prebuilt_video_conference.dart';
 
@@ -25,7 +24,7 @@ class VideoCallScreen extends StatelessWidget {
         child: ZegoUIKitPrebuiltVideoConference(
           appID: Constant.appId,
           appSign: Constant.appSign,
-          userID: userProvider.userInfo['id'],
+          userID: userProvider.userInfo['id']!.toString(),
           userName: userProvider.userInfo['fullname'],
           conferenceID: conferenceId,
           config: ZegoUIKitPrebuiltVideoConferenceConfig(),

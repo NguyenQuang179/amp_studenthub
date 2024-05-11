@@ -114,7 +114,6 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
 
   Future<void> init() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final accessToken = userProvider.userToken;
     userId = userProvider.userInfo['id'];
     //get message
     await getNotification(userId, "");
@@ -147,7 +146,6 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
 
     sendMessageDetailController.dispose();
     SocketManager().unregisterSocketListener(onReceiveNotification);
-
     print('Socket Disconnected');
   }
 
@@ -178,7 +176,6 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
     } catch (e) {
       print(e);
     }
-    ;
   }
 
   Future<void> connectSocket() async {
@@ -186,9 +183,11 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
     socket = await socketManager.connectSocket(context, userId);
     SocketManager().registerSocketListener(onReceiveNotification);
     print(socket);
-    setState(() {
-      socketInitialized = true;
-    });
+    if (mounted) {
+      setState(() {
+        socketInitialized = true;
+      });
+    }
   }
 
   // final List<UserNotification> allNotifications = [

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:math';
 import 'dart:async';
@@ -18,7 +17,6 @@ import 'package:intl/intl.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
-
 
 class MessageDetail extends StatefulWidget {
   final int userId;
@@ -76,7 +74,7 @@ class _MessageDetailState extends State<MessageDetail> {
       curve: Curves.easeOut,
     );
   }
-  
+
   Future<void> scheduleInterview(BuildContext context, String title,
       String startTime, String endTime) async {
     final dio = Dio();
@@ -87,12 +85,12 @@ class _MessageDetailState extends State<MessageDetail> {
       const endpoint = '${Constant.baseURL}/api/interview';
       var data = {
         "title": title,
-        "content": "string",
+        "content": "Interview",
         "startTime": startTime,
         "endTime": endTime,
-        "projectId": 835,
-        "senderId": 341,
-        "receiverId": 227,
+        "projectId": projectId,
+        "senderId": userId,
+        "receiverId": receiverId,
         "meeting_room_code": Random().nextInt(1000000).toString(),
         "meeting_room_id": Random().nextInt(1000000).toString(),
         "expired_at": endTime
@@ -110,6 +108,8 @@ class _MessageDetailState extends State<MessageDetail> {
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
       if (result != null) {
+        print("INTERVIEW DATA: ");
+        print(result);
       } else {
         print('User data not found in the response');
       }
@@ -169,7 +169,7 @@ class _MessageDetailState extends State<MessageDetail> {
         setState(() {
           messages = fetchedMessages;
         });
-        Timer(Duration(milliseconds: 500), () => scrollToBottom());
+        Timer(const Duration(milliseconds: 500), () => scrollToBottom());
       }
       print(messages);
     } catch (e) {
@@ -236,7 +236,6 @@ class _MessageDetailState extends State<MessageDetail> {
     } catch (e) {
       print(e);
     }
-    ;
   }
 
   Future<void> connectSocket() async {
@@ -253,7 +252,7 @@ class _MessageDetailState extends State<MessageDetail> {
   Future<void> sendMessage(String message) async {
     final newMessage = Message(
       1,
-      DateTime.now(),
+      DateTime.now().add(-DateTime.now().timeZoneOffset),
       userId,
       receiverId,
       projectId,
@@ -264,6 +263,7 @@ class _MessageDetailState extends State<MessageDetail> {
     );
     //optimistic
     addMessage(newMessage);
+    print(DateTime.now());
 
     final form = {
       "senderId": userId,
@@ -313,7 +313,7 @@ class _MessageDetailState extends State<MessageDetail> {
         toolbarHeight: 60,
         title: Text(
           receiverName ?? "",
-          style: TextStyle(
+          style: const TextStyle(
               color: Constant.primaryColor, fontWeight: FontWeight.w600),
         ),
         actions: [
@@ -607,10 +607,12 @@ class _MessageDetailState extends State<MessageDetail> {
                 return MessageDetailItem(
                   isCurrentUser: isCurrentUser,
                   fullname: isCurrentUser ? senderName : receiverName ?? "",
-                  timeCreated: DateFormat('HH:mm MM-dd')
-                      .format(DateTime.parse(message.createdAt.toString())),
+                  timeCreated: DateFormat('HH:mm dd/MM').format(
+                      DateTime.parse(message.createdAt.toString())
+                          .add(DateTime.now().timeZoneOffset)),
                   message: message.content ?? "empty??",
-                  isScheduleItem: false,
+                  isScheduleItem: message.interview != null,
+                  interview: message.interview,
                 );
               },
             )),
