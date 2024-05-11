@@ -8,6 +8,7 @@ import 'package:amp_studenthub/utilities/constant.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -61,6 +62,11 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
   Future<void> getNotification(receiverId, projectId) async {
     final dio = Dio();
     try {
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
@@ -109,6 +115,12 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
       print(notifications);
     } catch (e) {
       print(e);
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -331,30 +343,43 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
               // Render Job List
               if (notifications.isEmpty)
                 Expanded(
-                  child: Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.center,
-                        child: SvgPicture.asset(
-                          'assets/empty.svg',
-                          height: 320,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 24),
-                        child: const Text(
-                          "Your notification list is empty",
-                          style: TextStyle(
-                            color: Constant.secondaryColor,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
+                  child: isLoading
+                      ? Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                  child: const SpinKitThreeBounce(
+                                      size: 32,
+                                      duration: Durations.extralong4,
+                                      color: Constant.primaryColor))
+                            ],
                           ),
-                          textAlign: TextAlign.center,
+                        )
+                      : Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: SvgPicture.asset(
+                                'assets/empty.svg',
+                                height: 320,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 24),
+                              child: const Text(
+                                "Your notification list is empty",
+                                style: TextStyle(
+                                  color: Constant.secondaryColor,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
                 )
               else
                 Expanded(

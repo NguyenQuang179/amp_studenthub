@@ -1,18 +1,14 @@
 # amp_studenthub
 
+StudentHub - Final Project For Advanced Mobile Programming
+
 Video Demo:
 Phasing 01: https://youtu.be/g6augs4n2XA
 Phasing 02: https://youtu.be/KfJfik06W5Q
+Phasing 03, 04: https://youtu.be/OS_T7ROtRmI
 
-## Getting Started
+# Team Member:
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+20127040 - Truong Gia Huy
+20127060 - Nguyen Duy Nien
+20127297 - Nguyen Ngoc Quang
