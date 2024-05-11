@@ -24,6 +24,7 @@ class NotificationListScreen extends StatefulWidget {
 
 class _NotificationListScreenState extends State<NotificationListScreen> {
   bool isLoading = false;
+  bool isSubmitting = false;
   Set<DashboardFilterOptions> selectedFilterOptions = {
     DashboardFilterOptions.all
   };
@@ -124,7 +125,11 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
   }
 
   addMessage(notification) {
-    notifications.insert(0, notification);
+    final notiNew = notifications;
+    notiNew.insert(0, notification);
+    setState(() {
+      notifications = notiNew;
+    });
   }
 
   @override
@@ -152,7 +157,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
       final notification = NotificationModel.fromJson(data["notification"]);
       print(notification);
       addMessage(notification);
-      print(notifications[0]);
+      print(notifications[0].typeNotifyFlag);
       // final notification = NotificationModel.fromJson(data);
       // print(notification);
       // final newMsg = Message.fromJson(data["notification"]);
@@ -259,6 +264,71 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
     }
   }
 
+  markAsRead(notification) async {
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final accessToken = userProvider.userToken;
+      final dio = Dio();
+      final endpoint =
+          '${Constant.baseURL}/api/notification/readNoti/${notification.id}';
+      final Response response = await dio.patch(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      print(endpoint);
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      print("successful + $response");
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> updateProposalStatusFlag(int statusFlag, int proposalId) async {
+    final dio = Dio();
+    try {
+      if (mounted) {
+        setState(() {
+          isSubmitting = true;
+        });
+      }
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final accessToken = userProvider.userToken;
+      String updateStatusFlagEndpoint =
+          '${Constant.baseURL}/api/proposal/$proposalId';
+      await dio.patch(updateStatusFlagEndpoint,
+          data: {'statusFlag': statusFlag},
+          options: Options(
+            headers: {
+              'Authorization': 'Bearer $accessToken',
+            },
+          ));
+    } on DioException catch (e) {
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        print(e.response?.statusCode);
+        print(e.response?.data);
+        print(e.response?.headers);
+        print(e.response?.requestOptions);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isSubmitting = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -297,7 +367,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                       Container(
                         margin: const EdgeInsets.only(top: 24),
                         child: const Text(
-                          "Welcome, Quang!\nYour job list is empty",
+                          "Your notification list is empty",
                           style: TextStyle(
                             color: Constant.secondaryColor,
                             fontWeight: FontWeight.w600,
@@ -314,158 +384,172 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: ListView.builder(
-                            //bottom up
-                            physics: const ClampingScrollPhysics(),
-                            itemCount: notifications.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              NotificationModel notification =
-                                  notifications[index];
-                              return Container(
-                                margin: const EdgeInsets.symmetric(vertical: 8),
-                                child: InkWell(
-                                  onTap: () {
-                                    if (notification.typeNotifyFlag ==
-                                        NotificationType.message) {
-                                      checkMessageDetail(notification);
-                                    }
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 16),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 1, color: Colors.grey[500]!),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    // Column Layout Of Card
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    right: 16),
-                                                child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            100),
-                                                    child: Container(
-                                                      height: 48,
-                                                      width: 48,
-                                                      color:
-                                                          Constant.primaryColor,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      child: getNotificationIcon(
-                                                          notification
-                                                              .typeNotifyFlag),
-                                                    )),
-                                              ),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "${notification.content}",
-                                                      style: const TextStyle(
-                                                          color: Constant
-                                                              .secondaryColor,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                    Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              top: 4),
-                                                      child: Text(
-                                                        DateFormat(
-                                                                'dd/MM hh:mm')
-                                                            .format(notification
-                                                                .createdAt
-                                                                .add(DateTime
-                                                                        .now()
-                                                                    .timeZoneOffset)),
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: const TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          notification.typeNotifyFlag ==
-                                                      NotificationType
-                                                          .interview ||
-                                                  notification.typeNotifyFlag ==
-                                                      NotificationType.offer
-                                              ? Column(
-                                                  children: [
-                                                    Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              top: 8),
-                                                      child: const Divider(),
-                                                    ),
-                                                    SizedBox(
-                                                        width: double.infinity,
+                        child: Container(
+                          child: ListView.builder(
+                              //bottom up
+                              physics: const ClampingScrollPhysics(),
+                              itemCount: notifications.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                NotificationModel notification =
+                                    notifications[index];
+                                return Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  child: InkWell(
+                                    onTap: () {
+                                      if (notification.typeNotifyFlag ==
+                                          NotificationType.message) {
+                                        checkMessageDetail(notification);
+                                        markAsRead(notification);
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 16),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 1,
+                                              color: Colors.grey[500]!),
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      // Column Layout Of Card
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 16),
+                                                  child: ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              100),
+                                                      child: Container(
                                                         height: 48,
-                                                        child: TextButton(
-                                                          onPressed: () {
-                                                            print(
-                                                                "Join Interview");
-                                                          },
-                                                          style: TextButton.styleFrom(
-                                                              shape: RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          12)),
-                                                              side: const BorderSide(
-                                                                  color: Constant
-                                                                      .backgroundColor,
-                                                                  width: 1),
-                                                              foregroundColor:
-                                                                  Constant
-                                                                      .primaryColor),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Container(
-                                                                child: Text(
-                                                                  notification.typeNotifyFlag ==
-                                                                          NotificationType
-                                                                              .interview
-                                                                      ? "Join Interview"
-                                                                      : "Accept Offer",
-                                                                  style: const TextStyle(
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500),
+                                                        width: 48,
+                                                        color: Constant
+                                                            .primaryColor,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: getNotificationIcon(
+                                                            notification
+                                                                .typeNotifyFlag),
+                                                      )),
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "${notification.content}",
+                                                        style: const TextStyle(
+                                                            color: Constant
+                                                                .secondaryColor,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .only(top: 4),
+                                                        child: Text(
+                                                          DateFormat(
+                                                                  'hh:mm MM-dd')
+                                                              .format(notification
+                                                                  .createdAt),
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 12),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            notification.typeNotifyFlag ==
+                                                        NotificationType
+                                                            .interview ||
+                                                    notification
+                                                            .typeNotifyFlag ==
+                                                        NotificationType.offer
+                                                ? Column(
+                                                    children: [
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .only(top: 8),
+                                                        child: const Divider(),
+                                                      ),
+                                                      SizedBox(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 48,
+                                                          child: TextButton(
+                                                            onPressed: () {
+                                                              if (notification
+                                                                      .typeNotifyFlag ==
+                                                                  NotificationType
+                                                                      .interview) {
+                                                              } else {
+                                                                updateProposalStatusFlag(
+                                                                    3,
+                                                                    notification
+                                                                            .proposal[
+                                                                        'id']);
+                                                              }
+                                                            },
+                                                            style: TextButton.styleFrom(
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            12)),
+                                                                side: const BorderSide(
+                                                                    color: Constant
+                                                                        .backgroundColor,
+                                                                    width: 1),
+                                                                foregroundColor:
+                                                                    Constant
+                                                                        .primaryColor),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Container(
+                                                                  child: Text(
+                                                                    notification.typeNotifyFlag ==
+                                                                            NotificationType.interview
+                                                                        ? "Join Interview"
+                                                                        : "Accept Offer",
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w500),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ))
-                                                  ],
-                                                )
-                                              : Container()
-                                        ]),
+                                                              ],
+                                                            ),
+                                                          ))
+                                                    ],
+                                                  )
+                                                : Container()
+                                          ]),
+                                    ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              }),
+                        ),
                       )
                     ],
                   ),

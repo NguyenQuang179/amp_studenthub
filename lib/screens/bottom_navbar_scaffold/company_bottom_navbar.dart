@@ -116,10 +116,12 @@ class _CompanyNavbarScaffoldState extends State<CompanyNavbarScaffold> {
   void onReceiveMessage(data) {
     print(data);
     print("receiveNoti");
+    print(notificationCount);
     setState(() {
       hasNotification = true;
       notificationCount = notificationCount + 1;
     });
+    print(notificationCount);
   }
 
   Future<void> connectSocket() async {
