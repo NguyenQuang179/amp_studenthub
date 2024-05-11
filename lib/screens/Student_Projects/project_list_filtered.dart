@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:amp_studenthub/components/project_item.dart';
 import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/models/company_dashboard_project.dart';
 import 'package:amp_studenthub/models/project.dart';
 import 'package:amp_studenthub/providers/student_project_provider.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
@@ -20,6 +23,53 @@ class ProjectListFiltered extends StatefulWidget {
 }
 
 class _ProjectListFilteredState extends State<ProjectListFiltered> {
+  late List<Project> companyProjectsList = [];
+  final ScrollController _scrollController = ScrollController();
+  bool isLoading = false;
+  static const perPage = 6;
+  int page = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+    filterProjects(context);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    log(isLoading.toString());
+    if (!isLoading &&
+        _scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+      setState(() {
+        isLoading = true;
+      });
+      log('scroll');
+    }
+  }
+
+  Future<void> _handleScrollEnd() async {
+    if (isLoading) {
+      setState(() {
+        isLoading = false;
+      });
+      await loadMoreProjects();
+    }
+  }
+
+  Future<void> loadMoreProjects() async {
+    page++;
+    log(page.toString());
+    await filterProjects(context);
+  }
+
   Future<void> favorite(id, isSaved) async {
     // Implement submit proposal logic here
     //api request
@@ -107,6 +157,8 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
         filterQuery += '&proposalsLessThan=${proposalsController.text}';
       }
 
+      filterQuery += '&page=$page&perPage=$perPage';
+
       final studentProjectProvider =
           Provider.of<StudentProjectProvider>(context, listen: false);
       var titleQuery = studentProjectProvider.searchQuery;
@@ -126,18 +178,20 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
           'Authorization': 'Bearer $accessToken',
         }),
       );
-
+      log('success');
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
       if (result != null) {
-        List<Project> resultList = [];
-        for (var item in result) {
-          resultList.add(Project.fromJson(item));
+        List<Project> newProjects = [];
+        for (var project in result) {
+          Project companyProject = Project.fromJson(project);
+          newProjects.add(companyProject);
         }
-        studentProjectProvider.updateList(resultList);
-
-        setState(() {});
+        print("SUCCESS");
+        setState(() {
+          companyProjectsList.addAll(newProjects);
+        });
       } else {
         print('User data not found in the response');
       }
@@ -199,10 +253,6 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
 
   @override
   Widget build(BuildContext context) {
-    final studentProjectProvider =
-        Provider.of<StudentProjectProvider>(context, listen: false);
-    final List<Project> resultList = studentProjectProvider.searchProjects;
-
     return Scaffold(
       backgroundColor: Constant.backgroundColor,
       appBar: AppBar(
@@ -432,26 +482,48 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                       color: Constant.primaryColor),
                 )),
             Expanded(
-                child: ListView.builder(
-              itemCount: resultList.length,
-              itemBuilder: (BuildContext context, int index) {
-                final Project project = resultList[index];
-                return ProjectItem(
-                  id: project.id as int,
-                  jobTitle: project.title,
-                  jobCreatedDate: project.createdDate,
-                  jobDuration: ProjectScopeToString[project.projectScopeFlag],
-                  jobStudentNeeded: project.numberOfStudents,
-                  jobProposalNums: project.countProposals,
-                  onClick: () => onClick(project),
-                  isSaved: project.isFavorite,
-                  favorite: () {
-                    favorite(project.id, project.isFavorite);
-                    resultList[index].isFavorite = !project.isFavorite;
+              child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onVerticalDragEnd: (details) {
+                    _handleScrollEnd();
                   },
-                );
-              },
-            )),
+                  child: NotificationListener<ScrollNotification>(
+                    onNotification: (scrollInfo) {
+                      if (scrollInfo is ScrollEndNotification) {
+                        _handleScrollEnd();
+                      }
+                      return false;
+                    },
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: companyProjectsList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final Project project = companyProjectsList[index];
+                        return ProjectItem(
+                          id: project.id as int,
+                          jobTitle: project.title,
+                          jobCreatedDate: project.createdDate,
+                          jobDuration:
+                              ProjectScopeToString[project.projectScopeFlag],
+                          jobStudentNeeded: project.numberOfStudents,
+                          jobProposalNums: project.countProposals,
+                          onClick: () => onClick(project),
+                          isSaved: project.isFavorite,
+                          favorite: () {
+                            favorite(project.id, project.isFavorite);
+                            companyProjectsList[index].isFavorite =
+                                !project.isFavorite;
+                          },
+                        );
+                      },
+                    ),
+                  )),
+            ),
+            if (isLoading && companyProjectsList.isNotEmpty)
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              ),
           ],
         )),
       ),

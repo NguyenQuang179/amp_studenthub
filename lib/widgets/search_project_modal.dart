@@ -50,7 +50,8 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
-      var endpoint = '${Constant.baseURL}/api/project?title=${controller.text}';
+      var endpoint =
+          '${Constant.baseURL}/api/project?title=${controller.text}&page=1&perPage=6';
       final Response response = await dio.get(
         endpoint,
         options: Options(headers: {
