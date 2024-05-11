@@ -35,6 +35,95 @@ class ChatVideoSchedule extends StatefulWidget {
       required this.interview});
 
   @override
+  State<ChatVideoSchedule> createState() => _ChatVideoScheduleState();
+}
+
+class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
+  final interviewTitleController = TextEditingController();
+  final endDateController = TextEditingController();
+  final startDateController = TextEditingController();
+
+  Future<void> scheduleInterview(BuildContext context, String title,
+      String startTime, String endTime) async {
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      final interview = widget.interview;
+      var endpoint = '${Constant.baseURL}/api/interview/${interview.id}';
+      var data = {
+        "title": title,
+        "startTime": startTime,
+        "endTime": endTime,
+      };
+
+      final Response response = await dio.patch(
+        endpoint,
+        data: jsonEncode(data),
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      if (result != null) {
+        print("INTERVIEW DATA: ");
+        print(result);
+      } else {
+        print('User data not found in the response');
+      }
+    } on DioError catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        final responseData = e.response?.data;
+        print(responseData);
+      } else {
+        print(e.message);
+      }
+    }
+  }
+
+  Future<void> cancelInterview(BuildContext context) async {
+    final dio = Dio();
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      // Get access token from provider
+      final accessToken = userProvider.userToken;
+      final interview = widget.interview;
+      var endpoint =
+          '${Constant.baseURL}/api/interview/${interview.id}/disable';
+
+      final Response response = await dio.patch(
+        endpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> responseData =
+          response.data as Map<String, dynamic>;
+      final dynamic result = responseData['result'];
+      if (result != null) {
+        print("INTERVIEW DATA: ");
+        print(result);
+      } else {
+        print('User data not found in the response');
+      }
+    } on DioError catch (e) {
+      // Handle Dio errors
+      if (e.response != null) {
+        final responseData = e.response?.data;
+        print(responseData);
+      } else {
+        print(e.message);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       Container(
@@ -104,11 +193,11 @@ class ChatVideoSchedule extends StatefulWidget {
                 ],
               ),
               Text(
-                "Start Time: $startTime",
+                "Start Time: ${widget.startTime}",
                 style: const TextStyle(color: Constant.textColor),
               ),
               Text(
-                "End Time: $endTime",
+                "End Time: ${widget.endTime}",
                 style: const TextStyle(color: Constant.textColor),
               ),
               widget.isCancelled
@@ -121,7 +210,7 @@ class ChatVideoSchedule extends StatefulWidget {
                         ElevatedButton(
                           onPressed: () {
                             String? meetingRoomCode =
-                                interview.meetingRoom.meetingRoomCode;
+                                widget.interview.meetingRoom.meetingRoomCode;
                             if (meetingRoomCode != null &&
                                 meetingRoomCode != "") {
                               context.pushNamed(RouteConstants.videoCall,
