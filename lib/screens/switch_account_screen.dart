@@ -4,6 +4,7 @@ import 'package:amp_studenthub/models/account.dart';
 import 'package:amp_studenthub/models/user.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:amp_studenthub/utilities/local_storage.dart';
 import 'package:amp_studenthub/widgets/account_list_view.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -45,39 +46,38 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Change password'),
-          content: Column(
-            children: [
-              TextField(
-                controller: oldPasswordController,
-                decoration: InputDecoration(hintText: "old password"),
-              ),
-              TextField(
-                  controller: newPasswordController,
-                  onChanged: (value) {
-                    setState(() {
-                      // Update the error text dynamically when the text changes
-                      // by calling setState to trigger a rebuild
-                      // validatePassword returns null if the password is valid
-                      // or a validation error message if the password is invalid
-                      // Update the error text accordingly
-                      _passwordErrorText =
-                          validatePassword(newPasswordController.text);
-                    });
-                  },
-                  decoration: InputDecoration(
-                      hintText: "new password", errorText: _passwordErrorText)),
-            ],
+          backgroundColor: Constant.backgroundColor,
+          surfaceTintColor: Constant.backgroundColor,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 8),
+          title: const Text('Change Password'),
+          content: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: oldPasswordController,
+                  decoration: const InputDecoration(hintText: "Old Password"),
+                ),
+                TextField(
+                    controller: newPasswordController,
+                    decoration: InputDecoration(
+                        errorMaxLines: 5,
+                        hintText: "New Password",
+                        errorText:
+                            validatePassword(newPasswordController.text))),
+              ],
+            ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('CANCEL'),
+              child: const Text('CANCEL'),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () async {
                 //api request
                 final dio = Dio();
@@ -106,7 +106,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                       }));
 
                   Fluttertoast.showToast(
-                      msg: "Pass change successfully",
+                      msg: "Change Password Successfully",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,
@@ -116,7 +116,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                 } catch (error) {
                   print(error);
                   Fluttertoast.showToast(
-                      msg: 'Incorrect Old Pass',
+                      msg: 'Incorrect Old Password',
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,
@@ -234,12 +234,13 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         toolbarHeight: 56,
-        title: const Text(
+        title: Text(
           'StudentHub',
           style: TextStyle(
-              color: Constant.primaryColor, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -263,12 +264,12 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
           const SizedBox(
             height: 5,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
             child: SizedBox(
-              height: 50,
+              height: 52,
               width: double.infinity,
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: () {
                   bool isStudent = role == 'Student';
                   print("profile new:$isNewProfile");
@@ -287,65 +288,113 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     }
                   }
                 },
-                style: ElevatedButton.styleFrom(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   padding: EdgeInsets.zero,
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(width: 16),
-                    Icon(Icons.person),
-                    SizedBox(width: 8),
-                    Text('Profile'),
+                    const SizedBox(width: 16),
+                    Icon(
+                      Icons.person,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      'Profile',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
             child: SizedBox(
-              height: 50,
+              height: 52,
               width: double.infinity,
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: () {
                   context.pushNamed(RouteConstants.settings);
                 },
-                style: ElevatedButton.styleFrom(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   padding: EdgeInsets.zero,
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(width: 16),
-                    Icon(Icons.settings),
-                    SizedBox(width: 8),
-                    Text('Settings'),
+                    const SizedBox(width: 16),
+                    Icon(
+                      Icons.settings,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      'Settings',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
             child: SizedBox(
-              height: 50,
+              height: 52,
               width: double.infinity,
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: () {
                   _displayTextInputDialog();
                 },
-                style: ElevatedButton.styleFrom(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   padding: EdgeInsets.zero,
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(width: 16),
-                    Icon(Icons.lock),
-                    SizedBox(width: 8),
-                    Text('Change Password'),
+                    const SizedBox(width: 16),
+                    Icon(
+                      Icons.lock,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                    const SizedBox(width: 16),
+                    Text(
+                      'Change Password',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onBackground,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
+                    ),
                   ],
                 ),
               ),
             ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20),
@@ -354,29 +403,35 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
+                  LocalStorage pref = LocalStorage.instance;
+                  pref.clearStorage();
                   //disconnect socket
                   SocketManager().disconnectSocket();
                   context.goNamed(RouteConstants.home);
                 },
                 style: TextButton.styleFrom(
-                    backgroundColor: Constant.onPrimaryColor,
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100)),
-                    side: const BorderSide(
-                        color: Constant.primaryColor, width: 1),
-                    foregroundColor: Constant.primaryColor),
-                child: const Row(
+                        borderRadius: BorderRadius.circular(12)),
+                    side: BorderSide(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        width: 1),
+                    foregroundColor:
+                        Theme.of(context).colorScheme.onPrimaryContainer),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.logout,
-                      color: Constant.primaryColor,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Text(
                       'Sign Out',
                       style: TextStyle(
-                          color: Constant.primaryColor,
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
                     ),

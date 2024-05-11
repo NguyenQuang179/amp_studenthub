@@ -2,6 +2,7 @@ import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/utilities/constant.dart';
+import 'package:amp_studenthub/utilities/local_storage.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -31,6 +32,9 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
 
   Future<void> fetchCompanyProjects(int? typeFlag) async {
     final dio = Dio();
+    String? value =
+        LocalStorage.instance.getString(key: StorageKey.accessToken);
+    print('Local storage: $value');
     try {
       if (mounted) {
         setState(() {
@@ -361,291 +365,304 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                               itemBuilder: (BuildContext context, int index) {
                                 CompanyProject project =
                                     allCompanyProjects[index];
-                                return InkWell(
-                                  onTap: () => GoRouter.of(context).pushNamed(
-                                      RouteConstants.companyProjectDetails,
-                                      pathParameters: {
-                                        'projectId': project.id.toString()
-                                      }),
-                                  child: Container(
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 8),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 16),
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            width: 1, color: Colors.grey[500]!),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    // Column Layout Of Card
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      project.title,
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: const TextStyle(
-                                                          color: Constant
-                                                              .secondaryColor,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.w600),
-                                                    ),
-                                                    Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              top: 4),
-                                                      child: Text(
-                                                        DateFormat('yyyy-MM-dd')
-                                                            .format(DateTime
-                                                                .parse(project
-                                                                    .createdAt)),
-                                                        textAlign:
-                                                            TextAlign.start,
-                                                        style: const TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              IconButton.outlined(
-                                                  onPressed: () {
-                                                    showModalBottomSheet(
-                                                        context: context,
-                                                        builder: (context) {
-                                                          return Wrap(
-                                                            children: [
-                                                              TextButton(
-                                                                onPressed: () =>
-                                                                    handleUpdateProjectTypeFlag(
-                                                                        Constant.projectTypeFlag[
-                                                                            'working']!,
-                                                                        project
-                                                                            .id,
-                                                                        project
-                                                                            .numberOfStudents),
-                                                                child:
-                                                                    const ListTile(
-                                                                  leading: FaIcon(
-                                                                      FontAwesomeIcons
-                                                                          .diagramNext),
-                                                                  title: Text(
-                                                                      'Start Working'),
-                                                                ),
-                                                              ),
-                                                              const Divider(),
-                                                              TextButton(
-                                                                onPressed: () =>
-                                                                    handleUpdateProjectTypeFlag(
-                                                                        Constant.projectTypeFlag[
-                                                                            'archived']!,
-                                                                        project
-                                                                            .id,
-                                                                        project
-                                                                            .numberOfStudents),
-                                                                child:
-                                                                    const ListTile(
-                                                                  leading: FaIcon(
-                                                                      FontAwesomeIcons
-                                                                          .boxArchive),
-                                                                  title: Text(
-                                                                    'Archive Project',
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              const Divider(),
-                                                              TextButton(
-                                                                onPressed:
-                                                                    () {},
-                                                                child:
-                                                                    const ListTile(
-                                                                  leading: FaIcon(
-                                                                      FontAwesomeIcons
-                                                                          .solidPenToSquare),
-                                                                  title: Text(
-                                                                      'Edit Project'),
-                                                                ),
-                                                              ),
-                                                              const Divider(),
-                                                              TextButton(
-                                                                onPressed: () =>
-                                                                    handleRemoveProject(
-                                                                        project
-                                                                            .id),
-                                                                child:
-                                                                    const ListTile(
-                                                                  leading: FaIcon(
-                                                                      FontAwesomeIcons
-                                                                          .solidTrashCan),
-                                                                  title: Text(
-                                                                      'Remove Project'),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        });
-                                                  },
-                                                  icon: const FaIcon(
-                                                    FontAwesomeIcons.ellipsis,
-                                                    size: 20,
-                                                  ))
-                                            ],
-                                          ),
-                                          const Divider(),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "Description: ",
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                              ),
-                                              Text(
-                                                project.description,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                textAlign: TextAlign.justify,
-                                              )
-                                            ],
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                vertical: 16),
-                                            child: Row(
+                                return Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 8),
+                                  child: InkWell(
+                                    onTap: () => GoRouter.of(context).pushNamed(
+                                        RouteConstants.companyProjectDetails,
+                                        pathParameters: {
+                                          'projectId': project.id.toString()
+                                        }),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 16),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 1,
+                                              color: Colors.grey[500]!),
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      // Column Layout Of Card
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Expanded(
-                                                    child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      right: 8),
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          width: 1,
-                                                          color: Colors
-                                                              .grey[500]!),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8)),
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      vertical: 8,
-                                                      horizontal: 8),
                                                   child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      const Text(
-                                                        "Proposals:",
+                                                      Text(
+                                                        project.title,
+                                                        maxLines: 1,
                                                         overflow: TextOverflow
                                                             .ellipsis,
-                                                        style: TextStyle(),
+                                                        style: const TextStyle(
+                                                            color: Constant
+                                                                .secondaryColor,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
                                                       ),
-                                                      Text(
-                                                          '${project.countProposals}',
-                                                          style: const TextStyle(
-                                                              fontSize: 20,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600))
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .only(top: 4),
+                                                        child: Text(
+                                                          DateFormat(
+                                                                  'yyyy-MM-dd')
+                                                              .format(DateTime
+                                                                  .parse(project
+                                                                      .createdAt)),
+                                                          textAlign:
+                                                              TextAlign.start,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 12),
+                                                        ),
+                                                      ),
                                                     ],
                                                   ),
-                                                )),
-                                                Expanded(
-                                                    child: Container(
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          width: 1,
-                                                          color: Colors
-                                                              .grey[500]!),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8)),
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      vertical: 8,
-                                                      horizontal: 8),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      const Text(
-                                                        "Messages:",
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(),
-                                                      ),
-                                                      Text(
-                                                          '${project.countMessages}',
-                                                          style: const TextStyle(
-                                                              fontSize: 20,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600))
-                                                    ],
-                                                  ),
-                                                )),
-                                                Expanded(
-                                                    child: Container(
-                                                  margin: const EdgeInsets.only(
-                                                      left: 8),
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          width: 1,
-                                                          color: Colors
-                                                              .grey[500]!),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8)),
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                      vertical: 8,
-                                                      horizontal: 8),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      const Text(
-                                                        "Hired:",
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(),
-                                                      ),
-                                                      Text(
-                                                          '${project.countHired}',
-                                                          style: const TextStyle(
-                                                              fontSize: 20,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600))
-                                                    ],
-                                                  ),
-                                                )),
+                                                ),
+                                                IconButton.outlined(
+                                                    onPressed: () {
+                                                      showModalBottomSheet(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return Wrap(
+                                                              children: [
+                                                                TextButton(
+                                                                  onPressed: () => handleUpdateProjectTypeFlag(
+                                                                      Constant.projectTypeFlag[
+                                                                          'working']!,
+                                                                      project
+                                                                          .id,
+                                                                      project
+                                                                          .numberOfStudents),
+                                                                  child:
+                                                                      const ListTile(
+                                                                    leading: FaIcon(
+                                                                        FontAwesomeIcons
+                                                                            .diagramNext),
+                                                                    title: Text(
+                                                                        'Start Working'),
+                                                                  ),
+                                                                ),
+                                                                const Divider(),
+                                                                TextButton(
+                                                                  onPressed: () => handleUpdateProjectTypeFlag(
+                                                                      Constant.projectTypeFlag[
+                                                                          'archived']!,
+                                                                      project
+                                                                          .id,
+                                                                      project
+                                                                          .numberOfStudents),
+                                                                  child:
+                                                                      const ListTile(
+                                                                    leading: FaIcon(
+                                                                        FontAwesomeIcons
+                                                                            .boxArchive),
+                                                                    title: Text(
+                                                                      'Archive Project',
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                const Divider(),
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () {},
+                                                                  child:
+                                                                      const ListTile(
+                                                                    leading: FaIcon(
+                                                                        FontAwesomeIcons
+                                                                            .solidPenToSquare),
+                                                                    title: Text(
+                                                                        'Edit Project'),
+                                                                  ),
+                                                                ),
+                                                                const Divider(),
+                                                                TextButton(
+                                                                  onPressed: () =>
+                                                                      handleRemoveProject(
+                                                                          project
+                                                                              .id),
+                                                                  child:
+                                                                      const ListTile(
+                                                                    leading: FaIcon(
+                                                                        FontAwesomeIcons
+                                                                            .solidTrashCan),
+                                                                    title: Text(
+                                                                        'Remove Project'),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          });
+                                                    },
+                                                    icon: const FaIcon(
+                                                      FontAwesomeIcons.ellipsis,
+                                                      size: 20,
+                                                    ))
                                               ],
                                             ),
-                                          )
-                                        ]),
+                                            const Divider(),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Text(
+                                                  "Description: ",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                Text(
+                                                  project.description,
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  textAlign: TextAlign.justify,
+                                                )
+                                              ],
+                                            ),
+                                            Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 16),
+                                              child: Row(
+                                                children: [
+                                                  Expanded(
+                                                      child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            right: 8),
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 1,
+                                                            color: Colors
+                                                                .grey[500]!),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8)),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 8,
+                                                        horizontal: 8),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        const Text(
+                                                          "Proposals:",
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(),
+                                                        ),
+                                                        Text(
+                                                            '${project.countProposals}',
+                                                            style: const TextStyle(
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600))
+                                                      ],
+                                                    ),
+                                                  )),
+                                                  Expanded(
+                                                      child: Container(
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 1,
+                                                            color: Colors
+                                                                .grey[500]!),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8)),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 8,
+                                                        horizontal: 8),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        const Text(
+                                                          "Messages:",
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(),
+                                                        ),
+                                                        Text(
+                                                            '${project.countMessages}',
+                                                            style: const TextStyle(
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600))
+                                                      ],
+                                                    ),
+                                                  )),
+                                                  Expanded(
+                                                      child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 8),
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            width: 1,
+                                                            color: Colors
+                                                                .grey[500]!),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8)),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 8,
+                                                        horizontal: 8),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        const Text(
+                                                          "Hired:",
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(),
+                                                        ),
+                                                        Text(
+                                                            '${project.countHired}',
+                                                            style: const TextStyle(
+                                                                fontSize: 20,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600))
+                                                      ],
+                                                    ),
+                                                  )),
+                                                ],
+                                              ),
+                                            )
+                                          ]),
+                                    ),
                                   ),
                                 );
                               }),

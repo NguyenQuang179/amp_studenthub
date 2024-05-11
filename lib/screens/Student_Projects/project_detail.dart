@@ -2,6 +2,7 @@ import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/company_dashboard_project.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -50,7 +51,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
           companyProject = fetchedCompanyProject;
         });
       }
-      print(this.companyProject);
+      print(companyProject);
       // if (responseData.containsKey('result')) {
       //   // Assuming your API returns a list of jobs under 'jobs' key
       //   print(result);
@@ -140,11 +141,12 @@ class _ProjectDetailState extends State<ProjectDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Constant.backgroundColor,
-      body: SafeArea(
+      appBar: const AuthAppBar(),
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(
                 height: 40,
@@ -184,13 +186,13 @@ class _ProjectDetailState extends State<ProjectDetail> {
               const SizedBox(
                 height: 40,
               ),
-              // Spacer to create flexible space between items
-              const Spacer(),
+
               // Second item with no flexible space
               Container(
                 child: Row(
                   children: [
-                    Expanded(
+                    Flexible(
+                      fit: FlexFit.loose,
                       child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
@@ -211,7 +213,8 @@ class _ProjectDetailState extends State<ProjectDetail> {
                     const SizedBox(
                       width: 16,
                     ),
-                    Expanded(
+                    Flexible(
+                      fit: FlexFit.loose,
                       child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
@@ -230,13 +233,14 @@ class _ProjectDetailState extends State<ProjectDetail> {
                                 }
                               },
                         child: isLoading
-                            ? CircularProgressIndicator() // Show loading indicator if loading
+                            ? const CircularProgressIndicator() // Show loading indicator if loading
                             : companyProject.isFavorite
                                 ? const Text("Unsave")
                                 : const Text("Save"),
                       ),
                     ),
-                    Expanded(
+                    Flexible(
+                      fit: FlexFit.loose,
                       child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
