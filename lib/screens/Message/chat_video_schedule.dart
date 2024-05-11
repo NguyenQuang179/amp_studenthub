@@ -22,7 +22,7 @@ class ChatVideoSchedule extends StatefulWidget {
   final String timeCreated;
   final Interview interview;
 
-  ChatVideoSchedule(
+  const ChatVideoSchedule(
       {super.key,
       required this.isCurrentUser,
       required this.username,
@@ -144,7 +144,7 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                     ),
                   ),
             Text(
-              " ${widget.username}",
+              " ${widget.username} ",
               style: const TextStyle(
                 color: Constant.textColor,
                 fontSize: 12,
@@ -211,8 +211,7 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                           onPressed: () {
                             String? meetingRoomCode =
                                 widget.interview.meetingRoom.meetingRoomCode;
-                            if (meetingRoomCode != null &&
-                                meetingRoomCode != "") {
+                            if (meetingRoomCode != "") {
                               context.pushNamed(RouteConstants.videoCall,
                                   queryParameters: {
                                     meetingRoomCode: meetingRoomCode

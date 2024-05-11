@@ -127,9 +127,11 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
   addMessage(notification) {
     final notiNew = notifications;
     notiNew.insert(0, notification);
-    setState(() {
-      notifications = notiNew;
-    });
+    if (mounted) {
+      setState(() {
+        notifications = notiNew;
+      });
+    }
   }
 
   @override
@@ -189,31 +191,6 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
       });
     }
   }
-
-  // final List<UserNotification> allNotifications = [
-  //   UserNotification(
-  //       'notification1',
-  //       "Submitted for project \"Javis - AI Copilot\"",
-  //       NotificationType.activity,
-  //       '2024-03-19'),
-  //   UserNotification(
-  //       'notification2',
-  //       "Invited to interview for project \"Javis - AI Copilot\"",
-  //       NotificationType.interview,
-  //       '2024-03-19'),
-  //   UserNotification(
-  //       'notification3',
-  //       "Offered to join project \"Javis - AI Copilot\"",
-  //       NotificationType.offer,
-  //       '2024-03-19'),
-  //   UserNotification('notification4', "New message from Quang Nguyen",
-  //       NotificationType.message, '2024-03-19'),
-  //   UserNotification(
-  //       'notification5',
-  //       "Invited to interview for project \"Front-end Project\"",
-  //       NotificationType.interview,
-  //       '2024-03-19')
-  // ];
 
   checkMessageDetail(NotificationModel notification) {
     if (notification.typeNotifyFlag != NotificationType.message) {
@@ -402,6 +379,18 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                         checkMessageDetail(notification);
                                         markAsRead(notification);
                                       }
+                                      if (notification.typeNotifyFlag ==
+                                          NotificationType.submitted) {
+                                        print(notification.proposalId);
+                                        context.pushNamed(
+                                            RouteConstants
+                                                .studentProposalDetails,
+                                            pathParameters: {
+                                              'proposalId': notification
+                                                  .proposalId
+                                                  .toString()
+                                            });
+                                      }
                                     },
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
@@ -462,9 +451,12 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                                             .only(top: 4),
                                                         child: Text(
                                                           DateFormat(
-                                                                  'hh:mm MM-dd')
+                                                                  'dd/MM hh:mm')
                                                               .format(notification
-                                                                  .createdAt),
+                                                                  .createdAt
+                                                                  .add(DateTime
+                                                                          .now()
+                                                                      .timeZoneOffset)),
                                                           textAlign:
                                                               TextAlign.start,
                                                           style:
@@ -495,19 +487,45 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                                               double.infinity,
                                                           height: 48,
                                                           child: TextButton(
-                                                            onPressed: () {
-                                                              if (notification
-                                                                      .typeNotifyFlag ==
-                                                                  NotificationType
-                                                                      .interview) {
-                                                              } else {
-                                                                updateProposalStatusFlag(
-                                                                    3,
-                                                                    notification
-                                                                            .proposal[
-                                                                        'id']);
-                                                              }
-                                                            },
+                                                            onPressed: notification
+                                                                            .typeNotifyFlag ==
+                                                                        NotificationType
+                                                                            .interview &&
+                                                                    notification.message['interview']
+                                                                            [
+                                                                            'disableFlag'] ==
+                                                                        1
+                                                                ? null
+                                                                : () {
+                                                                    if (notification
+                                                                            .typeNotifyFlag ==
+                                                                        NotificationType
+                                                                            .interview) {
+                                                                      print(notification
+                                                                              .message[
+                                                                          'interview']);
+                                                                      String?
+                                                                          meetingRoomCode =
+                                                                          notification.message['interview']['meetingRoom']
+                                                                              [
+                                                                              'meeting_room_code'];
+                                                                      if (meetingRoomCode !=
+                                                                              null &&
+                                                                          meetingRoomCode !=
+                                                                              "") {
+                                                                        context.pushNamed(
+                                                                            RouteConstants.videoCall,
+                                                                            queryParameters: {
+                                                                              meetingRoomCode: meetingRoomCode
+                                                                            });
+                                                                      }
+                                                                    } else {
+                                                                      updateProposalStatusFlag(
+                                                                          3,
+                                                                          notification
+                                                                              .proposal['id']);
+                                                                    }
+                                                                  },
                                                             style: TextButton.styleFrom(
                                                                 shape: RoundedRectangleBorder(
                                                                     borderRadius:
@@ -528,8 +546,12 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                                                 Container(
                                                                   child: Text(
                                                                     notification.typeNotifyFlag ==
-                                                                            NotificationType.interview
-                                                                        ? "Join Interview"
+                                                                            NotificationType
+                                                                                .interview
+                                                                        ? notification.message['interview']['disableFlag'] ==
+                                                                                1
+                                                                            ? "Cancelled"
+                                                                            : "Join Interview"
                                                                         : "Accept Offer",
                                                                     style: const TextStyle(
                                                                         fontSize:
