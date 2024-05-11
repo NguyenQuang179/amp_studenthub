@@ -11,6 +11,7 @@ import 'package:amp_studenthub/utilities/constant.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -80,15 +81,11 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
     final studentId = userProvider.userInfo['student']?['id'];
     final endpoint = '${Constant.baseURL}/api/favoriteProject/$studentId';
 
-    print(id);
     final submitData = {
       "projectId": id,
       "disableFlag": isSaved ? "1" : "0",
     };
 
-    print(submitData);
-    print(endpoint);
-    print(accessToken);
     try {
       final Response response = await dio.patch(
         endpoint,
@@ -134,7 +131,6 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
   TextEditingController proposalsController = TextEditingController();
 
   onLengthSelected(value, setState) {
-    print('selected');
     setState(() {
       selectedOption = value;
       print(selectedOption);
@@ -166,7 +162,7 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
       var finalURL = '${Constant.baseURL}/api/project?title=$titleQuery';
       if (filterQuery != '') finalURL = '$finalURL&$filterQuery';
 
-      print(finalURL);
+      log(finalURL);
 
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
@@ -178,17 +174,17 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
           'Authorization': 'Bearer $accessToken',
         }),
       );
-      log('success');
+      log(titleQuery);
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
       if (result != null) {
+        log(result.toString());
         List<Project> newProjects = [];
         for (var project in result) {
           Project companyProject = Project.fromJson(project);
           newProjects.add(companyProject);
         }
-        print("SUCCESS");
         setState(() {
           companyProjectsList.addAll(newProjects);
         });
@@ -481,44 +477,70 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                       fontWeight: FontWeight.w600,
                       color: Constant.primaryColor),
                 )),
-            Expanded(
-              child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onVerticalDragEnd: (details) {
-                    _handleScrollEnd();
-                  },
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (scrollInfo) {
-                      if (scrollInfo is ScrollEndNotification) {
-                        _handleScrollEnd();
-                      }
-                      return false;
-                    },
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: companyProjectsList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final Project project = companyProjectsList[index];
-                        return ProjectItem(
-                          id: project.id as int,
-                          jobTitle: project.title,
-                          jobCreatedDate: project.createdDate,
-                          jobDuration:
-                              ProjectScopeToString[project.projectScopeFlag],
-                          jobStudentNeeded: project.numberOfStudents,
-                          jobProposalNums: project.countProposals,
-                          onClick: () => onClick(project),
-                          isSaved: project.isFavorite,
-                          favorite: () {
-                            favorite(project.id, project.isFavorite);
-                            companyProjectsList[index].isFavorite =
-                                !project.isFavorite;
-                          },
-                        );
-                      },
+            if (companyProjectsList.isEmpty)
+              Column(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: SvgPicture.asset(
+                      'assets/empty.svg',
+                      height: 320,
+                      fit: BoxFit.contain,
                     ),
-                  )),
-            ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 24),
+                    child: const Text(
+                      "The search list is empty",
+                      style: TextStyle(
+                        color: Constant.secondaryColor,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              )
+            else
+              Expanded(
+                child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onVerticalDragEnd: (details) {
+                      _handleScrollEnd();
+                    },
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (scrollInfo) {
+                        if (scrollInfo is ScrollEndNotification) {
+                          _handleScrollEnd();
+                        }
+                        return false;
+                      },
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        itemCount: companyProjectsList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final Project project = companyProjectsList[index];
+                          return ProjectItem(
+                            id: project.id as int,
+                            jobTitle: project.title,
+                            jobCreatedDate: project.createdDate,
+                            jobDuration:
+                                ProjectScopeToString[project.projectScopeFlag],
+                            jobStudentNeeded: project.numberOfStudents,
+                            jobProposalNums: project.countProposals,
+                            onClick: () => onClick(project),
+                            isSaved: project.isFavorite,
+                            favorite: () {
+                              favorite(project.id, project.isFavorite);
+                              companyProjectsList[index].isFavorite =
+                                  !project.isFavorite;
+                            },
+                          );
+                        },
+                      ),
+                    )),
+              ),
             if (isLoading && companyProjectsList.isNotEmpty)
               const Padding(
                 padding: EdgeInsets.all(8.0),

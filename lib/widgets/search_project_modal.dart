@@ -58,7 +58,7 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
           'Authorization': 'Bearer $accessToken',
         }),
       );
-
+      studentProjectProvider.updateSearchQuery(controller.text);
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
@@ -68,7 +68,6 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
           resultList.add(Project.fromJson(item));
         }
         studentProjectProvider.updateList(resultList);
-        studentProjectProvider.updateSearchQuery(controller.text);
       } else {
         print('User data not found in the response');
       }
