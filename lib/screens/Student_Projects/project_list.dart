@@ -6,6 +6,7 @@ import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/widgets/search_project_modal.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,8 @@ class ProjectList extends StatefulWidget {
 
 class _ProjectListState extends State<ProjectList> {
   bool isLoading = false;
+  static const perPage = 10;
+  int page = 1;
   late List<CompanyProject> companyProjectsList = [];
   List<String> projectScopeList = [
     "Less than 1 months",
@@ -35,13 +38,14 @@ class _ProjectListState extends State<ProjectList> {
   //       .pushNamed(RouteConstants.projectDetails, queryParameters: {'id': id});
   // }
 
+  final ScrollController _scrollController = ScrollController();
+
   checkSaved(context) {
     GoRouter.of(context).push('/projectListSaved');
   }
 
   handleSubmit(context, value) {
     GoRouter.of(context).push('/projectListFiltered');
-    print(value);
   }
 
   Future<void> favorite(id, isSaved) async {
@@ -54,15 +58,11 @@ class _ProjectListState extends State<ProjectList> {
     final studentId = userProvider.userInfo['student']?['id'];
     final endpoint = '${Constant.baseURL}/api/favoriteProject/$studentId';
 
-    print(id);
     final submitData = {
       "projectId": id,
       "disableFlag": isSaved ? "1" : "0",
     };
 
-    print(submitData);
-    print(endpoint);
-    print(accessToken);
     try {
       final Response response = await dio.patch(
         endpoint,
@@ -73,7 +73,6 @@ class _ProjectListState extends State<ProjectList> {
       );
 
       final responseData = response.data;
-      print(responseData);
 
       Fluttertoast.showToast(
           msg: "Apply Successfully",
@@ -101,24 +100,51 @@ class _ProjectListState extends State<ProjectList> {
   @override
   void initState() {
     super.initState();
-    // Fetch jobs when the widget is initialized
     getProjects();
+    _scrollController.addListener(_scrollListener);
   }
 
-  Future<void> getProjects() async {
-    print('Fetching projects');
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
 
-    final dio = Dio();
-    try {
-      if (mounted) {
+  void _scrollListener() {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         setState(() {
           isLoading = true;
         });
       }
+    });
+  }
+
+  Future<void> _handleScrollEnd() async {
+    if (isLoading) {
+      setState(() {
+        isLoading = false;
+      });
+      await loadMoreProjects();
+    }
+  }
+
+  Future<void> getProjects() async {
+    print('Fetching projects for page $page');
+
+    final dio = Dio();
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
       final accessToken = userProvider.userToken;
-      const endpoint = '${Constant.baseURL}/api/project';
+      var endpoint =
+          '${Constant.baseURL}/api/project?page=$page&perPage=$perPage';
       print(endpoint);
       final Response response = await dio.get(
         endpoint,
@@ -129,30 +155,28 @@ class _ProjectListState extends State<ProjectList> {
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
-      print(responseData);
-      List<CompanyProject> companyProjects = [];
+      List<CompanyProject> newProjects = [];
       for (var project in result) {
         CompanyProject companyProject = CompanyProject.fromJson(project);
-        print(companyProject);
-        companyProjects.add(companyProject);
+        newProjects.add(companyProject);
       }
-      print(companyProjects);
       print("SUCCESS");
-      if (mounted) {
-        setState(() {
-          companyProjectsList = companyProjects;
-        });
-      }
-      print(companyProjectsList);
+      setState(() {
+        companyProjectsList.addAll(newProjects);
+      });
+      print(companyProjectsList.length);
     } on DioException catch (e) {
       // Handle DioException
     } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
+      setState(() {
+        isLoading = false;
+      });
     }
+  }
+
+  Future<void> loadMoreProjects() async {
+    page++;
+    await getProjects();
   }
 
   @override
@@ -223,7 +247,7 @@ class _ProjectListState extends State<ProjectList> {
                 ],
               ),
             ),
-            if (isLoading)
+            if (isLoading && companyProjectsList.isEmpty)
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -238,33 +262,56 @@ class _ProjectListState extends State<ProjectList> {
               )
             else
               Expanded(
+                  child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onVerticalDragEnd: (details) {
+                  _handleScrollEnd();
+                },
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (scrollInfo) {
+                    if (scrollInfo is ScrollEndNotification) {
+                      _handleScrollEnd();
+                    }
+                    return false;
+                  },
                   child: ListView.builder(
-                itemCount: companyProjectsList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final companyProject = companyProjectsList[index];
-                  return ProjectItem(
-                    id: companyProject.id,
-                    jobTitle: companyProject.title,
-                    jobCreatedDate: DateFormat('yyyy-MM-dd')
-                        .format(DateTime.parse(companyProject.createdAt)),
-                    jobDuration:
-                        projectScopeList[companyProject.projectScopeFlag],
-                    jobStudentNeeded: companyProject.numberOfStudents,
-                    jobProposalNums: companyProject.countProposals,
-                    onClick: () {
-                      // Navigate to project details page
-                      GoRouter.of(context).pushNamed(
-                        RouteConstants.projectDetails,
-                        queryParameters: {'id': companyProject.id.toString()},
+                    controller: _scrollController,
+                    itemCount: companyProjectsList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final companyProject = companyProjectsList[index];
+                      return ProjectItem(
+                        id: companyProject.id,
+                        jobTitle: companyProject.title,
+                        jobCreatedDate: DateFormat('yyyy-MM-dd')
+                            .format(DateTime.parse(companyProject.createdAt)),
+                        jobDuration:
+                            projectScopeList[companyProject.projectScopeFlag],
+                        jobStudentNeeded: companyProject.numberOfStudents,
+                        jobProposalNums: companyProject.countProposals,
+                        onClick: () {
+                          // Navigate to project details page
+                          GoRouter.of(context).pushNamed(
+                            RouteConstants.projectDetails,
+                            queryParameters: {
+                              'id': companyProject.id.toString()
+                            },
+                          );
+                        },
+                        favorite: () {
+                          favorite(
+                              companyProject.id, companyProject.isFavorite);
+                        },
+                        isSaved: companyProject.isFavorite,
                       );
                     },
-                    favorite: () {
-                      favorite(companyProject.id, companyProject.isFavorite);
-                    },
-                    isSaved: companyProject.isFavorite,
-                  );
-                },
+                  ),
+                ),
               )),
+            if (isLoading && companyProjectsList.isNotEmpty)
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              ),
           ],
         )),
       ),
