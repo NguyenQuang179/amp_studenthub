@@ -2,10 +2,10 @@ import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class ChatVideoSchedule extends StatelessWidget {
   final bool isCurrentUser;
-  final String message;
   final String username;
   final String startTime;
   final String endTime;
@@ -13,18 +13,19 @@ class ChatVideoSchedule extends StatelessWidget {
   final String duration;
   final bool isCancelled;
   final String timeCreated;
+  final dynamic interview;
 
   const ChatVideoSchedule(
       {super.key,
       required this.isCurrentUser,
-      required this.message,
       required this.username,
       required this.startTime,
       required this.endTime,
       required this.meetingName,
       required this.duration,
       required this.isCancelled,
-      required this.timeCreated});
+      required this.timeCreated,
+      required this.interview});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class ChatVideoSchedule extends StatelessWidget {
                     ),
                   ),
             Text(
-              " $username want to schedule a meeting ",
+              " $username",
               style: const TextStyle(
                 color: Constant.textColor,
                 fontSize: 12,
@@ -94,11 +95,11 @@ class ChatVideoSchedule extends StatelessWidget {
                 ],
               ),
               Text(
-                "Start Time:$startTime",
+                "Start Time: ${DateFormat('HH:mm MM-dd').format(DateTime.parse(startTime))}",
                 style: const TextStyle(color: Constant.textColor),
               ),
               Text(
-                "End Time:$endTime",
+                "End Time: ${DateFormat('HH:mm MM-dd').format(DateTime.parse(endTime))}",
                 style: const TextStyle(color: Constant.textColor),
               ),
               isCancelled
@@ -110,7 +111,15 @@ class ChatVideoSchedule extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            context.pushNamed(RouteConstants.videoCall);
+                            String? meetingRoomCode =
+                                interview['meetingRoom']['meeting_room_code'];
+                            if (meetingRoomCode != null &&
+                                meetingRoomCode != "") {
+                              context.pushNamed(RouteConstants.videoCall,
+                                  queryParameters: {
+                                    meetingRoomCode: meetingRoomCode
+                                  });
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Constant.primaryColor,

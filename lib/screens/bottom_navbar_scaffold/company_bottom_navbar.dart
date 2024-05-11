@@ -165,22 +165,22 @@ class _CompanyNavbarScaffoldState extends State<CompanyNavbarScaffold> {
               icon: notificationCount > 0
                   ? Stack(
                       children: <Widget>[
-                        FaIcon(FontAwesomeIcons.solidBell),
+                        const FaIcon(FontAwesomeIcons.solidBell),
                         Positioned(
                           right: 0,
                           child: Container(
-                            padding: EdgeInsets.all(1),
+                            padding: const EdgeInsets.all(1),
                             decoration: BoxDecoration(
                               color: Colors.red,
                               borderRadius: BorderRadius.circular(6),
                             ),
-                            constraints: BoxConstraints(
+                            constraints: const BoxConstraints(
                               minWidth: 12,
                               minHeight: 12,
                             ),
                             child: Text(
                               displayNotiCount(notificationCount),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 8,
                               ),
@@ -190,7 +190,7 @@ class _CompanyNavbarScaffoldState extends State<CompanyNavbarScaffold> {
                         )
                       ],
                     )
-                  : FaIcon(FontAwesomeIcons.solidBell),
+                  : const FaIcon(FontAwesomeIcons.solidBell),
               label: "Notification"),
         ],
       ),

@@ -23,6 +23,7 @@ class NotificationListScreen extends StatefulWidget {
 }
 
 class _NotificationListScreenState extends State<NotificationListScreen> {
+  bool isLoading = false;
   Set<DashboardFilterOptions> selectedFilterOptions = {
     DashboardFilterOptions.all
   };
@@ -97,7 +98,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
         NotificationModel noti = NotificationModel.fromJson(message);
         // detailMsg.senderId = message['sender']['id'];
         print(noti);
-        fetchedNoti.insert(0, noti);
+        fetchedNoti.add(noti);
       }
       if (mounted) {
         setState(() {
@@ -112,7 +113,6 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
 
   Future<void> init() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final accessToken = userProvider.userToken;
     userId = userProvider.userInfo['id'];
     //get message
     await getNotification(userId, "");
@@ -141,7 +141,6 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
 
     sendMessageDetailController.dispose();
     SocketManager().unregisterSocketListener(onReceiveNotification);
-
     print('Socket Disconnected');
   }
 
@@ -172,7 +171,6 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
     } catch (e) {
       print(e);
     }
-    ;
   }
 
   Future<void> connectSocket() async {
@@ -180,9 +178,11 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
     socket = await socketManager.connectSocket(context, userId);
     SocketManager().registerSocketListener(onReceiveNotification);
     print(socket);
-    setState(() {
-      socketInitialized = true;
-    });
+    if (mounted) {
+      setState(() {
+        socketInitialized = true;
+      });
+    }
   }
 
   // final List<UserNotification> allNotifications = [
@@ -235,7 +235,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
   }
 
   getNotificationIcon(int typeNotifyFlag) {
-    if (typeNotifyFlag == NotificationType.activity) {
+    if (typeNotifyFlag == NotificationType.submitted) {
       return const FaIcon(FontAwesomeIcons.bell,
           color: Constant.onPrimaryColor);
     }
@@ -314,162 +314,158 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: Container(
-                          child: ListView.builder(
-                              //bottom up
-                              physics: const ClampingScrollPhysics(),
-                              itemCount: notifications.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                NotificationModel notification =
-                                    notifications[index];
-                                return Container(
-                                  margin:
-                                      const EdgeInsets.symmetric(vertical: 8),
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (notification.typeNotifyFlag ==
-                                          NotificationType.message) {
-                                        checkMessageDetail(notification);
-                                      }
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8, horizontal: 16),
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              width: 1,
-                                              color: Colors.grey[500]!),
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      // Column Layout Of Card
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      right: 16),
-                                                  child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              100),
-                                                      child: Container(
-                                                        height: 48,
-                                                        width: 48,
-                                                        color: Constant
-                                                            .primaryColor,
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: getNotificationIcon(
-                                                            notification
-                                                                .typeNotifyFlag),
-                                                      )),
-                                                ),
-                                                Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        "${notification.content}",
+                        child: ListView.builder(
+                            //bottom up
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: notifications.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              NotificationModel notification =
+                                  notifications[index];
+                              return Container(
+                                margin: const EdgeInsets.symmetric(vertical: 8),
+                                child: InkWell(
+                                  onTap: () {
+                                    if (notification.typeNotifyFlag ==
+                                        NotificationType.message) {
+                                      checkMessageDetail(notification);
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 16),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1, color: Colors.grey[500]!),
+                                        borderRadius: BorderRadius.circular(8)),
+                                    // Column Layout Of Card
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 16),
+                                                child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            100),
+                                                    child: Container(
+                                                      height: 48,
+                                                      width: 48,
+                                                      color:
+                                                          Constant.primaryColor,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: getNotificationIcon(
+                                                          notification
+                                                              .typeNotifyFlag),
+                                                    )),
+                                              ),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "${notification.content}",
+                                                      style: const TextStyle(
+                                                          color: Constant
+                                                              .secondaryColor,
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 4),
+                                                      child: Text(
+                                                        DateFormat(
+                                                                'dd/MM hh:mm')
+                                                            .format(notification
+                                                                .createdAt
+                                                                .add(DateTime
+                                                                        .now()
+                                                                    .timeZoneOffset)),
+                                                        textAlign:
+                                                            TextAlign.start,
                                                         style: const TextStyle(
-                                                            color: Constant
-                                                                .secondaryColor,
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
+                                                            fontSize: 12),
                                                       ),
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                            .only(top: 4),
-                                                        child: Text(
-                                                          DateFormat(
-                                                                  'hh:mm MM-dd')
-                                                              .format(notification
-                                                                  .createdAt),
-                                                          textAlign:
-                                                              TextAlign.start,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 12),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                            notification.typeNotifyFlag ==
-                                                        NotificationType
-                                                            .interview ||
-                                                    notification
-                                                            .typeNotifyFlag ==
-                                                        NotificationType.offer
-                                                ? Column(
-                                                    children: [
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                            .only(top: 8),
-                                                        child: const Divider(),
-                                                      ),
-                                                      SizedBox(
-                                                          width:
-                                                              double.infinity,
-                                                          height: 48,
-                                                          child: TextButton(
-                                                            onPressed: () {
-                                                              print(
-                                                                  "Join Interview");
-                                                            },
-                                                            style: TextButton.styleFrom(
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            12)),
-                                                                side: const BorderSide(
-                                                                    color: Constant
-                                                                        .backgroundColor,
-                                                                    width: 1),
-                                                                foregroundColor:
-                                                                    Constant
-                                                                        .primaryColor),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Container(
-                                                                  child: Text(
-                                                                    notification.typeNotifyFlag ==
-                                                                            NotificationType.interview
-                                                                        ? "Join Interview"
-                                                                        : "View Offer",
-                                                                    style: const TextStyle(
-                                                                        fontSize:
-                                                                            16,
-                                                                        fontWeight:
-                                                                            FontWeight.w500),
-                                                                  ),
+                                              ),
+                                            ],
+                                          ),
+                                          notification.typeNotifyFlag ==
+                                                      NotificationType
+                                                          .interview ||
+                                                  notification.typeNotifyFlag ==
+                                                      NotificationType.offer
+                                              ? Column(
+                                                  children: [
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 8),
+                                                      child: const Divider(),
+                                                    ),
+                                                    SizedBox(
+                                                        width: double.infinity,
+                                                        height: 48,
+                                                        child: TextButton(
+                                                          onPressed: () {
+                                                            print(
+                                                                "Join Interview");
+                                                          },
+                                                          style: TextButton.styleFrom(
+                                                              shape: RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          12)),
+                                                              side: const BorderSide(
+                                                                  color: Constant
+                                                                      .backgroundColor,
+                                                                  width: 1),
+                                                              foregroundColor:
+                                                                  Constant
+                                                                      .primaryColor),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Container(
+                                                                child: Text(
+                                                                  notification.typeNotifyFlag ==
+                                                                          NotificationType
+                                                                              .interview
+                                                                      ? "Join Interview"
+                                                                      : "Accept Offer",
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
                                                                 ),
-                                                              ],
-                                                            ),
-                                                          ))
-                                                    ],
-                                                  )
-                                                : Container()
-                                          ]),
-                                    ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ))
+                                                  ],
+                                                )
+                                              : Container()
+                                        ]),
                                   ),
-                                );
-                              }),
-                        ),
+                                ),
+                              );
+                            }),
                       )
                     ],
                   ),
