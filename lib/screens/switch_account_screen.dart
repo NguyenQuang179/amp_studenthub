@@ -21,6 +21,7 @@ class SwitchAccountScreen extends StatefulWidget {
 
 class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
   late User user;
+  String? _passwordErrorText;
   late Account currentAccount;
   late List<Account> accountList = [];
   bool _isLoading = true;
@@ -59,12 +60,24 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                   decoration: const InputDecoration(hintText: "Old Password"),
                 ),
                 TextField(
-                    controller: newPasswordController,
-                    decoration: InputDecoration(
-                        errorMaxLines: 5,
-                        hintText: "New Password",
-                        errorText:
-                            validatePassword(newPasswordController.text))),
+                  controller: newPasswordController,
+                  onChanged: (value) {
+                    setState(() {
+                      // Update the error text dynamically when the text changes
+                      // by calling setState to trigger a rebuild
+                      // validatePassword returns null if the password is valid
+                      // or a validation error message if the password is invalid
+                      // Update the error text accordingly
+                      _passwordErrorText =
+                          validatePassword(newPasswordController.text);
+                    });
+                  },
+
+                  decoration: InputDecoration(
+                      errorMaxLines: 5,
+                      hintText: "New Password",
+                      errorText: _passwordErrorText), // Display the error text
+                )
               ],
             ),
           ),
@@ -84,6 +97,13 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     newPasswordController.text.isEmpty) {
                   Fluttertoast.showToast(
                     msg: 'Please fill in all fields',
+                  );
+                  return;
+                }
+                if (validatePassword(newPasswordController.text) != null) {
+                  Fluttertoast.showToast(
+                    msg:
+                        'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit',
                   );
                   return;
                 }

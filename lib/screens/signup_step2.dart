@@ -22,7 +22,7 @@ class SignupStepTwo extends StatefulWidget {
 
 class _SignupStepTowState extends State<SignupStepTwo> {
   bool _isChecked = false;
-
+  String? _passwordErrorText;
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController fullnameController = TextEditingController();
@@ -38,10 +38,11 @@ class _SignupStepTowState extends State<SignupStepTwo> {
     final RegExp passwordPattern = RegExp(
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$',
     );
-
+    print(password);
+    print(passwordPattern.hasMatch(password));
     // Check if the password matches the pattern
     if (!passwordPattern.hasMatch(password)) {
-      return 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit';
+      return 'Minimum 8 characters long with 1 upper, lowercase and digit';
     }
     // Return null if password is valid
     return null;
@@ -50,6 +51,18 @@ class _SignupStepTowState extends State<SignupStepTwo> {
   Future<void> signUp() async {
     if (!_isChecked) {
       Fluttertoast.showToast(msg: 'Please accept the Terms & Conditions');
+      return;
+    }
+    if (usernameController.text.isEmpty) {
+      Fluttertoast.showToast(msg: 'Email is required');
+      return;
+    }
+    if (passwordController.text.isEmpty) {
+      Fluttertoast.showToast(msg: 'Password is required');
+      return;
+    }
+    if (_passwordErrorText != null) {
+      Fluttertoast.showToast(msg: 'Invalid password');
       return;
     }
     final dio = Dio();
@@ -131,14 +144,41 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                       obscureText: false),
                 ),
 
-                Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  child: Textfield(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: TextField(
+                      obscureText: true,
                       controller: passwordController,
-                      hintText: AppLocalizations.of(context)!.passwordLabel,
-                      obscureText: true),
+                      onChanged: (text) {
+                        setState(() {
+                          // Update the error text dynamically when the text changes
+                          // by calling setState to trigger a rebuild
+                          // validatePassword returns null if the password is valid
+                          // or a validation error message if the password is invalid
+                          // Update the error text accordingly
+                          _passwordErrorText = validatePassword(text);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Constant.primaryColor),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Constant.secondaryColor),
+                        ),
+                        fillColor: Constant.backgroundWithOpacity,
+                        filled: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        hintText: "new password",
+                        errorText: _passwordErrorText, // Set errorText here
+                      ),
+                    ),
+                  ),
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
