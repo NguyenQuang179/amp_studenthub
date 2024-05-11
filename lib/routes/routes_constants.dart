@@ -8,6 +8,7 @@ class RouteConstants {
   static String companyPostProject = 'companyPostProject';
   static String companyProjectDetails = 'companyProjectDetails';
   static String projectDetails = 'projectDetails';
+  static String projectDetailsSaved = 'projectDetailsSaved';
   static String projectListSaved = 'projectListSaved';
   static String projectListFiltered = 'projectListFiltered';
   static String messageList = 'messageList';
@@ -22,6 +23,7 @@ class RouteConstants {
   static String companyMessage = 'companyMessage';
   static String companyNotification = 'companyNotification';
   static String createCompanyProfile = 'createCompanyProfile';
+  static String viewCompanyProfile = 'viewCompanyProfile';
   static String editCompanyProfile = 'editCompanyProfile';
 
   static String studentProfile = 'studentProfile';
@@ -31,4 +33,7 @@ class RouteConstants {
 
   static String studentDashboard = 'studentDashboard';
   static String submitProposal = 'submitProposal';
+  static String studentProposalDetails = 'studentProposalDetails';
+
+  static String activeInterviewList = 'activeInterviewList';
 }

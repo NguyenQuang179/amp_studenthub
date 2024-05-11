@@ -1,7 +1,9 @@
-import 'package:amp_studenthub/configs/constant.dart';
+import 'package:amp_studenthub/providers/language_provider.dart';
+import 'package:amp_studenthub/providers/theme_provider.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class AccountSettings extends StatefulWidget {
@@ -19,14 +21,18 @@ class _AccountSettingsState extends State<AccountSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final languageProvider =
+        Provider.of<LanguageProvider>(context, listen: false);
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Constant.backgroundColor,
+          backgroundColor: Theme.of(context).colorScheme.background,
           toolbarHeight: 56,
-          title: const Text(
+          title: Text(
             'StudentHub',
             style: TextStyle(
-                color: Constant.primaryColor, fontWeight: FontWeight.bold),
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
         ),
@@ -40,12 +46,12 @@ class _AccountSettingsState extends State<AccountSettings> {
                   Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(bottom: 16),
-                      child: const Text(
+                      child: Text(
                         "Settings:",
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
-                            color: Constant.primaryColor),
+                            color: Theme.of(context).colorScheme.primary),
                       )),
                   Container(
                     margin: const EdgeInsets.only(bottom: 8),
@@ -61,22 +67,25 @@ class _AccountSettingsState extends State<AccountSettings> {
                   ),
                   DropdownButtonFormField2<String>(
                     isExpanded: true,
-                    value: selectedLocales,
+                    value: languageProvider.appLocal.languageCode,
                     decoration: InputDecoration(
                       contentPadding:
                           const EdgeInsets.only(top: 8, left: 8, right: 8),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              color: Constant.primaryColor, width: 1)),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 1)),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              color: Constant.primaryColor, width: 2)),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              color: Constant.secondaryColor, width: 1)),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                              width: 1)),
                       labelStyle: TextStyle(color: Colors.grey[600]),
                     ),
                     hint: const Text(
@@ -105,11 +114,13 @@ class _AccountSettingsState extends State<AccountSettings> {
                       setState(() {
                         selectedLocales = value;
                       });
+                      Provider.of<LanguageProvider>(context, listen: false)
+                          .updateLanguage(Locale(value!));
                     },
-                    iconStyleData: const IconStyleData(
+                    iconStyleData: IconStyleData(
                       icon: Icon(
                         Icons.arrow_drop_down,
-                        color: Colors.black45,
+                        color: Theme.of(context).colorScheme.tertiary,
                       ),
                       iconSize: 24,
                     ),
@@ -137,7 +148,8 @@ class _AccountSettingsState extends State<AccountSettings> {
                   ToggleSwitch(
                     minWidth: MediaQuery.of(context).size.width * 0.75,
                     minHeight: 52.0,
-                    initialLabelIndex: 0,
+                    initialLabelIndex:
+                        themeProvider.mode == ThemeMode.dark ? 0 : 1,
                     cornerRadius: 30.0,
                     activeFgColor: Colors.white,
                     inactiveBgColor: Colors.grey,
@@ -159,6 +171,13 @@ class _AccountSettingsState extends State<AccountSettings> {
                     //     .linear, // animate must be set to true when using custom curve
                     onToggle: (index) {
                       print('switched to: $index');
+                      if (index == 0) {
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .setMode(ThemeMode.dark);
+                      } else {
+                        Provider.of<ThemeProvider>(context, listen: false)
+                            .setMode(ThemeMode.light);
+                      }
                     },
                   ),
                 ],

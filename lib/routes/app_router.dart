@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
+import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:amp_studenthub/screens/Message/active_interview_list.dart';
 import 'package:amp_studenthub/screens/Message/message_detail.dart';
 import 'package:amp_studenthub/screens/Message/message_list.dart';
 import 'package:amp_studenthub/screens/Student_Profile/profile_input_1.dart';
@@ -15,6 +17,7 @@ import 'package:amp_studenthub/screens/Student_Projects/project_list_saved.dart'
 import 'package:amp_studenthub/screens/account_settings.dart';
 import 'package:amp_studenthub/screens/bottom_navbar_scaffold/company_bottom_navbar.dart';
 import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
+import 'package:amp_studenthub/screens/edit_company_profile.dart';
 import 'package:amp_studenthub/screens/home_screen.dart';
 import 'package:amp_studenthub/screens/job_details_screen.dart';
 import 'package:amp_studenthub/screens/login_page.dart';
@@ -25,10 +28,12 @@ import 'package:amp_studenthub/screens/profile_input_view_screen.dart';
 import 'package:amp_studenthub/screens/signup_step1.dart';
 import 'package:amp_studenthub/screens/signup_step2.dart';
 import 'package:amp_studenthub/screens/student_dashboard.dart';
+import 'package:amp_studenthub/screens/student_proposal_details.dart';
 import 'package:amp_studenthub/screens/student_submit_proposal.dart';
 import 'package:amp_studenthub/screens/switch_account_screen.dart';
 import 'package:amp_studenthub/screens/video_call_screen.dart';
 import 'package:amp_studenthub/screens/welcome_screen.dart';
+import 'package:amp_studenthub/utilities/local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -74,26 +79,27 @@ class AppRouter {
           },
           routes: [
             GoRoute(
-                name: RouteConstants.companyProject,
-                parentNavigatorKey: _bottomNavbarNavigatorKey,
-                path: '/project',
-                pageBuilder: (context, state) {
-                  return const MaterialPage(child: ProjectList());
-                },
-                routes: [
-                  GoRoute(
-                      name: RouteConstants.projectDetails,
-                      path: 'details',
-                      pageBuilder: (context, state) {
-                        // Extract id from the URI query parameters
-                        final id = state.uri.queryParameters['id'] ?? '0';
+              name: RouteConstants.companyProject,
+              parentNavigatorKey: _bottomNavbarNavigatorKey,
+              path: '/project',
+              pageBuilder: (context, state) {
+                return const MaterialPage(child: ProjectList());
+              },
+              // routes: [
+              //   GoRoute(
+              //       name: RouteConstants.projectDetails,
+              //       path: 'details',
+              //       pageBuilder: (context, state) {
+              //         // Extract id from the URI query parameters
+              //         final id = state.uri.queryParameters['id'] ?? '0';
 
-                        // Create the ProjectDetail widget with the extracted id
-                        return MaterialPage(
-                          child: ProjectDetail(id: id),
-                        );
-                      }),
-                ]),
+              //         // Create the ProjectDetail widget with the extracted id
+              //         return MaterialPage(
+              //           child: ProjectDetail(id: id),
+              //         );
+              //       }),
+              // ]
+            ),
             GoRoute(
               name: RouteConstants.studentDashboard,
               parentNavigatorKey: _bottomNavbarNavigatorKey,
@@ -107,7 +113,12 @@ class AppRouter {
               parentNavigatorKey: _bottomNavbarNavigatorKey,
               path: '/dashboard',
               pageBuilder: (context, state) {
-                return const MaterialPage(child: CompanyDashboardScreen());
+                final userProvider =
+                    Provider.of<UserProvider>(context, listen: false);
+                final userRole = userProvider.userRole;
+                return userRole == "Student"
+                    ? const MaterialPage(child: StudentDashboard())
+                    : const MaterialPage(child: CompanyDashboardScreen());
               },
             ),
             GoRoute(
@@ -131,7 +142,7 @@ class AppRouter {
         name: RouteConstants.login,
         path: '/login',
         pageBuilder: (context, state) {
-          return MaterialPage(child: LoginPage());
+          return const MaterialPage(child: LoginPage());
         },
       ),
       GoRoute(
@@ -168,6 +179,18 @@ class AppRouter {
             return const MaterialPage(child: PostJobScreen());
           }),
       GoRoute(
+          name: RouteConstants.projectDetails,
+          path: '/project/details',
+          pageBuilder: (context, state) {
+            // Extract id from the URI query parameters
+            final id = state.uri.queryParameters['id'] ?? '0';
+
+            // Create the ProjectDetail widget with the extracted id
+            return MaterialPage(
+              child: ProjectDetail(id: id),
+            );
+          }),
+      GoRoute(
           name: RouteConstants.companyProjectDetails,
           path: '/jobDetails/:projectId',
           pageBuilder: (context, state) {
@@ -176,6 +199,16 @@ class AppRouter {
             log('ProjectID: $id');
             // Create the ProjectDetail widget with the extracted id
             return MaterialPage(child: JobDetailsScreen(projectId: id));
+          }),
+      GoRoute(
+          name: RouteConstants.studentProposalDetails,
+          path: '/proposalDetails/:proposalId',
+          pageBuilder: (context, state) {
+            // Extract id from the URI query parameters
+            final id = state.pathParameters['proposalId'] ?? '0';
+            log('ProposalID: $id');
+            // Create the ProjectDetail widget with the extracted id
+            return MaterialPage(child: StudentProposalDetails(proposalId: id));
           }),
       GoRoute(
           name: RouteConstants.projectListSaved,
@@ -199,13 +232,42 @@ class AppRouter {
           name: RouteConstants.messageDetail,
           path: '/messageDetail',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: MessageDetail());
+            final userId =
+                int.parse(state.uri.queryParameters['userId'] ?? '0');
+            final receiverId =
+                int.parse(state.uri.queryParameters['receiverId'] ?? '0');
+            final projectId =
+                int.parse(state.uri.queryParameters['projectId'] ?? '0');
+            final receiverName =
+                state.uri.queryParameters['receiverName'] ?? '';
+            print({
+              'userId': userId,
+              'receiverId': receiverId,
+              'projectId': projectId,
+              'receiverName': receiverName
+            });
+            return MaterialPage(
+                child: MessageDetail(
+              userId: userId,
+              receiverId: receiverId,
+              projectId: projectId,
+              receiverName: receiverName,
+            ));
           }),
       GoRoute(
           name: RouteConstants.videoCall,
           path: '/videoCall',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: VideoCallScreen());
+            final meetingRoomCode =
+                state.uri.queryParameters['meetingRoomCode'] ?? '0';
+            return MaterialPage(
+                child: VideoCallScreen(conferenceId: meetingRoomCode));
+          }),
+      GoRoute(
+          name: RouteConstants.activeInterviewList,
+          path: '/ativeInterviewList',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: ActiveInterview());
           }),
       GoRoute(
           name: RouteConstants.createCompanyProfile,
@@ -214,10 +276,16 @@ class AppRouter {
             return const MaterialPage(child: ProfileInputNew());
           }),
       GoRoute(
+          name: RouteConstants.viewCompanyProfile,
+          path: '/viewCompanyProfile',
+          pageBuilder: (context, state) {
+            return const MaterialPage(child: ProfileInputView());
+          }),
+      GoRoute(
           name: RouteConstants.editCompanyProfile,
           path: '/editCompanyProfile',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: ProfileInputView());
+            return const MaterialPage(child: EditCompanyProfile());
           }),
       GoRoute(
           name: RouteConstants.studentProfile,
@@ -247,7 +315,9 @@ class AppRouter {
           name: RouteConstants.submitProposal,
           path: '/submitProposal',
           pageBuilder: (context, state) {
-            return const MaterialPage(child: StudentSubmitProposal());
+            final projectId = state.uri.queryParameters['id'] ?? '0';
+            return MaterialPage(
+                child: StudentSubmitProposal(projectId: projectId));
           }),
       GoRoute(
           name: RouteConstants.settings,
@@ -259,7 +329,40 @@ class AppRouter {
     // errorPageBuilder: (context, state) {
     //   return MaterialPage(child: null);
     // },
-    redirect: (context, state) {
+    redirect: (context, state) async {
+      // final dio = Dio();
+      // LocalStorage localStorage = await LocalStorage.init();
+      // String? token = localStorage.getString(key: StorageKey.accessToken);
+      // log(token ?? "No Token");
+      // bool isAuth = token != null ? true : false;
+      // // ignore: dead_code
+      // if (!isAuth && state.matchedLocation != '/') {
+      //   return state.namedLocation(RouteConstants.home);
+      //   // ignore: dead_code
+      // } else if (isAuth && state.matchedLocation == '/') {
+      //   // Provider.of<UserProvider>(context, listen: false).updateToken(token);
+      //   // // Get and store user data to provider
+      //   // const endpoint = '${Constant.baseURL}/api/auth/me';
+      //   // final Response userResponse = await dio.get(
+      //   //   endpoint,
+      //   //   options: Options(headers: {
+      //   //     'Authorization': 'Bearer $token',
+      //   //   }),
+      //   // );
+
+      //   // final Map<String, dynamic> userResponseData =
+      //   //     userResponse.data as Map<String, dynamic>;
+      //   // final dynamic userData = userResponseData['result'];
+
+      //   // Provider.of<UserProvider>(context, listen: false)
+      //   //     .updateUserInfo(userData);
+      //   // // connect to socket
+      //   // final socketManager = SocketManager();
+      //   // final socket =
+      //   //     await socketManager.connectSocket(context, userData['id']);
+      //   // return state.namedLocation(RouteConstants.companyProject);
+      // }
+      // // ignore: dead_code
       bool isAuth = false;
       // ignore: dead_code
       if (!isAuth && state.matchedLocation == '/') {
@@ -268,7 +371,6 @@ class AppRouter {
       } else if (state.matchedLocation == '/') {
         return state.namedLocation(RouteConstants.company);
       }
-      // ignore: dead_code
       return null;
     },
   );

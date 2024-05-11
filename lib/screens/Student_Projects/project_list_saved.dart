@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +35,60 @@ class _ProjectListSavedState extends State<ProjectListSaved> {
   //   GoRouter.of(context)
   //       .pushNamed(RouteConstants.projectDetails, queryParameters: {'id': id});
   // }
+
+  Future<void> favorite(id, isSaved) async {
+    // Implement submit proposal logic here
+    //api request
+    final dio = Dio();
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final accessToken = userProvider.userToken;
+    final studentId = userProvider.userInfo['student']?['id'];
+    final endpoint = '${Constant.baseURL}/api/favoriteProject/$studentId';
+
+    print(id);
+    final submitData = {
+      "projectId": id,
+      "disableFlag": isSaved ? "1" : "0",
+    };
+
+    print(submitData);
+    print(endpoint);
+    print(accessToken);
+    try {
+      final Response response = await dio.patch(
+        endpoint,
+        data: submitData,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final responseData = response.data;
+      print(responseData);
+
+      Fluttertoast.showToast(
+          msg: "Apply Successfully",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+
+      getProjects();
+    } catch (error) {
+      print(error);
+      Fluttertoast.showToast(
+          msg: 'An error occurred',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
 
   checkSaved(context) {
     GoRouter.of(context).push('/projectListSaved');
@@ -201,6 +256,7 @@ class _ProjectListSavedState extends State<ProjectListSaved> {
                 itemBuilder: (BuildContext context, int index) {
                   final companyProject = companyProjectsList[index];
                   return ProjectItem(
+                    id: companyProject.id,
                     jobTitle: companyProject.title,
                     jobCreatedDate: DateFormat('yyyy-MM-dd')
                         .format(DateTime.parse(companyProject.createdAt)),
@@ -215,7 +271,10 @@ class _ProjectListSavedState extends State<ProjectListSaved> {
                         queryParameters: {'id': companyProject.id.toString()},
                       );
                     },
-                    isSaved: companyProject.isFavorite,
+                    favorite: () {
+                      favorite(companyProject.id, true);
+                    },
+                    isSaved: true,
                   );
                 },
               )),

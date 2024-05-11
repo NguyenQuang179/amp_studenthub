@@ -1,4 +1,3 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,12 +9,13 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Constant.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       toolbarHeight: 56,
-      title: const Text(
+      title: Text(
         'StudentHub',
         style: TextStyle(
-            color: Constant.primaryColor, fontWeight: FontWeight.bold),
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold),
       ),
       actions: [
         if (GoRouter.of(context).routeInformationProvider.value.uri.path != "/")
@@ -23,12 +23,12 @@ class AuthAppBar extends StatelessWidget implements PreferredSizeWidget {
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: CircleAvatar(
               radius: 24,
-              backgroundColor: Constant.primaryColor,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               child: IconButton(
-                icon: const FaIcon(
+                icon: FaIcon(
                   FontAwesomeIcons.user,
                   size: 20,
-                  color: Constant.onPrimaryColor,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 onPressed: () {
                   GoRouter.of(context).pushNamed(RouteConstants.switchAccount);

@@ -1,10 +1,12 @@
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/student_proposal.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class ProposalTab extends StatefulWidget {
@@ -314,7 +316,17 @@ class _ProposalTabState extends State<ProposalTab> {
                                                             .symmetric(
                                                             vertical: 8),
                                                         child: InkWell(
-                                                          onTap: () {},
+                                                          onTap: () {
+                                                            context.pushNamed(
+                                                                RouteConstants
+                                                                    .studentProposalDetails,
+                                                                pathParameters: {
+                                                                  'proposalId':
+                                                                      proposal
+                                                                          .id
+                                                                          .toString()
+                                                                });
+                                                          },
                                                           child: Container(
                                                             padding:
                                                                 const EdgeInsets
@@ -394,7 +406,24 @@ class _ProposalTabState extends State<ProposalTab> {
                                                                             onPressed: () {
                                                                               if (proposal.statusFlag == 0) {
                                                                                 updateProposalStatusFlag(1, proposal.id);
+                                                                                //send MEssage to client
                                                                               }
+                                                                              //move to chat details
+                                                                              final userProvider = Provider.of<UserProvider>(context, listen: false);
+                                                                              final userId = userProvider.userInfo['id'];
+                                                                              print("P1 " + userId.toString());
+                                                                              print(proposal.student?.userId);
+                                                                              print("P3 " + proposal.projectId.toString());
+
+                                                                              GoRouter.of(context).pushNamed(
+                                                                                RouteConstants.messageDetail,
+                                                                                queryParameters: {
+                                                                                  'userId': userId.toString(),
+                                                                                  'receiverId': proposal.student?.userId.toString(),
+                                                                                  'projectId': proposal.projectId.toString(),
+                                                                                  'receiverName': proposal.student?.user['fullname'] ?? 'user',
+                                                                                },
+                                                                              );
                                                                             },
                                                                             child: const Text("Message")),
                                                                       ),

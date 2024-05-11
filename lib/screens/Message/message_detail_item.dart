@@ -1,16 +1,24 @@
+import 'package:amp_studenthub/models/meeting.dart';
 import 'package:amp_studenthub/screens/Message/chat_bubble.dart';
 import 'package:amp_studenthub/screens/Message/chat_video_schedule.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MessageDetailItem extends StatelessWidget {
   final bool isCurrentUser;
   final bool isScheduleItem;
   final String message;
-  MessageDetailItem(
+  final String fullname;
+  final String timeCreated;
+  final Interview? interview;
+  const MessageDetailItem(
       {super.key,
       required this.isCurrentUser,
       required this.message,
-      required this.isScheduleItem});
+      required this.isScheduleItem,
+      required this.fullname,
+      required this.timeCreated,
+      this.interview});
 
   @override
   Widget build(BuildContext context) {
@@ -18,25 +26,27 @@ class MessageDetailItem extends StatelessWidget {
         isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
 
     return Container(
-        margin: EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.symmetric(vertical: 10),
         alignment: alignment,
         child: isScheduleItem
             ? ChatVideoSchedule(
                 isCurrentUser: isCurrentUser,
-                message: message,
-                username: 'John Doe',
-                startTime: '10:00',
-                endTime: '11:00',
-                meetingName: 'Meeting',
-                duration: '1 hour',
-                isCancelled: isCurrentUser,
-                timeCreated: '12:30am',
-              )
+                username: fullname,
+                startTime: DateFormat('hh:mm a').format(interview!.startTime),
+                endTime: DateFormat('hh:mm a').format(interview!.endTime),
+                meetingName: interview!.title,
+                duration: interview!.endTime
+                    .difference(interview!.startTime)
+                    .inHours
+                    .toString(),
+                isCancelled: interview!.disableFlag == 1,
+                timeCreated: timeCreated,
+                interview: interview!)
             : ChatBubble(
                 isCurrentUser: isCurrentUser,
                 message: message,
-                username: 'John Doe',
-                timeCreated: '12:30am',
+                username: fullname,
+                timeCreated: timeCreated,
               ));
   }
 }

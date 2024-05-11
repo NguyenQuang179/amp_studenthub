@@ -10,6 +10,7 @@ import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SignupStepTwo extends StatefulWidget {
   final int role;
@@ -21,7 +22,7 @@ class SignupStepTwo extends StatefulWidget {
 
 class _SignupStepTowState extends State<SignupStepTwo> {
   bool _isChecked = false;
-
+  String? _passwordErrorText;
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController fullnameController = TextEditingController();
@@ -32,9 +33,36 @@ class _SignupStepTowState extends State<SignupStepTwo> {
   //   print('Password: ${passwordController.text}');
   //   print('Role: ${role}');
   // }
+  String? validatePassword(String password) {
+    // Define a regular expression pattern
+    final RegExp passwordPattern = RegExp(
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$',
+    );
+    print(password);
+    print(passwordPattern.hasMatch(password));
+    // Check if the password matches the pattern
+    if (!passwordPattern.hasMatch(password)) {
+      return 'Minimum 8 characters long with 1 upper, lowercase and digit';
+    }
+    // Return null if password is valid
+    return null;
+  }
+
   Future<void> signUp() async {
     if (!_isChecked) {
       Fluttertoast.showToast(msg: 'Please accept the Terms & Conditions');
+      return;
+    }
+    if (usernameController.text.isEmpty) {
+      Fluttertoast.showToast(msg: 'Email is required');
+      return;
+    }
+    if (passwordController.text.isEmpty) {
+      Fluttertoast.showToast(msg: 'Password is required');
+      return;
+    }
+    if (_passwordErrorText != null) {
+      Fluttertoast.showToast(msg: 'Invalid password');
       return;
     }
     final dio = Dio();
@@ -80,165 +108,174 @@ class _SignupStepTowState extends State<SignupStepTwo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Constant.backgroundColor,
         appBar: const AuthAppBar(),
-        body: SafeArea(
-          child: Center(
-              child: Column(children: [
-            Expanded(
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 24),
-                    child: const Text(
-                      'SIGN UP',
-                      style: TextStyle(
-                          color: Constant.secondaryColor,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 32),
+        body: Column(children: [
+          Expanded(
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 24),
+                  child: Text(
+                    AppLocalizations.of(context)!.signUpTitle,
+                    style: const TextStyle(
+                        color: Constant.secondaryColor,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 32),
+                  ),
+                ),
+
+                //username texfield
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Textfield(
+                      controller: fullnameController,
+                      hintText: AppLocalizations.of(context)!.fullNameLabel,
+                      obscureText: false),
+                ),
+
+                //password textfield
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16),
+                  child: Textfield(
+                      controller: usernameController,
+                      hintText: AppLocalizations.of(context)!.emailLabel,
+                      obscureText: false),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 16),
+                    child: TextField(
+                      obscureText: true,
+                      controller: passwordController,
+                      onChanged: (text) {
+                        setState(() {
+                          // Update the error text dynamically when the text changes
+                          // by calling setState to trigger a rebuild
+                          // validatePassword returns null if the password is valid
+                          // or a validation error message if the password is invalid
+                          // Update the error text accordingly
+                          _passwordErrorText = validatePassword(text);
+                        });
+                      },
+                      decoration: InputDecoration(
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Constant.primaryColor),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Constant.secondaryColor),
+                        ),
+                        fillColor: Constant.backgroundWithOpacity,
+                        filled: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        hintText: "new password",
+                        errorText: _passwordErrorText, // Set errorText here
+                      ),
                     ),
                   ),
-
-                  //username texfield
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Textfield(
-                        controller: fullnameController,
-                        hintText: 'Fullname',
-                        obscureText: false),
-                  ),
-
-                  //password textfield
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Textfield(
-                        controller: usernameController,
-                        hintText: 'Email Address',
-                        obscureText: false),
-                  ),
-
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    child: Textfield(
-                        controller: passwordController,
-                        hintText: 'password',
-                        obscureText: true),
-                  ),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      //Todo add check and link term and condition
-                      Checkbox(
-                        value: _isChecked,
-                        onChanged: (value) {
-                          setState(() {
-                            _isChecked = value as bool;
-                          });
-                        },
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //Todo add check and link term and condition
+                    Checkbox(
+                      value: _isChecked,
+                      onChanged: (value) {
+                        setState(() {
+                          _isChecked = value as bool;
+                        });
+                      },
+                    ),
+                    Text(
+                      AppLocalizations.of(context)!.iHaveRead,
+                      style: const TextStyle(
+                        color: Constant.secondaryColor,
                       ),
-                      const Text(
-                        'I have read & accept the ',
-                        style: TextStyle(
-                          color: Constant.secondaryColor,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // Handle click on Terms & Conditions
+                        // Example: Navigate to a Terms & Conditions page
+                        Fluttertoast.showToast(msg: 'Terms & Conditions');
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.termConditions,
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          // Handle click on Terms & Conditions
-                          // Example: Navigate to a Terms & Conditions page
-                          Fluttertoast.showToast(msg: 'Terms & Conditions');
-                        },
-                        child: const Text(
-                          'Terms & Conditions',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            Expanded(
-              child: ClipPath(
-                clipper:
-                    OvalTopBorderClipper(), // Custom clipper for rounded cone
-                child: Container(
-                  width: 500,
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  color: Constant.primaryColor,
-                  child: Center(
-                      child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 60,
-                      ),
-                      //sign in button
-                      Container(
-                          margin: const EdgeInsets.only(bottom: 32),
-                          child: Button(onTap: signUp, text: 'Sign Up')),
+          ),
+          Expanded(
+            child: ClipPath(
+              clipper:
+                  OvalTopBorderClipper(), // Custom clipper for rounded cone
+              child: Container(
+                width: 500,
+                height: MediaQuery.of(context).size.height * 0.5,
+                color: Constant.primaryColor,
+                child: Center(
+                    child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 60,
+                    ),
+                    //sign in button
+                    Container(
+                        margin: const EdgeInsets.only(bottom: 32),
+                        child: Button(
+                            onTap: signUp,
+                            text: AppLocalizations.of(context)!.signUpButton)),
 
-                      //forgot password?
+                    //forgot password?
 
-                      //not a member? register
-                      Row(
+                    //not a member? register
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      Text(AppLocalizations.of(context)!.lookingProject,
+                          style:
+                              const TextStyle(color: Constant.onPrimaryColor)),
+                      const SizedBox(width: 20),
+                      TextButton(
+                        onPressed: () {
+                          Provider.of<RoleProvider>(context, listen: false)
+                              .setRole(1 - widget.role); // For student
+                          context.pushNamed(RouteConstants.signUp2);
+                        },
+                        style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            side: const BorderSide(
+                                color: Constant.onPrimaryColor, width: 2),
+                            foregroundColor: Constant.onPrimaryColor),
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text('Looking for projects?',
-                                style:
-                                    TextStyle(color: Constant.onPrimaryColor)),
-                            const SizedBox(width: 20),
-                            TextButton(
-                              onPressed: () {
-                                Provider.of<RoleProvider>(context,
-                                        listen: false)
-                                    .setRole(1 - widget.role); // For student
-                                context.pushNamed(RouteConstants.signUp2);
-                              },
-                              style: TextButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  side: const BorderSide(
-                                      color: Constant.onPrimaryColor, width: 2),
-                                  foregroundColor: Constant.onPrimaryColor),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    widget.role == 1
-                                        ? 'Join as student'
-                                        : 'Join as company',
-                                    style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
-                              ),
+                            Text(
+                              widget.role == 1
+                                  ? AppLocalizations.of(context)!.joinAsStudent
+                                  : AppLocalizations.of(context)!.joinAsCompany,
+                              style: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w500),
                             ),
-                            // Container(
-                            //   padding: const EdgeInsets.symmetric(
-                            //       vertical: 8, horizontal: 12),
-                            //   decoration: BoxDecoration(
-                            //     color: Colors.transparent,
-                            //     borderRadius: BorderRadius.circular(10),
-                            //     border: Border.all(
-                            //         color: Constant.onPrimaryColor, width: 2),
-                            //   ),
-                            //   child: const Text('Join as student',
-                            //       style: TextStyle(
-                            //           color: Constant.onPrimaryColor,
-                            //           fontWeight: FontWeight.normal)),
-                            // )
-                          ]),
-                    ],
-                  )),
-                ),
+                          ],
+                        ),
+                      ),
+                    ]),
+                  ],
+                )),
               ),
             ),
-          ])),
-        ));
+          ),
+        ]));
   }
 }

@@ -127,7 +127,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
               ProposalTab(
                 projectId: widget.projectId,
               ),
-              const MessageTab(),
+              MessageTab(
+                projectId: widget.projectId,
+              ),
               HiredTab(
                 projectId: widget.projectId,
               )
