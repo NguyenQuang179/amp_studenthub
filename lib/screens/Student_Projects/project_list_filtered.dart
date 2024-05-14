@@ -25,6 +25,7 @@ class ProjectListFiltered extends StatefulWidget {
 }
 
 class _ProjectListFilteredState extends State<ProjectListFiltered> {
+  late StudentProjectProvider _studentProjectProvider;
   late List<Project> companyProjectsList = [];
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
@@ -35,26 +36,35 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
   @override
   void initState() {
     super.initState();
+    _studentProjectProvider =
+        Provider.of<StudentProjectProvider>(context, listen: false);
     _scrollController.addListener(_scrollListener);
+    final studentProjectProvider =
+        Provider.of<StudentProjectProvider>(context, listen: false);
+    if (studentProjectProvider.projectScopeFlag != -1) {
+      selectedOption = studentProjectProvider.projectScopeFlag;
+    }
+    proposalsController.text = studentProjectProvider.proposals;
+    studentNeededController.text = studentProjectProvider.students;
+    setState(() {});
     filterProjects(context);
   }
 
   @override
   void dispose() {
+    _studentProjectProvider.clear();
     _scrollController.removeListener(_scrollListener);
     _scrollController.dispose();
     super.dispose();
   }
 
   void _scrollListener() {
-    log(isLoading.toString());
     if (!isLoading &&
         _scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
       setState(() {
         isLoading = true;
       });
-      log('scroll');
     }
   }
 
@@ -69,13 +79,10 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
 
   Future<void> loadMoreProjects() async {
     page++;
-    log(page.toString());
     await filterProjects(context);
   }
 
   Future<void> favorite(id, isSaved) async {
-    // Implement submit proposal logic here
-    //api request
     final dio = Dio();
 
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -133,16 +140,21 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
   TextEditingController proposalsController = TextEditingController();
 
   onLengthSelected(value, setState) {
+    final studentProjectProvider =
+        Provider.of<StudentProjectProvider>(context, listen: false);
+    studentProjectProvider.updateProjectScopeFlag(value);
     setState(() {
       selectedOption = value;
       print(selectedOption);
     });
   }
 
+  String curQuery = '';
   Future<void> filterProjects(BuildContext context) async {
     final dio = Dio();
     try {
       String filterQuery = '';
+      bool isChanged = false;
       if (selectedOption != null) {
         filterQuery += '&projectScopeFlag=$selectedOption';
       }
@@ -155,6 +167,12 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
         filterQuery += '&proposalsLessThan=${proposalsController.text}';
       }
 
+      if (filterQuery != curQuery) {
+        page = 1;
+        curQuery = filterQuery;
+        isChanged = true;
+      }
+
       filterQuery += '&page=$page&perPage=$perPage';
 
       final studentProjectProvider =
@@ -162,7 +180,7 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
       var titleQuery = studentProjectProvider.searchQuery;
 
       var finalURL = '${Constant.baseURL}/api/project?title=$titleQuery';
-      if (filterQuery != '') finalURL = '$finalURL&$filterQuery';
+      if (filterQuery != '') finalURL = '$finalURL$filterQuery';
 
       log(finalURL);
 
@@ -176,24 +194,29 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
           'Authorization': 'Bearer $accessToken',
         }),
       );
-      log(titleQuery);
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
+
       if (result != null) {
         List<Project> newProjects = [];
         for (var project in result) {
           Project companyProject = Project.fromJson(project);
           newProjects.add(companyProject);
         }
-        setState(() {
-          companyProjectsList.addAll(newProjects);
-        });
+        if (isChanged == true) {
+          companyProjectsList.clear();
+          setState(() {});
+        }
+        companyProjectsList.addAll(newProjects);
+        setState(() {});
+        log(companyProjectsList.map((e) => e.companyId).toString());
       } else {
         print('User data not found in the response');
       }
     } on DioError catch (e) {
       // Handle Dio errors
+      page--;
       if (e.response != null) {
         final responseData = e.response?.data;
         print(responseData);
@@ -208,6 +231,7 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
     try {
       final studentProjectProvider =
           Provider.of<StudentProjectProvider>(context, listen: false);
+      studentProjectProvider.clear();
       var titleQuery = studentProjectProvider.searchQuery;
 
       var finalURL = '${Constant.baseURL}/api/project?title=$titleQuery';
@@ -422,9 +446,26 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                                         MaterialStateProperty
                                                             .all<Color>(Constant
                                                                 .onPrimaryColor)),
-                                                onPressed: () async {
-                                                  await filterProjects(context);
+                                                onPressed: () {
+                                                  var studentProjectProvider =
+                                                      Provider.of<
+                                                              StudentProjectProvider>(
+                                                          context,
+                                                          listen: false);
+                                                  studentProjectProvider
+                                                      .updateProposals(
+                                                          proposalsController
+                                                              .text);
+                                                  studentProjectProvider
+                                                      .updateStudents(
+                                                          studentNeededController
+                                                              .text);
+                                                  setState(() {});
                                                   GoRouter.of(context).pop('/');
+                                                  context.pop();
+                                                  context.pushNamed(
+                                                      RouteConstants
+                                                          .projectListFiltered);
                                                 },
                                                 child: const Text("Apply"),
                                               ),

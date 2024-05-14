@@ -43,7 +43,7 @@ class Project {
   Project.fromJson(Map<String, dynamic> json)
       : id = json['id'] as num,
         companyId = json['companyId'] as String,
-        companyName = json['companyName'] as String,
+        companyName = json['companyName'] == null ? '' : json['companyName'],
         projectScopeFlag = json['projectScopeFlag'] as int,
         title = json['title'] as String,
         description = json['description'] as String,
