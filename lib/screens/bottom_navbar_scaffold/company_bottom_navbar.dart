@@ -148,9 +148,9 @@ class _CompanyNavbarScaffoldState extends State<CompanyNavbarScaffold> {
       body: widget.child,
       bottomNavigationBar: NavigationBar(
         height: 80,
-        backgroundColor: Constant.backgroundWithOpacity,
-        indicatorColor: Constant.primaryColor,
-        surfaceTintColor: Constant.onPrimaryColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
+        indicatorColor: Theme.of(context).colorScheme.primaryContainer,
+        surfaceTintColor: Theme.of(context).colorScheme.onPrimaryContainer,
         selectedIndex: routePaths.contains(widget.location) &&
                 routePaths.indexOf(widget.location) < routePaths.length
             ? routePaths.indexOf(widget.location)
@@ -173,7 +173,7 @@ class _CompanyNavbarScaffoldState extends State<CompanyNavbarScaffold> {
                           child: Container(
                             padding: const EdgeInsets.all(1),
                             decoration: BoxDecoration(
-                              color: Colors.red,
+                              color: Theme.of(context).colorScheme.error,
                               borderRadius: BorderRadius.circular(6),
                             ),
                             constraints: const BoxConstraints(
@@ -182,8 +182,8 @@ class _CompanyNavbarScaffoldState extends State<CompanyNavbarScaffold> {
                             ),
                             child: Text(
                               displayNotiCount(notificationCount),
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onError,
                                 fontSize: 8,
                               ),
                               textAlign: TextAlign.center,

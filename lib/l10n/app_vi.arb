@@ -29,5 +29,12 @@
   "signUpButton": "Đăng Ký",
   "lookingProject": "Tìm kiếm dự án?",
   "joinAsCompany": "Vai trò doanh nghiệp",
-  "joinAsStudent": "Vai trò sinh viên"
+  "joinAsStudent": "Vai trò sinh viên",
+  "@_SWITCH_ACCOUNT": {},
+  "profile": "Hồ Sơ",
+  "settings": "Cài Đặt",
+  "changePassword": "Cập Nhật Mật Khẩu",
+  "signOut": "Đăng Xuất",
+  "oldPassLabel": "Mật khẩu cũ",
+  "newPassLabel": "Mật khẩu mới"
 }

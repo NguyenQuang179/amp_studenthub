@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:amp_studenthub/components/project_item.dart';
 import 'package:amp_studenthub/configs/constant.dart';
-import 'package:amp_studenthub/models/company_dashboard_project.dart';
 import 'package:amp_studenthub/models/project.dart';
 import 'package:amp_studenthub/providers/student_project_provider.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
@@ -11,7 +10,6 @@ import 'package:amp_studenthub/utilities/constant.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -275,9 +273,9 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constant.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         toolbarHeight: 56,
         title: Row(
           children: [
@@ -298,23 +296,27 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                       contentPadding:
                           const EdgeInsets.only(top: 8, left: 16, right: 16),
                       filled: true,
-                      fillColor: Constant.onPrimaryColor,
+                      fillColor: Theme.of(context).colorScheme.background,
                       prefixIcon: const Icon(Icons.search),
                       prefixStyle: const TextStyle(),
                       hintText: "Search for job...",
-                      labelStyle: TextStyle(color: Colors.grey[600]),
+                      labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.tertiary),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide:
-                              BorderSide(color: Colors.grey[500]!, width: 1)),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.tertiary,
+                              width: 1)),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide:
-                              BorderSide(color: Colors.grey[500]!, width: 1)),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.tertiary,
+                              width: 1)),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide:
-                              BorderSide(color: Colors.grey[500]!, width: 1)))),
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.tertiary,
+                              width: 1)))),
             ),
           ],
         ),
@@ -323,8 +325,8 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: IconButton(
                 style: IconButton.styleFrom(
-                    backgroundColor: Constant.primaryColor,
-                    foregroundColor: Constant.onPrimaryColor),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary),
                 onPressed: () => showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
@@ -343,23 +345,27 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
                                   children: [
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(vertical: 12),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12),
                                       child: Text("Filter By",
                                           style: TextStyle(
                                               fontSize: 20,
-                                              color: Constant.primaryColor,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                               fontWeight: FontWeight.w600),
                                           textAlign: TextAlign.center),
                                     ),
                                     const Divider(),
-                                    const Text(
+                                    Text(
                                       "Project Length:",
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
-                                          color: Constant.textColor),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground),
                                     ),
                                     RadioListTile<int>(
                                       title: const Text('Less than 1 month'),
@@ -395,12 +401,14 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                     Container(
                                       margin: const EdgeInsets.only(
                                           top: 16, bottom: 8),
-                                      child: const Text(
+                                      child: Text(
                                         "Student needed",
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
-                                            color: Constant.textColor),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground),
                                       ),
                                     ),
                                     TextField(
@@ -414,12 +422,14 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                     Container(
                                       margin: const EdgeInsets.only(
                                           top: 16, bottom: 8),
-                                      child: const Text(
+                                      child: Text(
                                         "Proposals less than",
                                         style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
-                                            color: Constant.textColor),
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onBackground),
                                       ),
                                     ),
                                     TextField(
@@ -440,12 +450,17 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                                 style: ButtonStyle(
                                                     backgroundColor:
                                                         MaterialStateProperty
-                                                            .all<Color>(Constant
-                                                                .primaryColor),
+                                                            .all<Color>(
+                                                                Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary),
                                                     foregroundColor:
                                                         MaterialStateProperty
-                                                            .all<Color>(Constant
-                                                                .onPrimaryColor)),
+                                                            .all<Color>(Theme
+                                                                    .of(context)
+                                                                .colorScheme
+                                                                .onPrimary)),
                                                 onPressed: () {
                                                   var studentProjectProvider =
                                                       Provider.of<
@@ -478,12 +493,17 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                                                 style: ButtonStyle(
                                                     backgroundColor:
                                                         MaterialStateProperty
-                                                            .all<Color>(Constant
-                                                                .onPrimaryColor),
+                                                            .all<Color>(
+                                                                Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .onPrimary),
                                                     foregroundColor:
                                                         MaterialStateProperty
-                                                            .all<Color>(Constant
-                                                                .primaryColor)),
+                                                            .all<Color>(Theme
+                                                                    .of(context)
+                                                                .colorScheme
+                                                                .primary)),
                                                 onPressed: () async {
                                                   setState(() {
                                                     selectedOption = null;
@@ -521,12 +541,12 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                 width: double.infinity,
                 padding:
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                child: const Text(
+                child: Text(
                   "Search Result:",
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
-                      color: Constant.primaryColor),
+                      color: Theme.of(context).colorScheme.primary),
                 )),
             if (companyProjectsList.isEmpty)
               Column(
@@ -541,10 +561,10 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 24),
-                    child: const Text(
+                    child: Text(
                       "The search list is empty",
                       style: TextStyle(
-                        color: Constant.secondaryColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.w600,
                         fontSize: 20,
                       ),

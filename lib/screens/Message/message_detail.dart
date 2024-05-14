@@ -1,10 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'dart:async';
 
 import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/core/socket_manager.dart';
-import 'package:amp_studenthub/models/meeting.dart';
 import 'package:amp_studenthub/models/message.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/screens/Message/message_detail_item.dart';

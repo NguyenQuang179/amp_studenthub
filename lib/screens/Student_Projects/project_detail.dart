@@ -140,7 +140,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constant.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthAppBar(),
       body: SingleChildScrollView(
         child: Padding(
@@ -151,37 +151,48 @@ class _ProjectDetailState extends State<ProjectDetail> {
               const SizedBox(
                 height: 40,
               ),
-              const Text(
+              Text(
                 "Project Detail",
-                style: TextStyle(fontSize: 20, color: Constant.secondaryColor),
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Theme.of(context).colorScheme.secondary),
               ),
               Text(companyProject.title,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 30, color: Constant.primaryColor)),
-              const Divider(
-                color: Constant.primaryColor,
+                  style: TextStyle(
+                      fontSize: 30,
+                      color: Theme.of(context).colorScheme.primary)),
+              Divider(
+                color: Theme.of(context).colorScheme.primary,
               ),
               const Text("Students are expecting:"),
               Text("- ${companyProject.description}"),
-              const Divider(
-                color: Constant.primaryColor,
+              Divider(
+                color: Theme.of(context).colorScheme.primary,
               ),
-              const Text("Created:",
+              Text("Created:",
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.primary)),
               Text("- ${companyProject.createdAt}"),
-              const Text("Duration:",
+              Text("Duration:",
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.primary)),
               Text("- ${companyProject.projectScopeFlag}"),
-              const Text("Available Slots:",
+              Text("Available Slots:",
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.primary)),
               Text("- ${companyProject.countHired} Students"),
-              const Text("Total Slots:",
+              Text("Total Slots:",
                   textAlign: TextAlign.left,
-                  style: TextStyle(fontSize: 20, color: Constant.primaryColor)),
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.primary)),
               Text("- ${companyProject.countProposals}s Students"),
               const SizedBox(
                 height: 40,
@@ -196,9 +207,9 @@ class _ProjectDetailState extends State<ProjectDetail> {
                       child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Constant.primaryColor),
+                                Theme.of(context).colorScheme.primary),
                             foregroundColor: MaterialStateProperty.all<Color>(
-                                Constant.onPrimaryColor)),
+                                Theme.of(context).colorScheme.onPrimary)),
                         onPressed: () {
                           GoRouter.of(context).pushNamed(
                             RouteConstants.submitProposal,
@@ -218,9 +229,9 @@ class _ProjectDetailState extends State<ProjectDetail> {
                       child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Constant.onPrimaryColor),
+                                Theme.of(context).colorScheme.onPrimary),
                             foregroundColor: MaterialStateProperty.all<Color>(
-                                Constant.primaryColor)),
+                                Theme.of(context).colorScheme.primary)),
                         onPressed: isLoading
                             ? null // Disable button if loading
                             : () {
@@ -244,9 +255,9 @@ class _ProjectDetailState extends State<ProjectDetail> {
                       child: ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all<Color>(
-                                Constant.onPrimaryColor),
+                                Theme.of(context).colorScheme.onPrimary),
                             foregroundColor: MaterialStateProperty.all<Color>(
-                                Constant.primaryColor)),
+                                Theme.of(context).colorScheme.primary)),
                         onPressed: () => GoRouter.of(context).pop('/'),
                         child: const Text("Return"),
                       ),

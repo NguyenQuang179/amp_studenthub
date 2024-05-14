@@ -191,7 +191,7 @@ class _ProjectListSavedState extends State<ProjectListSaved> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constant.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: const AuthAppBar(),
       body: SafeArea(
         child: Center(
@@ -202,12 +202,12 @@ class _ProjectListSavedState extends State<ProjectListSaved> {
                 width: double.infinity,
                 margin:
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                child: const Text(
+                child: Text(
                   "Saved Projects: ",
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
-                      color: Constant.primaryColor),
+                      color: Theme.of(context).colorScheme.primary),
                 )),
             if (isLoading)
               Expanded(
@@ -215,10 +215,10 @@ class _ProjectListSavedState extends State<ProjectListSaved> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                        child: const SpinKitThreeBounce(
+                        child: SpinKitThreeBounce(
                             size: 32,
                             duration: Durations.extralong4,
-                            color: Constant.primaryColor))
+                            color: Theme.of(context).colorScheme.primary))
                   ],
                 ),
               )
@@ -236,10 +236,10 @@ class _ProjectListSavedState extends State<ProjectListSaved> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 24),
-                      child: const Text(
+                      child: Text(
                         "No project saved yet",
                         style: TextStyle(
-                          color: Constant.secondaryColor,
+                          color: Theme.of(context).colorScheme.secondary,
                           fontWeight: FontWeight.w600,
                           fontSize: 20,
                         ),

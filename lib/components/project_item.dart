@@ -72,14 +72,14 @@ class _ProjectItemState extends State<ProjectItem> {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Constant.backgroundColor,
-            border: Border.all(color: Colors.grey[500]!),
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: Theme.of(context).colorScheme.background,
+            border: Border.all(color: Theme.of(context).colorScheme.tertiary),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: 16),
                 child: Row(
                   children: [
                     Flexible(
@@ -87,9 +87,9 @@ class _ProjectItemState extends State<ProjectItem> {
                       child: Text(jobTitle,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.left,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 20,
-                              color: Constant.primaryColor,
+                              color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.w600)),
                     ),
                   ],
@@ -102,63 +102,68 @@ class _ProjectItemState extends State<ProjectItem> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Container(
-                          margin: EdgeInsets.only(bottom: 16),
+                          margin: const EdgeInsets.only(bottom: 16),
                           child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Container(
                                     width: 20,
                                     height: 20,
-                                    margin: EdgeInsets.only(right: 8),
-                                    child: FaIcon(FontAwesomeIcons.clock,
+                                    margin: const EdgeInsets.only(right: 8),
+                                    child: const FaIcon(FontAwesomeIcons.clock,
                                         size: 16)),
                                 Text(
                                   jobDuration,
-                                  style: TextStyle(fontSize: 16),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                                 Container(
                                     width: 20,
                                     height: 20,
-                                    margin: EdgeInsets.only(left: 24, right: 8),
-                                    child: FaIcon(FontAwesomeIcons.user,
+                                    margin: const EdgeInsets.only(
+                                        left: 24, right: 8),
+                                    child: const FaIcon(FontAwesomeIcons.user,
                                         size: 16)),
                                 Text(
-                                  '${jobStudentNeeded}',
-                                  style: TextStyle(fontSize: 16),
+                                  '$jobStudentNeeded',
+                                  style: const TextStyle(fontSize: 16),
                                 )
                               ]),
                         ),
                         Container(
-                            margin: EdgeInsets.only(bottom: 8),
+                            margin: const EdgeInsets.only(bottom: 8),
                             child: Text(
-                              "Proposals: ${jobProposalNums}",
-                              style: TextStyle(color: Colors.grey[600]),
+                              "Proposals: $jobProposalNums",
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.tertiary),
                             )),
                         Text("Created at $jobCreatedDate",
                             textAlign: TextAlign.left,
-                            style: TextStyle(color: Colors.grey[600])),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary)),
                       ],
                     ),
                   ),
                   Column(children: [
                     IconButton(
-                        splashColor: Constant.primaryColor,
+                        splashColor: Theme.of(context).colorScheme.primary,
                         style: IconButton.styleFrom(
-                            padding: EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(12),
                             foregroundColor: Constant.textColor,
                             backgroundColor: isSaved
-                                ? Constant.primaryColor
-                                : Constant.backgroundColor,
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.background,
                             side: BorderSide(
-                                width: 1, color: Constant.primaryColor)),
+                                width: 1,
+                                color: Theme.of(context).colorScheme.primary)),
                         onPressed: () {
                           favorite();
                         },
                         icon: Icon(
                             isSaved ? Icons.favorite : Icons.favorite_border,
                             color: isSaved
-                                ? Constant.backgroundColor
-                                : Constant.primaryColor,
+                                ? Theme.of(context).colorScheme.background
+                                : Theme.of(context).colorScheme.primary,
                             size: 24))
                   ])
                 ],

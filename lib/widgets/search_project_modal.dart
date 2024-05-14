@@ -1,18 +1,10 @@
-import 'dart:developer';
-
-import 'package:amp_studenthub/configs/constant.dart';
-import 'package:amp_studenthub/models/project.dart';
 import 'package:amp_studenthub/providers/student_project_provider.dart';
-import 'package:amp_studenthub/providers/user_provider.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class SearchProjectModal extends StatefulWidget {
-  const SearchProjectModal({Key? key}) : super(key: key);
+  const SearchProjectModal({super.key});
 
   @override
   State<SearchProjectModal> createState() => _SearchProjectModalState();
@@ -61,7 +53,7 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
     //   }),
     // );
 
-    print('query: ' + controller.text);
+    print('query: ${controller.text}');
     // final Map<String, dynamic> responseData =
     //     response.data as Map<String, dynamic>;
     // final dynamic result = responseData['result'];
@@ -100,7 +92,7 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
           height: 400,
           child: Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.transparent,
+              backgroundColor: Theme.of(context).colorScheme.background,
               elevation: 0,
               leading: IconButton(
                 icon: const Icon(Icons.close),

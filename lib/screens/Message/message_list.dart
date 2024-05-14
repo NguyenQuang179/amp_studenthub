@@ -110,7 +110,7 @@ class _MessageListState extends State<MessageList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constant.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Center(
             child: Column(
@@ -122,12 +122,12 @@ class _MessageListState extends State<MessageList> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Messages: ",
                       style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.w600,
-                          color: Constant.primaryColor),
+                          color: Theme.of(context).colorScheme.primary),
                     ),
                     const Spacer(),
                     TextButton(
@@ -138,12 +138,12 @@ class _MessageListState extends State<MessageList> {
                   ],
                 )),
             isLoading
-                ? const Expanded(
+                ? Expanded(
                     child: Center(
                         child: SpinKitThreeBounce(
                             size: 32,
                             duration: Durations.extralong4,
-                            color: Constant.primaryColor)),
+                            color: Theme.of(context).colorScheme.primary)),
                   )
                 : messagesList.isEmpty
                     ? Expanded(
@@ -159,10 +159,11 @@ class _MessageListState extends State<MessageList> {
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 24),
-                              child: const Text(
+                              child: Text(
                                 'Your message list is empty',
                                 style: TextStyle(
-                                  color: Constant.secondaryColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 20,
                                 ),

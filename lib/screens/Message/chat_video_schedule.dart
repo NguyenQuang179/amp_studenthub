@@ -138,15 +138,15 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                 ? const Text("")
                 : Text(
                     widget.timeCreated,
-                    style: const TextStyle(
-                      color: Constant.textColor,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 12,
                     ),
                   ),
             Text(
               " ${widget.username} ",
-              style: const TextStyle(
-                color: Constant.textColor,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onBackground,
                 fontSize: 12,
               ),
               textAlign:
@@ -156,8 +156,8 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                 ? const Text("")
                 : Text(
                     widget.timeCreated,
-                    style: const TextStyle(
-                      color: Constant.textColor,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onBackground,
                       fontSize: 12,
                     ),
                   ),
@@ -167,10 +167,10 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
       Container(
           width: MediaQuery.of(context).size.width * 0.8,
           decoration: BoxDecoration(
-            color: Constant.backgroundColor,
+            color: Theme.of(context).colorScheme.background,
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             border: Border.all(
-              color: Constant.primaryColor,
+              color: Theme.of(context).colorScheme.primary,
               width: 2,
             ),
           ),
@@ -184,21 +184,25 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                 children: [
                   Text(
                     widget.meetingName,
-                    style: const TextStyle(color: Constant.textColor),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground),
                   ),
                   Text(
                     widget.duration,
-                    style: const TextStyle(color: Constant.textColor),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onBackground),
                   )
                 ],
               ),
               Text(
                 "Start Time: ${widget.startTime}",
-                style: const TextStyle(color: Constant.textColor),
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground),
               ),
               Text(
                 "End Time: ${widget.endTime}",
-                style: const TextStyle(color: Constant.textColor),
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onBackground),
               ),
               widget.isCancelled
                   ? Text("Meeting cancelled",
@@ -219,17 +223,15 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Constant.primaryColor,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
                           ),
-                          child: const Text(
+                          child: Text(
                             "Join Meeting",
-                            style: TextStyle(color: Constant.onPrimaryColor),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary),
                           ),
                         ),
-                        // IconButton(
-                        //     color: Constant.secondaryColor,
-                        //     onPressed: () {},
-                        //     icon: Icon(Icons.more_horiz_rounded))
                         PopupMenuButton(itemBuilder: (BuildContext context) {
                           return [
                             PopupMenuItem(
@@ -258,16 +260,18 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                                                       CrossAxisAlignment
                                                           .stretch,
                                                   children: [
-                                                    const Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 12),
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 12),
                                                       child: Text(
                                                           "Schedule An Interview",
                                                           style: TextStyle(
                                                               fontSize: 20,
-                                                              color: Constant
-                                                                  .primaryColor,
+                                                              color: Theme.of(
+                                                                      context)
+                                                                  .colorScheme
+                                                                  .primary,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w600),
@@ -280,14 +284,16 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                                                           const EdgeInsets.only(
                                                               top: 16,
                                                               bottom: 8),
-                                                      child: const Text(
+                                                      child: Text(
                                                         "Title:",
                                                         style: TextStyle(
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.w600,
-                                                            color: Constant
-                                                                .textColor),
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .onBackground),
                                                       ),
                                                     ),
                                                     Container(
@@ -298,46 +304,47 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                                                           controller:
                                                               interviewTitleController,
                                                           decoration: InputDecoration(
-                                                              contentPadding:
-                                                                  const EdgeInsets.only(
-                                                                      top: 8,
-                                                                      left: 16,
-                                                                      right:
-                                                                          16),
+                                                              contentPadding: const EdgeInsets.only(
+                                                                  top: 8,
+                                                                  left: 16,
+                                                                  right: 16),
                                                               filled: true,
-                                                              fillColor: Constant
-                                                                  .onPrimaryColor,
+                                                              fillColor: Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onPrimary,
                                                               hintText:
                                                                   "Enter interview title...",
                                                               labelStyle: TextStyle(
                                                                   color: Colors.grey[
                                                                       600]),
                                                               border: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          12),
-                                                                  borderSide: const BorderSide(
-                                                                      color: Constant
-                                                                          .secondaryColor,
+                                                                  borderRadius: BorderRadius.circular(
+                                                                      12),
+                                                                  borderSide: BorderSide(
+                                                                      color: Theme.of(context)
+                                                                          .colorScheme
+                                                                          .secondary,
                                                                       width:
                                                                           1)),
                                                               focusedBorder: OutlineInputBorder(
                                                                   borderRadius: BorderRadius.circular(12),
-                                                                  borderSide: const BorderSide(color: Constant.secondaryColor, width: 1)),
-                                                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Constant.secondaryColor, width: 1)))),
+                                                                  borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)),
+                                                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)))),
                                                     ),
                                                     Container(
                                                       margin:
                                                           const EdgeInsets.only(
                                                               bottom: 8),
-                                                      child: const Text(
+                                                      child: Text(
                                                         "Start time:",
                                                         style: TextStyle(
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.w600,
-                                                            color: Constant
-                                                                .textColor),
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .onBackground),
                                                       ),
                                                     ),
                                                     Container(
@@ -364,47 +371,50 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                                                             }
                                                           },
                                                           decoration: InputDecoration(
-                                                              prefixIcon: const Icon(Icons
-                                                                  .calendar_month_rounded),
-                                                              contentPadding: const EdgeInsets.only(
-                                                                  top: 8,
-                                                                  left: 16,
-                                                                  right: 16),
+                                                              prefixIcon:
+                                                                  const Icon(Icons
+                                                                      .calendar_month_rounded),
+                                                              contentPadding:
+                                                                  const EdgeInsets.only(
+                                                                      top: 8,
+                                                                      left: 16,
+                                                                      right:
+                                                                          16),
                                                               filled: true,
-                                                              fillColor: Constant
-                                                                  .onPrimaryColor,
+                                                              fillColor:
+                                                                  Theme.of(context)
+                                                                      .colorScheme
+                                                                      .onPrimary,
                                                               hintText:
                                                                   "DD/MM/YYYY HH:MM",
                                                               labelStyle: TextStyle(
-                                                                  color: Colors.grey[
-                                                                      600]),
+                                                                  color:
+                                                                      Colors.grey[
+                                                                          600]),
                                                               border: OutlineInputBorder(
                                                                   borderRadius:
                                                                       BorderRadius.circular(
                                                                           12),
-                                                                  borderSide: const BorderSide(
-                                                                      color: Constant
-                                                                          .secondaryColor,
-                                                                      width:
-                                                                          1)),
-                                                              focusedBorder: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(12),
-                                                                  borderSide: const BorderSide(color: Constant.secondaryColor, width: 1)),
-                                                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Constant.secondaryColor, width: 1)))),
+                                                                  borderSide: BorderSide(
+                                                                      color: Theme.of(context).colorScheme.secondary,
+                                                                      width: 1)),
+                                                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)),
+                                                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)))),
                                                     ),
                                                     Container(
                                                       margin:
                                                           const EdgeInsets.only(
                                                               bottom: 8),
-                                                      child: const Text(
+                                                      child: Text(
                                                         "End time:",
                                                         style: TextStyle(
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.w600,
-                                                            color: Constant
-                                                                .textColor),
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .onBackground),
                                                       ),
                                                     ),
                                                     Container(
@@ -431,40 +441,43 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                                                             }
                                                           },
                                                           decoration: InputDecoration(
-                                                              prefixIcon: const Icon(Icons
-                                                                  .calendar_month_rounded),
-                                                              contentPadding: const EdgeInsets.only(
-                                                                  top: 8,
-                                                                  left: 16,
-                                                                  right: 16),
+                                                              prefixIcon:
+                                                                  const Icon(Icons
+                                                                      .calendar_month_rounded),
+                                                              contentPadding:
+                                                                  const EdgeInsets.only(
+                                                                      top: 8,
+                                                                      left: 16,
+                                                                      right:
+                                                                          16),
                                                               filled: true,
-                                                              fillColor: Constant
-                                                                  .onPrimaryColor,
+                                                              fillColor:
+                                                                  Theme.of(context)
+                                                                      .colorScheme
+                                                                      .onPrimary,
                                                               hintText:
                                                                   "DD/MM/YYYY HH:MM",
                                                               labelStyle: TextStyle(
-                                                                  color: Colors.grey[
-                                                                      600]),
+                                                                  color: Theme.of(context)
+                                                                      .colorScheme
+                                                                      .tertiary),
                                                               border: OutlineInputBorder(
                                                                   borderRadius:
                                                                       BorderRadius.circular(
                                                                           12),
-                                                                  borderSide: const BorderSide(
-                                                                      color: Constant
-                                                                          .secondaryColor,
-                                                                      width:
-                                                                          1)),
-                                                              focusedBorder: OutlineInputBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(12),
-                                                                  borderSide: const BorderSide(color: Constant.secondaryColor, width: 1)),
-                                                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Constant.secondaryColor, width: 1)))),
+                                                                  borderSide: BorderSide(
+                                                                      color: Theme.of(context).colorScheme.secondary,
+                                                                      width: 1)),
+                                                              focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)),
+                                                              enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)))),
                                                     ),
                                                     Text(
                                                       "Duration: 60 minutes",
                                                       style: TextStyle(
-                                                          color: Colors
-                                                              .grey[600]!),
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .tertiary),
                                                     ),
                                                     Padding(
                                                       padding:
@@ -476,16 +489,16 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                                                             child:
                                                                 ElevatedButton(
                                                               style: ButtonStyle(
-                                                                  backgroundColor:
-                                                                      MaterialStateProperty.all<
-                                                                              Color>(
-                                                                          Constant
-                                                                              .onPrimaryColor),
-                                                                  foregroundColor:
-                                                                      MaterialStateProperty.all<
-                                                                              Color>(
-                                                                          Constant
-                                                                              .primaryColor)),
+                                                                  backgroundColor: MaterialStateProperty.all<
+                                                                      Color>(Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .onPrimary),
+                                                                  foregroundColor: MaterialStateProperty.all<
+                                                                      Color>(Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .primary)),
                                                               onPressed: () {
                                                                 interviewTitleController
                                                                     .clear();
@@ -506,16 +519,16 @@ class _ChatVideoScheduleState extends State<ChatVideoSchedule> {
                                                             child:
                                                                 ElevatedButton(
                                                               style: ButtonStyle(
-                                                                  backgroundColor:
-                                                                      MaterialStateProperty.all<
-                                                                              Color>(
-                                                                          Constant
-                                                                              .primaryColor),
-                                                                  foregroundColor:
-                                                                      MaterialStateProperty.all<
-                                                                              Color>(
-                                                                          Constant
-                                                                              .onPrimaryColor)),
+                                                                  backgroundColor: MaterialStateProperty.all<
+                                                                      Color>(Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .primary),
+                                                                  foregroundColor: MaterialStateProperty.all<
+                                                                      Color>(Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .onPrimary)),
                                                               onPressed: () {
                                                                 scheduleInterview(
                                                                     context,

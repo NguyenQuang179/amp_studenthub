@@ -3,7 +3,6 @@ import 'package:amp_studenthub/models/meeting.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/Message/chat_video_schedule.dart';
-import 'package:amp_studenthub/screens/Message/message_item.dart';
 import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -108,7 +107,7 @@ class _ActiveInterviewState extends State<ActiveInterview> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AuthAppBar(),
-      backgroundColor: Constant.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Center(
             child: Column(
@@ -117,20 +116,20 @@ class _ActiveInterviewState extends State<ActiveInterview> {
                 width: double.infinity,
                 padding:
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                child: const Text(
+                child: Text(
                   "Messages: ",
                   style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w600,
-                      color: Constant.primaryColor),
+                      color: Theme.of(context).colorScheme.primary),
                 )),
             isLoading
-                ? const Expanded(
+                ? Expanded(
                     child: Center(
                         child: SpinKitThreeBounce(
                             size: 32,
                             duration: Durations.extralong4,
-                            color: Constant.primaryColor)),
+                            color: Theme.of(context).colorScheme.primary)),
                   )
                 : Expanded(
                     child: ListView.builder(

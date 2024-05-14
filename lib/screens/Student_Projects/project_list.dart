@@ -6,7 +6,6 @@ import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/widgets/search_project_modal.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
@@ -64,7 +63,8 @@ class _ProjectListState extends State<ProjectList> {
     };
 
     try {
-      final Response response = await dio.patch(
+      // final Response response =
+      await dio.patch(
         endpoint,
         data: submitData,
         options: Options(headers: {
@@ -72,7 +72,7 @@ class _ProjectListState extends State<ProjectList> {
         }),
       );
 
-      final responseData = response.data;
+      // final responseData = response.data;
 
       Fluttertoast.showToast(
           msg: "Apply Successfully",
@@ -174,7 +174,7 @@ class _ProjectListState extends State<ProjectList> {
       }
       print(companyProjectsList.length);
     } on DioException catch (e) {
-      // Handle DioException
+      print(e); // Handle DioException
     } finally {
       if (mounted) {
         setState(() {
@@ -192,7 +192,7 @@ class _ProjectListState extends State<ProjectList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constant.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Center(
             child: Column(
@@ -226,31 +226,40 @@ class _ProjectListState extends State<ProjectList> {
                             contentPadding: const EdgeInsets.only(
                                 top: 8, left: 16, right: 16),
                             filled: true,
-                            fillColor: Constant.onPrimaryColor,
+                            fillColor: Theme.of(context).colorScheme.background,
                             prefixIcon: const Icon(Icons.search),
                             prefixStyle: const TextStyle(),
                             hintText: "Search for job...",
-                            labelStyle: TextStyle(color: Colors.grey[600]),
+                            labelStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                    color: Colors.grey[500]!, width: 1)),
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary,
+                                    width: 1)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                    color: Colors.grey[500]!, width: 1)),
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary,
+                                    width: 1)),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                                 borderSide: BorderSide(
-                                    color: Colors.grey[500]!, width: 1)))),
+                                    color:
+                                        Theme.of(context).colorScheme.tertiary,
+                                    width: 1)))),
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 8),
                     child: IconButton(
                         style: IconButton.styleFrom(
                             padding: const EdgeInsets.all(12),
-                            backgroundColor: Constant.primaryColor,
-                            foregroundColor: Constant.onPrimaryColor),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onPrimary),
                         onPressed: () => checkSaved(context),
                         icon: const Icon(Icons.favorite_border)),
                   )
@@ -263,10 +272,10 @@ class _ProjectListState extends State<ProjectList> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
-                        child: const SpinKitThreeBounce(
+                        child: SpinKitThreeBounce(
                             size: 32,
                             duration: Durations.extralong4,
-                            color: Constant.primaryColor))
+                            color: Theme.of(context).colorScheme.primary))
                   ],
                 ),
               )

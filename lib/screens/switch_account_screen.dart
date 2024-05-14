@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SwitchAccountScreen extends StatefulWidget {
   const SwitchAccountScreen({super.key});
@@ -49,7 +50,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
           backgroundColor: Constant.backgroundColor,
           surfaceTintColor: Constant.backgroundColor,
           insetPadding: const EdgeInsets.symmetric(horizontal: 8),
-          title: const Text('Change Password'),
+          title: Text(AppLocalizations.of(context)!.changePassword),
           content: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Column(
@@ -322,7 +323,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     ),
                     const SizedBox(width: 16),
                     Text(
-                      'Profile',
+                      AppLocalizations.of(context)!.profile,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground,
                           fontSize: 16,
@@ -361,7 +362,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     ),
                     const SizedBox(width: 16),
                     Text(
-                      'Settings',
+                      AppLocalizations.of(context)!.settings,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground,
                           fontSize: 16,
@@ -400,7 +401,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     ),
                     const SizedBox(width: 16),
                     Text(
-                      'Change Password',
+                      AppLocalizations.of(context)!.changePassword,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onBackground,
                           fontSize: 16,
@@ -447,7 +448,7 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
                     ),
                     const SizedBox(width: 16),
                     Text(
-                      'Sign Out',
+                      AppLocalizations.of(context)!.signOut,
                       style: TextStyle(
                           color:
                               Theme.of(context).colorScheme.onPrimaryContainer,

@@ -271,7 +271,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
       final Map<String, dynamic> responseData =
           response.data as Map<String, dynamic>;
       final dynamic result = responseData['result'];
-      print("successful + $response");
+      print("successful + $response + $result");
     } catch (e) {
       print(e);
     }
@@ -333,12 +333,12 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
               Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 16),
-                  child: const Text(
+                  child: Text(
                     "Notifications: ",
                     style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w600,
-                        color: Constant.primaryColor),
+                        color: Theme.of(context).colorScheme.primary),
                   )),
               // Render Job List
               if (notifications.isEmpty)
@@ -349,10 +349,12 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                  child: const SpinKitThreeBounce(
+                                  child: SpinKitThreeBounce(
                                       size: 32,
                                       duration: Durations.extralong4,
-                                      color: Constant.primaryColor))
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary))
                             ],
                           ),
                         )
@@ -368,10 +370,11 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 24),
-                              child: const Text(
+                              child: Text(
                                 "Your notification list is empty",
                                 style: TextStyle(
-                                  color: Constant.secondaryColor,
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 20,
                                 ),
@@ -423,7 +426,9 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                       decoration: BoxDecoration(
                                           border: Border.all(
                                               width: 1,
-                                              color: Colors.grey[500]!),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiary),
                                           borderRadius:
                                               BorderRadius.circular(8)),
                                       // Column Layout Of Card
@@ -446,8 +451,9 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                                       child: Container(
                                                         height: 48,
                                                         width: 48,
-                                                        color: Constant
-                                                            .primaryColor,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .primary,
                                                         alignment:
                                                             Alignment.center,
                                                         child: getNotificationIcon(
@@ -463,9 +469,11 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                                     children: [
                                                       Text(
                                                         "${notification.content}",
-                                                        style: const TextStyle(
-                                                            color: Constant
-                                                                .secondaryColor,
+                                                        style: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .secondary,
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight
@@ -556,13 +564,16 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                                                                     borderRadius:
                                                                         BorderRadius.circular(
                                                                             12)),
-                                                                side: const BorderSide(
-                                                                    color: Constant
-                                                                        .backgroundColor,
+                                                                side: BorderSide(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .background,
                                                                     width: 1),
-                                                                foregroundColor:
-                                                                    Constant
-                                                                        .primaryColor),
+                                                                foregroundColor: Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary),
                                                             child: Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment

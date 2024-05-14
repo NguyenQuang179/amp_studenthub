@@ -240,17 +240,17 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
               Container(
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 16),
-                  child: const Text(
+                  child: Text(
                     "Your Jobs: ",
                     style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w600,
-                        color: Constant.primaryColor),
+                        color: Theme.of(context).colorScheme.primary),
                   )),
               // Segment Filter Button
               Container(
-                decoration: const BoxDecoration(
-                  color: Constant.backgroundColor,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.background,
                 ),
                 child: Row(children: [
                   Expanded(
@@ -261,18 +261,18 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                               MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.selected)) {
-                                return Constant.primaryColor;
+                                return Theme.of(context).colorScheme.primary;
                               }
-                              return Constant.backgroundColor;
+                              return Theme.of(context).colorScheme.background;
                             },
                           ),
                           foregroundColor:
                               MaterialStateProperty.resolveWith<Color>(
                             (Set<MaterialState> states) {
                               if (states.contains(MaterialState.selected)) {
-                                return Constant.onPrimaryColor;
+                                return Theme.of(context).colorScheme.onPrimary;
                               }
-                              return Constant.textColor;
+                              return Theme.of(context).colorScheme.onBackground;
                             },
                           ),
                           shape: MaterialStateProperty.all(
@@ -318,10 +318,10 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                          child: const SpinKitThreeBounce(
+                          child: SpinKitThreeBounce(
                               size: 32,
                               duration: Durations.extralong4,
-                              color: Constant.primaryColor))
+                              color: Theme.of(context).colorScheme.primary))
                     ],
                   ),
                 )
@@ -339,10 +339,10 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 24),
-                        child: const Text(
+                        child: Text(
                           'Your job list is empty',
                           style: TextStyle(
-                            color: Constant.secondaryColor,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.w600,
                             fontSize: 20,
                           ),
@@ -380,7 +380,9 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                       decoration: BoxDecoration(
                                           border: Border.all(
                                               width: 1,
-                                              color: Colors.grey[500]!),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiary),
                                           borderRadius:
                                               BorderRadius.circular(8)),
                                       // Column Layout Of Card
@@ -404,9 +406,11 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                         maxLines: 1,
                                                         overflow: TextOverflow
                                                             .ellipsis,
-                                                        style: const TextStyle(
-                                                            color: Constant
-                                                                .secondaryColor,
+                                                        style: TextStyle(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .secondary,
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight
@@ -546,8 +550,10 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                     decoration: BoxDecoration(
                                                         border: Border.all(
                                                             width: 1,
-                                                            color: Colors
-                                                                .grey[500]!),
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .tertiary),
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(8)),
@@ -584,8 +590,10 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                     decoration: BoxDecoration(
                                                         border: Border.all(
                                                             width: 1,
-                                                            color: Colors
-                                                                .grey[500]!),
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .tertiary),
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(8)),
@@ -625,8 +633,10 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                                                     decoration: BoxDecoration(
                                                         border: Border.all(
                                                             width: 1,
-                                                            color: Colors
-                                                                .grey[500]!),
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .tertiary),
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(8)),
@@ -682,8 +692,8 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12)),
-                    backgroundColor: Constant.primaryColor,
-                    foregroundColor: Constant.onPrimaryColor),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

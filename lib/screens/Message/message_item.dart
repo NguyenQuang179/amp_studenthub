@@ -1,4 +1,3 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -25,8 +24,8 @@ class MessageItem extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Constant.backgroundColor,
-            border: Border.all(color: Colors.grey[500]!),
+            color: Theme.of(context).colorScheme.background,
+            border: Border.all(color: Theme.of(context).colorScheme.tertiary),
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
           child: Column(
@@ -65,7 +64,9 @@ class MessageItem extends StatelessWidget {
                             margin: const EdgeInsets.only(bottom: 6),
                             child: Text(
                               "For Project: $receiverPosition",
-                              style: TextStyle(color: Colors.grey[600]),
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.tertiary),
                             )),
                       ],
                     ),

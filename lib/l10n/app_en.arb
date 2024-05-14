@@ -30,5 +30,21 @@
   "signUpButton": "Sign Up",
   "lookingProject": "Looking for projects?",
   "joinAsCompany": "Join as Company",
-  "joinAsStudent": "Join as Student"
+  "joinAsStudent": "Join as Student",
+  "@_SWITCH_ACCOUNT": {},
+  "profile": "Profile",
+  "settings": "Settings",
+  "changePassword": "Change Password",
+  "signOut": "Sign Out",
+  "oldPassLabel": "Old password",
+  "newPassLabel": "New password",
+  "@_HOME_TAB": {},
+  "home": "Home",
+  "searchForJob": "Search for job...",
+  "@_DASHBOARD_TAB": {},
+  "notHaveProfile": "Not have corresponding profile\nPlease create your profile first",
+  "@_MESSAGE_TAB": {},
+  "message": "Message",
+  "@_NOTIFICATION_TAB": {},
+  "notification": "Notification"
 }

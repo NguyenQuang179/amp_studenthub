@@ -2,6 +2,7 @@ import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountCard extends StatelessWidget {
   final String? imageUrl;
@@ -56,7 +57,9 @@ class AccountCard extends StatelessWidget {
                           fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      role,
+                      role == "Student"
+                          ? AppLocalizations.of(context)!.roleStudent
+                          : AppLocalizations.of(context)!.roleCompany,
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary),
                     )
