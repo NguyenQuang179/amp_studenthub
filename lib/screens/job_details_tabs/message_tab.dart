@@ -150,7 +150,7 @@ class _MessageTabState extends State<MessageTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constant.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Center(
             child: Column(
@@ -159,22 +159,22 @@ class _MessageTabState extends State<MessageTab> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
                 width: double.infinity,
-                child: const Text(
+                child: Text(
                   'Message:',
                   style: TextStyle(
                       overflow: TextOverflow.ellipsis,
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
-                      color: Constant.primaryColor),
+                      color: Theme.of(context).colorScheme.primary),
                 )),
             isLoading
                 ? SizedBox(
                     height: MediaQuery.of(context).size.height * 0.75,
-                    child: const Center(
+                    child: Center(
                         child: SpinKitThreeBounce(
                             size: 32,
                             duration: Durations.extralong4,
-                            color: Constant.primaryColor)),
+                            color: Theme.of(context).colorScheme.primary)),
                   )
                 : Expanded(
                     child: ListView.builder(

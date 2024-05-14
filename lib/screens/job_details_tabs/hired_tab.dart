@@ -128,7 +128,7 @@ class _HiredTabState extends State<HiredTab> {
               children: [
                 Container(
                     decoration: BoxDecoration(
-                        color: Constant.backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.symmetric(
                         vertical: 16, horizontal: 16),
@@ -138,22 +138,24 @@ class _HiredTabState extends State<HiredTab> {
                       children: [
                         Container(
                           margin: const EdgeInsets.only(bottom: 8),
-                          child: const Text(
+                          child: Text(
                             "Hire Offer",
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: Constant.primaryColor),
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                         ),
                         Container(
                             margin: const EdgeInsets.only(bottom: 16),
                             child: RichText(
                                 text: TextSpan(
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 16,
                                       height: 1.6,
-                                      color: Constant.textColor,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
                                     ),
                                     children: <TextSpan>[
                                   const TextSpan(
@@ -162,8 +164,10 @@ class _HiredTabState extends State<HiredTab> {
                                   ),
                                   TextSpan(
                                       text: '$fullname',
-                                      style: const TextStyle(
-                                          color: Constant.primaryColor,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                           fontWeight: FontWeight.w500)),
                                   const TextSpan(
                                     text: ' to do this project?',
@@ -178,8 +182,13 @@ class _HiredTabState extends State<HiredTab> {
                                           borderRadius:
                                               BorderRadius.circular(6)),
                                       side: BorderSide(
-                                          color: Colors.grey[600]!, width: 1),
-                                      foregroundColor: Constant.textColor),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .tertiary,
+                                          width: 1),
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -193,8 +202,11 @@ class _HiredTabState extends State<HiredTab> {
                                 style: TextButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(6)),
-                                    backgroundColor: Constant.primaryColor,
-                                    foregroundColor: Constant.onPrimaryColor),
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    foregroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
                                 onPressed: () {
                                   updateProposalStatusFlag(2, proposalId);
                                 },
@@ -211,10 +223,12 @@ class _HiredTabState extends State<HiredTab> {
                                       ),
                                     ),
                                     if (isSubmitting)
-                                      const SpinKitCircle(
+                                      SpinKitCircle(
                                           size: 20,
                                           duration: Durations.extralong4,
-                                          color: Constant.onPrimaryColor)
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary)
                                   ],
                                 ),
                               ),
@@ -246,11 +260,11 @@ class _HiredTabState extends State<HiredTab> {
         body: Container(
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: isLoading
-                ? const Center(
+                ? Center(
                     child: SpinKitThreeBounce(
                         size: 32,
                         duration: Durations.extralong4,
-                        color: Constant.primaryColor))
+                        color: Theme.of(context).colorScheme.primary))
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -269,10 +283,12 @@ class _HiredTabState extends State<HiredTab> {
                                       ),
                                       Container(
                                         margin: const EdgeInsets.only(top: 24),
-                                        child: const Text(
+                                        child: Text(
                                           "No Hired Student Found",
                                           style: TextStyle(
-                                            color: Constant.secondaryColor,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             fontWeight: FontWeight.w600,
                                             fontSize: 20,
                                           ),
@@ -291,13 +307,14 @@ class _HiredTabState extends State<HiredTab> {
                                               width: double.infinity,
                                               child: Text(
                                                 'Hired Students: (${studentProposals.length})',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     fontSize: 20,
                                                     fontWeight: FontWeight.w600,
-                                                    color:
-                                                        Constant.primaryColor),
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary),
                                               )),
                                           Expanded(
                                             child: Container(
@@ -373,7 +390,7 @@ class _HiredTabState extends State<HiredTab> {
                                                                           children: [
                                                                             Text(
                                                                               proposal.student?.user['fullname'] ?? "",
-                                                                              style: const TextStyle(color: Constant.secondaryColor, fontSize: 16, fontWeight: FontWeight.w600),
+                                                                              style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 16, fontWeight: FontWeight.w600),
                                                                             ),
                                                                             Container(
                                                                               margin: const EdgeInsets.only(top: 4),
@@ -395,8 +412,8 @@ class _HiredTabState extends State<HiredTab> {
                                                                         child: TextButton(
                                                                             style: TextButton.styleFrom(
                                                                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-                                                                                side: BorderSide(color: Colors.grey[600]!, width: 1),
-                                                                                foregroundColor: Constant.textColor),
+                                                                                side: BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 1),
+                                                                                foregroundColor: Theme.of(context).colorScheme.onBackground),
                                                                             onPressed: () {},
                                                                             child: const Text("Message")),
                                                                       ),
@@ -406,7 +423,7 @@ class _HiredTabState extends State<HiredTab> {
                                                                       ),
                                                                       // Expanded(
                                                                       //   child: TextButton(
-                                                                      //       style: TextButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)), backgroundColor: Constant.primaryColor, foregroundColor: Constant.onPrimaryColor, disabledBackgroundColor: Colors.grey[500], disabledForegroundColor: Constant.onPrimaryColor),
+                                                                      //       style: TextButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)), backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Theme.of(context).colorScheme.onPrimary, disabledBackgroundColor: Colors.grey[500], disabledForegroundColor: Theme.of(context).colorScheme.onPrimary),
                                                                       //       onPressed: proposal.statusFlag == 2 || proposal.statusFlag == 3
                                                                       //           ? null
                                                                       //           : () {

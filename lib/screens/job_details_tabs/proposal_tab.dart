@@ -130,7 +130,7 @@ class _ProposalTabState extends State<ProposalTab> {
               children: [
                 Container(
                     decoration: BoxDecoration(
-                        color: Constant.backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.symmetric(
                         vertical: 16, horizontal: 16),
@@ -140,22 +140,24 @@ class _ProposalTabState extends State<ProposalTab> {
                       children: [
                         Container(
                           margin: const EdgeInsets.only(bottom: 8),
-                          child: const Text(
+                          child: Text(
                             "Hire Offer",
                             style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: Constant.primaryColor),
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                         ),
                         Container(
                             margin: const EdgeInsets.only(bottom: 16),
                             child: RichText(
                                 text: TextSpan(
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 16,
                                       height: 1.6,
-                                      color: Constant.textColor,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
                                     ),
                                     children: <TextSpan>[
                                   const TextSpan(
@@ -164,8 +166,10 @@ class _ProposalTabState extends State<ProposalTab> {
                                   ),
                                   TextSpan(
                                       text: '$fullname',
-                                      style: const TextStyle(
-                                          color: Constant.primaryColor,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                           fontWeight: FontWeight.w500)),
                                   const TextSpan(
                                     text: ' to do this project?',
@@ -181,7 +185,9 @@ class _ProposalTabState extends State<ProposalTab> {
                                               BorderRadius.circular(6)),
                                       side: BorderSide(
                                           color: Colors.grey[600]!, width: 1),
-                                      foregroundColor: Constant.textColor),
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -195,8 +201,11 @@ class _ProposalTabState extends State<ProposalTab> {
                                 style: TextButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(6)),
-                                    backgroundColor: Constant.primaryColor,
-                                    foregroundColor: Constant.onPrimaryColor),
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.primary,
+                                    foregroundColor: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
                                 onPressed: () {
                                   updateProposalStatusFlag(2, proposalId);
                                 },
@@ -213,10 +222,12 @@ class _ProposalTabState extends State<ProposalTab> {
                                       ),
                                     ),
                                     if (isSubmitting)
-                                      const SpinKitCircle(
+                                      SpinKitCircle(
                                           size: 20,
                                           duration: Durations.extralong4,
-                                          color: Constant.onPrimaryColor)
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary)
                                   ],
                                 ),
                               ),
@@ -248,11 +259,11 @@ class _ProposalTabState extends State<ProposalTab> {
         body: Container(
             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
             child: isLoading
-                ? const Center(
+                ? Center(
                     child: SpinKitThreeBounce(
                         size: 32,
                         duration: Durations.extralong4,
-                        color: Constant.primaryColor))
+                        color: Theme.of(context).colorScheme.primary))
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -261,11 +272,11 @@ class _ProposalTabState extends State<ProposalTab> {
                             width: double.infinity,
                             child: Text(
                               'Total Proposals: (${studentProposals.length})',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   overflow: TextOverflow.ellipsis,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
-                                  color: Constant.primaryColor),
+                                  color: Theme.of(context).colorScheme.primary),
                             )),
                         Expanded(
                             // Layout Container Expand All Height
@@ -282,10 +293,12 @@ class _ProposalTabState extends State<ProposalTab> {
                                       ),
                                       Container(
                                         margin: const EdgeInsets.only(top: 24),
-                                        child: const Text(
+                                        child: Text(
                                           "No Proposals Yet",
                                           style: TextStyle(
-                                            color: Constant.secondaryColor,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             fontWeight: FontWeight.w600,
                                             fontSize: 20,
                                           ),
@@ -382,7 +395,7 @@ class _ProposalTabState extends State<ProposalTab> {
                                                                           children: [
                                                                             Text(
                                                                               proposal.student?.user['fullname'] ?? "",
-                                                                              style: const TextStyle(color: Constant.secondaryColor, fontSize: 16, fontWeight: FontWeight.w600),
+                                                                              style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 16, fontWeight: FontWeight.w600),
                                                                             ),
                                                                             Container(
                                                                               margin: const EdgeInsets.only(top: 4),
@@ -402,7 +415,7 @@ class _ProposalTabState extends State<ProposalTab> {
                                                                     children: [
                                                                       Expanded(
                                                                         child: TextButton(
-                                                                            style: TextButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)), side: BorderSide(color: Colors.grey[600]!, width: 1), foregroundColor: Constant.textColor),
+                                                                            style: TextButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)), side: BorderSide(color: Colors.grey[600]!, width: 1), foregroundColor: Theme.of(context).colorScheme.onBackground),
                                                                             onPressed: () {
                                                                               if (proposal.statusFlag == 0) {
                                                                                 updateProposalStatusFlag(1, proposal.id);
@@ -411,9 +424,9 @@ class _ProposalTabState extends State<ProposalTab> {
                                                                               //move to chat details
                                                                               final userProvider = Provider.of<UserProvider>(context, listen: false);
                                                                               final userId = userProvider.userInfo['id'];
-                                                                              print("P1 " + userId.toString());
+                                                                              print("P1 $userId");
                                                                               print(proposal.student?.userId);
-                                                                              print("P3 " + proposal.projectId.toString());
+                                                                              print("P3 ${proposal.projectId}");
 
                                                                               GoRouter.of(context).pushNamed(
                                                                                 RouteConstants.messageDetail,
@@ -433,7 +446,7 @@ class _ProposalTabState extends State<ProposalTab> {
                                                                       ),
                                                                       Expanded(
                                                                         child: TextButton(
-                                                                            style: TextButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)), backgroundColor: Constant.primaryColor, foregroundColor: Constant.onPrimaryColor, disabledBackgroundColor: Colors.grey[500], disabledForegroundColor: Constant.onPrimaryColor),
+                                                                            style: TextButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)), backgroundColor: Theme.of(context).colorScheme.primary, foregroundColor: Theme.of(context).colorScheme.onPrimary, disabledBackgroundColor: Colors.grey[500], disabledForegroundColor: Theme.of(context).colorScheme.onPrimary),
                                                                             onPressed: proposal.statusFlag == 2 || proposal.statusFlag == 3
                                                                                 ? null
                                                                                 : () {

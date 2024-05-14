@@ -180,11 +180,11 @@ class _JobDetailTabState extends State<JobDetailTab> {
           child: isLoading
               ? SizedBox(
                   height: MediaQuery.of(context).size.height * 0.75,
-                  child: const Center(
+                  child: Center(
                       child: SpinKitThreeBounce(
                           size: 32,
                           duration: Durations.extralong4,
-                          color: Constant.primaryColor)),
+                          color: Theme.of(context).colorScheme.primary)),
                 )
               : isEditing
                   ? Column(
@@ -192,12 +192,12 @@ class _JobDetailTabState extends State<JobDetailTab> {
                       children: [
                           Container(
                             margin: const EdgeInsets.only(bottom: 16),
-                            child: const Text(
+                            child: Text(
                               "Edit Project Details: ",
                               style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w600,
-                                  color: Constant.primaryColor),
+                                  color: Theme.of(context).colorScheme.primary),
                             ),
                           ),
                           Container(
@@ -218,24 +218,31 @@ class _JobDetailTabState extends State<JobDetailTab> {
                                     contentPadding: const EdgeInsets.only(
                                         top: 8, left: 16, right: 16),
                                     filled: true,
-                                    fillColor: Constant.onPrimaryColor,
+                                    fillColor:
+                                        Theme.of(context).colorScheme.onPrimary,
                                     hintText: "Enter job title...",
                                     labelStyle:
                                         TextStyle(color: Colors.grey[600]),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Constant.secondaryColor,
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Constant.secondaryColor,
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)),
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Constant.secondaryColor,
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)))),
                           ),
                           // Step 2
@@ -293,24 +300,31 @@ class _JobDetailTabState extends State<JobDetailTab> {
                                     contentPadding: const EdgeInsets.only(
                                         top: 8, left: 16, right: 16),
                                     filled: true,
-                                    fillColor: Constant.onPrimaryColor,
+                                    fillColor:
+                                        Theme.of(context).colorScheme.onPrimary,
                                     hintText: "Enter number of student...",
                                     labelStyle:
                                         TextStyle(color: Colors.grey[600]),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Constant.secondaryColor,
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Constant.secondaryColor,
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)),
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Constant.secondaryColor,
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)))),
                           ),
                           // Step 3
@@ -334,24 +348,31 @@ class _JobDetailTabState extends State<JobDetailTab> {
                                     contentPadding: const EdgeInsets.only(
                                         top: 16, left: 16, right: 16),
                                     filled: true,
-                                    fillColor: Constant.onPrimaryColor,
+                                    fillColor:
+                                        Theme.of(context).colorScheme.onPrimary,
                                     hintText: "Enter job description...",
                                     labelStyle:
                                         TextStyle(color: Colors.grey[600]),
                                     border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Constant.secondaryColor,
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Constant.secondaryColor,
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)),
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Constant.secondaryColor,
+                                        borderSide: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             width: 1)))),
                           ),
                           // Save & Cancel Button
@@ -369,9 +390,12 @@ class _JobDetailTabState extends State<JobDetailTab> {
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12)),
-                                        backgroundColor: Constant.primaryColor,
-                                        foregroundColor:
-                                            Constant.onPrimaryColor),
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        foregroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -387,10 +411,12 @@ class _JobDetailTabState extends State<JobDetailTab> {
                                           ),
                                         ),
                                         if (isSubmitting)
-                                          const SpinKitCircle(
+                                          SpinKitCircle(
                                               size: 20,
                                               duration: Durations.extralong4,
-                                              color: Constant.onPrimaryColor)
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary)
                                       ],
                                     ),
                                   )),
@@ -421,10 +447,14 @@ class _JobDetailTabState extends State<JobDetailTab> {
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(12)),
-                                        side: const BorderSide(
-                                            color: Constant.primaryColor,
+                                        side: BorderSide(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
                                             width: 2),
-                                        foregroundColor: Constant.primaryColor),
+                                        foregroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -450,10 +480,10 @@ class _JobDetailTabState extends State<JobDetailTab> {
                           margin: const EdgeInsets.only(bottom: 16),
                           child: Text(
                             projectDetails.title,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w600,
-                                color: Constant.primaryColor),
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                         ),
                         Container(
@@ -470,8 +500,10 @@ class _JobDetailTabState extends State<JobDetailTab> {
                               ),
                               Text(
                                 'Project scope: ${Constant.timelineOptions[projectDetails.projectScopeFlag]}',
-                                style: const TextStyle(
-                                  color: Constant.textColor,
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground,
                                   fontSize: 16,
                                 ),
                               ),
@@ -492,26 +524,34 @@ class _JobDetailTabState extends State<JobDetailTab> {
                               ),
                               Text(
                                 'Student required: ${projectDetails.numberOfStudents}',
-                                style: const TextStyle(
-                                    color: Constant.textColor, fontSize: 16),
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground,
+                                    fontSize: 16),
                               ),
                             ],
                           ),
                         ),
                         Container(
                           margin: const EdgeInsets.only(bottom: 8),
-                          child: const Text(
+                          child: Text(
                             "Description: ",
                             style: TextStyle(
-                                color: Constant.textColor, fontSize: 16),
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                                fontSize: 16),
                           ),
                         ),
                         Container(
                           margin: const EdgeInsets.only(bottom: 32),
                           child: Text(projectDetails.description,
                               textAlign: TextAlign.justify,
-                              style: const TextStyle(
-                                  color: Constant.textColor, fontSize: 16)),
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground,
+                                  fontSize: 16)),
                         ),
                         Column(
                           children: [
@@ -531,8 +571,11 @@ class _JobDetailTabState extends State<JobDetailTab> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12)),
-                                      backgroundColor: Constant.primaryColor,
-                                      foregroundColor: Constant.onPrimaryColor),
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.primary,
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -556,10 +599,14 @@ class _JobDetailTabState extends State<JobDetailTab> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12)),
-                                      side: const BorderSide(
-                                          color: Constant.primaryColor,
+                                      side: BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                           width: 2),
-                                      foregroundColor: Constant.primaryColor),
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [

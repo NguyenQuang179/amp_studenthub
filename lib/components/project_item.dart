@@ -1,11 +1,8 @@
 import 'package:amp_studenthub/configs/constant.dart';
-import 'package:amp_studenthub/providers/user_provider.dart';
-import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class ProjectItem extends StatefulWidget {
   final int id;
@@ -112,9 +109,11 @@ class _ProjectItemState extends State<ProjectItem> {
                                     margin: const EdgeInsets.only(right: 8),
                                     child: const FaIcon(FontAwesomeIcons.clock,
                                         size: 16)),
-                                Text(
-                                  jobDuration,
-                                  style: const TextStyle(fontSize: 16),
+                                Expanded(
+                                  child: Text(
+                                    jobDuration,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
                                 ),
                                 Container(
                                     width: 20,
@@ -123,9 +122,12 @@ class _ProjectItemState extends State<ProjectItem> {
                                         left: 24, right: 8),
                                     child: const FaIcon(FontAwesomeIcons.user,
                                         size: 16)),
-                                Text(
-                                  '$jobStudentNeeded',
-                                  style: const TextStyle(fontSize: 16),
+                                Expanded(
+                                  child: Text(
+                                    '$jobStudentNeeded',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
                                 )
                               ]),
                         ),
@@ -149,7 +151,8 @@ class _ProjectItemState extends State<ProjectItem> {
                         splashColor: Theme.of(context).colorScheme.primary,
                         style: IconButton.styleFrom(
                             padding: const EdgeInsets.all(12),
-                            foregroundColor: Constant.textColor,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onBackground,
                             backgroundColor: isSaved
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).colorScheme.background,

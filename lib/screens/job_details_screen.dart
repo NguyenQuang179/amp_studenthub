@@ -1,4 +1,3 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:amp_studenthub/screens/job_details_tabs/detail_tab.dart';
 import 'package:amp_studenthub/screens/job_details_tabs/hired_tab.dart';
@@ -39,24 +38,25 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
           leading: BackButton(
             onPressed: () => GoRouter.of(context).pop(),
           ),
-          backgroundColor: Constant.backgroundColor,
+          backgroundColor: Theme.of(context).colorScheme.background,
           toolbarHeight: 64,
-          title: const Text(
+          title: Text(
             'StudentHub',
             style: TextStyle(
-                color: Constant.primaryColor, fontWeight: FontWeight.bold),
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold),
           ),
           actions: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: CircleAvatar(
                 radius: 24,
-                backgroundColor: Constant.primaryColor,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 child: IconButton(
-                  icon: const FaIcon(
+                  icon: FaIcon(
                     FontAwesomeIcons.user,
                     size: 20,
-                    color: Constant.onPrimaryColor,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                   onPressed: () {
                     context.pushNamed(RouteConstants.switchAccount);
@@ -73,23 +73,10 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
           Expanded(
               // Layout Container Expand All Height
               child: Column(children: [
-            // Title
-            // Container(
-            //     width: double.infinity,
-            //     margin:
-            //         const EdgeInsets.only(bottom: 16, left: 24, right: 24),
-            //     child: const Text(
-            //       "Project Details",
-            //       style: TextStyle(
-            //           overflow: TextOverflow.ellipsis,
-            //           fontSize: 24,
-            //           fontWeight: FontWeight.w600,
-            //           color: Constant.primaryColor),
-            //     )),
             Container(
               width: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
-                  color: Constant.backgroundColor,
+                  color: Theme.of(context).colorScheme.background,
                   borderRadius: BorderRadius.circular(8)),
               child: Column(
                 children: [
@@ -97,9 +84,10 @@ class _JobDetailsScreenState extends State<JobDetailsScreen>
                     padding: const EdgeInsets.all(4),
                     child: TabBar(
                       controller: tabController,
-                      indicatorColor: Constant.primaryColor,
-                      labelColor: Constant.primaryColor,
-                      unselectedLabelColor: Constant.textColor,
+                      indicatorColor: Theme.of(context).colorScheme.primary,
+                      labelColor: Theme.of(context).colorScheme.primary,
+                      unselectedLabelColor:
+                          Theme.of(context).colorScheme.onBackground,
                       tabs: const [
                         Tab(
                           text: "Detail",

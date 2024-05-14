@@ -92,11 +92,11 @@ class _StudentProposalDetailsState extends State<StudentProposalDetails> {
             child: isLoading
                 ? SizedBox(
                     height: MediaQuery.of(context).size.height * 0.75,
-                    child: const Center(
+                    child: Center(
                         child: SpinKitThreeBounce(
                             size: 32,
                             duration: Durations.extralong4,
-                            color: Constant.primaryColor)),
+                            color: Theme.of(context).colorScheme.primary)),
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,12 +104,12 @@ class _StudentProposalDetailsState extends State<StudentProposalDetails> {
                         Container(
                             width: double.infinity,
                             margin: const EdgeInsets.only(bottom: 24),
-                            child: const Text(
+                            child: Text(
                               "Proposal Details: ",
                               style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.w600,
-                                  color: Constant.primaryColor),
+                                  color: Theme.of(context).colorScheme.primary),
                             )),
                         Container(
                           alignment: AlignmentDirectional.center,
@@ -135,8 +135,10 @@ class _StudentProposalDetailsState extends State<StudentProposalDetails> {
                                       proposalDetails
                                               ?.student?.user['fullname'] ??
                                           "",
-                                      style: const TextStyle(
-                                          color: Constant.primaryColor,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                           fontSize: 24,
                                           fontWeight: FontWeight.w600),
                                     ),
@@ -261,12 +263,15 @@ class _StudentProposalDetailsState extends State<StudentProposalDetails> {
                                                                           8))),
                                                   label: Text(
                                                     skillset['name'],
-                                                    style: const TextStyle(
-                                                        color: Constant
-                                                            .onPrimaryColor),
+                                                    style: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimary),
                                                   ),
                                                   backgroundColor:
-                                                      Constant.primaryColor,
+                                                      Theme.of(context)
+                                                          .colorScheme
+                                                          .primary,
                                                 ),
                                               )
                                             : Container()),

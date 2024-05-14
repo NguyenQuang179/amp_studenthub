@@ -5,6 +5,8 @@ import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/student_profile.dart';
 import 'package:amp_studenthub/network/dio.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
+import 'package:amp_studenthub/routes/routes_constants.dart';
+import 'package:amp_studenthub/utilities/local_storage.dart';
 import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:provider/provider.dart';
 
@@ -221,6 +224,25 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
         });
         await dio.put(updateTranscriptEndpoint, data: transcriptFormData);
       }
+
+      // Use Provider to set the access token
+      Provider.of<UserProvider>(context, listen: false)
+          .updateToken(accessToken);
+      // Get and store user data to provider
+      const updateUserInfoEndpoint = '${Constant.baseURL}/api/auth/me';
+      final Response userResponse = await dio.get(
+        updateUserInfoEndpoint,
+        options: Options(headers: {
+          'Authorization': 'Bearer $accessToken',
+        }),
+      );
+
+      final Map<String, dynamic> userResponseData =
+          userResponse.data as Map<String, dynamic>;
+      final dynamic userData = userResponseData['result'];
+
+      Provider.of<UserProvider>(context, listen: false)
+          .updateUserInfo(userData);
 
       Fluttertoast.showToast(
           msg: "Update Student Profile Successfully",
