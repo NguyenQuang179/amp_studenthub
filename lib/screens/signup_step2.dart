@@ -170,11 +170,10 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                           borderSide: BorderSide(
                               color: Theme.of(context).colorScheme.secondary),
                         ),
-                        fillColor: Theme.of(context).colorScheme.tertiary,
                         filled: true,
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
-                        hintText: "new password",
+                        hintText: "Password",
                         errorText: _passwordErrorText, // Set errorText here
                       ),
                     ),
