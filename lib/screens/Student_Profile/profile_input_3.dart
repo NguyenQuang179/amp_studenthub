@@ -131,24 +131,25 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         toolbarHeight: 64,
-        title: const Text(
+        title: Text(
           'StudentHub',
           style: TextStyle(
-              color: Constant.primaryColor, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: CircleAvatar(
               radius: 24,
-              backgroundColor: Constant.primaryColor,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               child: IconButton(
-                icon: const FaIcon(
+                icon: FaIcon(
                   FontAwesomeIcons.user,
                   size: 20,
-                  color: Constant.onPrimaryColor,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 onPressed: () {},
               ),
@@ -402,8 +403,10 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
                           style: TextButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
-                              backgroundColor: Constant.primaryColor,
-                              foregroundColor: Constant.onPrimaryColor),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.onPrimary),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -417,10 +420,11 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
                                 ),
                               ),
                               if (isSubmitting)
-                                const SpinKitCircle(
+                                SpinKitCircle(
                                     size: 20,
                                     duration: Durations.extralong4,
-                                    color: Constant.onPrimaryColor)
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary)
                             ],
                           ),
                         )),
@@ -435,9 +439,11 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
                           style: TextButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
-                              side: const BorderSide(
-                                  color: Constant.primaryColor, width: 2),
-                              foregroundColor: Constant.primaryColor),
+                              side: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 2),
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.primary),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -457,7 +463,7 @@ class _StudentProfileInput3State extends State<StudentProfileInput3> {
                         "You can update this in your student profile later",
                         style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[600]!,
+                            color: Theme.of(context).colorScheme.tertiary,
                             fontStyle: FontStyle.italic),
                       ),
                     )

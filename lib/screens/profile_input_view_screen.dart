@@ -85,12 +85,13 @@ class _ProfileInputViewState extends State<ProfileInputView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         toolbarHeight: 56,
-        title: const Text(
+        title: Text(
           'StudentHub',
           style: TextStyle(
-              color: Constant.primaryColor, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold),
         ),
         actions: [
           Padding(

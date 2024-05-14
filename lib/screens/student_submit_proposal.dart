@@ -106,12 +106,13 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         toolbarHeight: 64,
-        title: const Text(
+        title: Text(
           'StudentHub',
           style: TextStyle(
-              color: Constant.primaryColor, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
@@ -124,12 +125,12 @@ class _StudentSubmitProposalState extends State<StudentSubmitProposal> {
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: CircleAvatar(
               radius: 24,
-              backgroundColor: Constant.primaryColor,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               child: IconButton(
-                icon: const FaIcon(
+                icon: FaIcon(
                   FontAwesomeIcons.user,
                   size: 20,
-                  color: Constant.onPrimaryColor,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 onPressed: () {},
               ),

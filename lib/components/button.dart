@@ -1,4 +1,3 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
@@ -14,14 +13,15 @@ class Button extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            color: Constant.onPrimaryColor,
+            color: Theme.of(context).colorScheme.onPrimary,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Constant.primaryColor, width: 2),
-            boxShadow: const [
+            border: Border.all(
+                color: Theme.of(context).colorScheme.primary, width: 2),
+            boxShadow: [
               BoxShadow(
-                color: Constant.textColor,
+                color: Theme.of(context).colorScheme.onBackground,
                 blurRadius: 8,
-                offset: Offset(0, 5),
+                offset: const Offset(0, 5),
               ),
             ],
           ),
@@ -30,8 +30,8 @@ class Button extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: const TextStyle(
-                color: Constant.primaryColor,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),

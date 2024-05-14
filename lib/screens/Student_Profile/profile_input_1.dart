@@ -192,8 +192,8 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
       showDialog<Map<String, dynamic>>(
           context: context,
           builder: (context) => AlertDialog(
-                backgroundColor: Constant.backgroundColor,
-                surfaceTintColor: Constant.backgroundColor,
+                backgroundColor: Theme.of(context).colorScheme.background,
+                surfaceTintColor: Theme.of(context).colorScheme.background,
                 insetPadding: const EdgeInsets.symmetric(horizontal: 8),
                 title: Text(selectedLanguageIndex is int
                     ? "Edit Language"
@@ -254,8 +254,8 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
       showDialog<Map<String, dynamic>>(
           context: context,
           builder: (context) => AlertDialog(
-                backgroundColor: Constant.backgroundColor,
-                surfaceTintColor: Constant.backgroundColor,
+                backgroundColor: Theme.of(context).colorScheme.background,
+                surfaceTintColor: Theme.of(context).colorScheme.background,
                 insetPadding: const EdgeInsets.symmetric(horizontal: 8),
                 title: Text(selectedEducationIndex is int
                     ? "Edit Education"
@@ -346,24 +346,25 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         toolbarHeight: 64,
-        title: const Text(
+        title: Text(
           'StudentHub',
           style: TextStyle(
-              color: Constant.primaryColor, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: CircleAvatar(
               radius: 24,
-              backgroundColor: Constant.primaryColor,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               child: IconButton(
-                icon: const FaIcon(
+                icon: FaIcon(
                   FontAwesomeIcons.user,
                   size: 20,
-                  color: Constant.onPrimaryColor,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 onPressed: () {},
               ),
@@ -375,11 +376,11 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: isLoading
-            ? const Center(
+            ? Center(
                 child: SpinKitThreeBounce(
                     size: 32,
                     duration: Durations.extralong4,
-                    color: Constant.primaryColor))
+                    color: Theme.of(context).colorScheme.primary))
             : Form(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -423,16 +424,19 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                             const EdgeInsets.only(top: 8, left: 8, right: 8),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                                color: Constant.primaryColor, width: 1)),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 1)),
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                                color: Constant.primaryColor, width: 2)),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 2)),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                                color: Constant.secondaryColor, width: 1)),
+                            borderSide: BorderSide(
+                                color: Theme.of(context).colorScheme.secondary,
+                                width: 1)),
                         labelStyle: TextStyle(color: Colors.grey[600]),
                       ),
                       hint: const Text(
@@ -511,21 +515,24 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                       hintStyle:
                           TextStyle(fontSize: 16, color: Colors.grey[600]!),
                       selectionType: SelectionType.multi,
-                      chipConfig: const ChipConfig(
+                      chipConfig: ChipConfig(
                           wrapType: WrapType.scroll,
                           spacing: 8,
                           runSpacing: 4,
                           radius: 8,
-                          backgroundColor: Constant.primaryColor,
-                          labelColor: Constant.onPrimaryColor,
-                          deleteIconColor: Constant.onPrimaryColor),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          labelColor: Theme.of(context).colorScheme.onPrimary,
+                          deleteIconColor:
+                              Theme.of(context).colorScheme.onPrimary),
                       dropdownHeight: 300,
                       optionTextStyle: const TextStyle(fontSize: 16),
                       selectedOptionBackgroundColor: Colors.grey.shade200,
-                      selectedOptionTextColor: Constant.primaryColor,
-                      selectedOptionIcon: const Icon(
+                      selectedOptionTextColor:
+                          Theme.of(context).colorScheme.primary,
+                      selectedOptionIcon: Icon(
                         Icons.check_circle,
-                        color: Constant.primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     Container(
@@ -544,9 +551,12 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
-                                side: const BorderSide(
-                                    color: Constant.primaryColor, width: 1),
-                                foregroundColor: Constant.primaryColor),
+                                side: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    width: 1),
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.primary),
                             onPressed: () async {
                               final newLanguageObj =
                                   await openLanguageDialog(null);
@@ -674,9 +684,12 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
-                                side: const BorderSide(
-                                    color: Constant.primaryColor, width: 1),
-                                foregroundColor: Constant.primaryColor),
+                                side: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    width: 1),
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.primary),
                             onPressed: () async {
                               final newEducationObj =
                                   await openEducationDialog(null);
@@ -813,8 +826,10 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                           style: TextButton.styleFrom(
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12)),
-                              backgroundColor: Constant.primaryColor,
-                              foregroundColor: Constant.onPrimaryColor),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.onPrimary),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -828,10 +843,11 @@ class _StudentProfileInput1State extends State<StudentProfileInput1> {
                                 ),
                               ),
                               if (isSubmitting)
-                                const SpinKitCircle(
+                                SpinKitCircle(
                                     size: 20,
                                     duration: Durations.extralong4,
-                                    color: Constant.onPrimaryColor)
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary)
                             ],
                           ),
                         )),

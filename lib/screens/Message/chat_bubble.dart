@@ -1,4 +1,3 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:flutter/material.dart';
 
 class ChatBubble extends StatelessWidget {
@@ -6,7 +5,7 @@ class ChatBubble extends StatelessWidget {
   final String message;
   final String username;
   final String timeCreated;
-  ChatBubble(
+  const ChatBubble(
       {super.key,
       required this.isCurrentUser,
       required this.message,
@@ -23,34 +22,35 @@ class ChatBubble extends StatelessWidget {
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.8,
-          margin: EdgeInsets.only(top: 10, left: 25, right: 25, bottom: 5),
+          margin:
+              const EdgeInsets.only(top: 10, left: 25, right: 25, bottom: 5),
           child: Row(
             mainAxisAlignment:
                 isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
               !isCurrentUser
-                  ? Text("")
+                  ? const Text("")
                   : Text(
                       timeCreated,
                       style: TextStyle(
-                        color: Constant.textColor,
+                        color: Theme.of(context).colorScheme.onBackground,
                         fontSize: 12,
                       ),
                     ),
               Text(
-                " " + username + " ",
+                " $username ",
                 textAlign: isCurrentUser ? TextAlign.right : TextAlign.left,
                 style: TextStyle(
-                  color: Constant.textColor,
+                  color: Theme.of(context).colorScheme.onBackground,
                   fontSize: 12,
                 ),
               ),
               isCurrentUser
-                  ? Text("")
+                  ? const Text("")
                   : Text(
                       timeCreated,
                       style: TextStyle(
-                        color: Constant.textColor,
+                        color: Theme.of(context).colorScheme.onBackground,
                         fontSize: 12,
                       ),
                     ),
@@ -61,16 +61,16 @@ class ChatBubble extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.8,
             decoration: BoxDecoration(
               color: isCurrentUser
-                  ? Constant.primaryColor
-                  : Constant.secondaryColor,
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Theme.of(context).colorScheme.secondaryContainer,
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
-            padding: EdgeInsets.all(16),
-            margin: EdgeInsets.symmetric(horizontal: 25),
+            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.symmetric(horizontal: 25),
             child: Text(
               message,
               style: TextStyle(
-                color: Constant.onPrimaryColor,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
             )),
       ],

@@ -109,7 +109,7 @@ class _SignupStepTowState extends State<SignupStepTwo> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         appBar: const AuthAppBar(),
         body: Column(children: [
           Expanded(
@@ -119,8 +119,8 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                   margin: const EdgeInsets.only(bottom: 24),
                   child: Text(
                     AppLocalizations.of(context)!.signUpTitle,
-                    style: const TextStyle(
-                        color: Constant.secondaryColor,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
                         fontWeight: FontWeight.w800,
                         fontSize: 32),
                   ),
@@ -162,14 +162,15 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                         });
                       },
                       decoration: InputDecoration(
-                        enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Constant.primaryColor),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary),
                         ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Constant.secondaryColor),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary),
                         ),
-                        fillColor: Constant.backgroundWithOpacity,
+                        fillColor: Theme.of(context).colorScheme.tertiary,
                         filled: true,
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
@@ -193,8 +194,8 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                     ),
                     Text(
                       AppLocalizations.of(context)!.iHaveRead,
-                      style: const TextStyle(
-                        color: Constant.secondaryColor,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                     ),
                     GestureDetector(
@@ -223,7 +224,7 @@ class _SignupStepTowState extends State<SignupStepTwo> {
               child: Container(
                 width: 500,
                 height: MediaQuery.of(context).size.height * 0.5,
-                color: Constant.primaryColor,
+                color: Theme.of(context).colorScheme.primary,
                 child: Center(
                     child: Column(
                   children: [
@@ -242,8 +243,8 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                     //not a member? register
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Text(AppLocalizations.of(context)!.lookingProject,
-                          style:
-                              const TextStyle(color: Constant.onPrimaryColor)),
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary)),
                       const SizedBox(width: 20),
                       TextButton(
                         onPressed: () {
@@ -254,9 +255,11 @@ class _SignupStepTowState extends State<SignupStepTwo> {
                         style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
-                            side: const BorderSide(
-                                color: Constant.onPrimaryColor, width: 2),
-                            foregroundColor: Constant.onPrimaryColor),
+                            side: BorderSide(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                width: 2),
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onPrimary),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

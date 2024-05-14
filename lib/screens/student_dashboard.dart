@@ -128,12 +128,12 @@ class _StudentDashboardState extends State<StudentDashboard>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Your Projects',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 24,
-                        color: Constant.primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     const SizedBox(
@@ -141,7 +141,7 @@ class _StudentDashboardState extends State<StudentDashboard>
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: Constant.backgroundColor,
+                        color: Theme.of(context).colorScheme.background,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(children: [
@@ -154,9 +154,13 @@ class _StudentDashboardState extends State<StudentDashboard>
                                   (Set<MaterialState> states) {
                                     if (states
                                         .contains(MaterialState.selected)) {
-                                      return Constant.primaryColor;
+                                      return Theme.of(context)
+                                          .colorScheme
+                                          .primary;
                                     }
-                                    return Constant.backgroundColor;
+                                    return Theme.of(context)
+                                        .colorScheme
+                                        .background;
                                   },
                                 ),
                                 foregroundColor:
@@ -164,9 +168,13 @@ class _StudentDashboardState extends State<StudentDashboard>
                                   (Set<MaterialState> states) {
                                     if (states
                                         .contains(MaterialState.selected)) {
-                                      return Constant.onPrimaryColor;
+                                      return Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary;
                                     }
-                                    return Constant.textColor;
+                                    return Theme.of(context)
+                                        .colorScheme
+                                        .onBackground;
                                   },
                                 ),
                                 shape: MaterialStateProperty.all(
@@ -285,10 +293,10 @@ class _AllProjectContainerState extends State<AllProjectContainer>
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 24),
-                        child: const Text(
+                        child: Text(
                           "Your Proposal list is empty",
                           style: TextStyle(
-                            color: Constant.secondaryColor,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.w600,
                             fontSize: 20,
                           ),
@@ -378,10 +386,10 @@ class _AllProjectContainerState extends State<AllProjectContainer>
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 24),
-                        child: const Text(
+                        child: Text(
                           "Your Proposal list is empty",
                           style: TextStyle(
-                            color: Constant.secondaryColor,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.w600,
                             fontSize: 20,
                           ),
@@ -477,10 +485,10 @@ class _ProjectContainerState extends State<ProjectContainer> {
           ),
           Container(
             margin: const EdgeInsets.only(top: 24),
-            child: const Text(
+            child: Text(
               "Your Project list is empty",
               style: TextStyle(
-                color: Constant.secondaryColor,
+                color: Theme.of(context).colorScheme.secondary,
                 fontWeight: FontWeight.w600,
                 fontSize: 20,
               ),

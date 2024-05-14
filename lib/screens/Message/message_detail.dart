@@ -314,14 +314,15 @@ class _MessageDetailState extends State<MessageDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Constant.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         toolbarHeight: 60,
         title: Text(
           receiverName ?? "",
-          style: const TextStyle(
-              color: Constant.primaryColor, fontWeight: FontWeight.w600),
+          style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.w600),
         ),
         actions: [
           Padding(
@@ -346,13 +347,15 @@ class _MessageDetailState extends State<MessageDetail> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      const Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 12),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12),
                                         child: Text("Schedule An Interview",
                                             style: TextStyle(
                                                 fontSize: 20,
-                                                color: Constant.primaryColor,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.center),
                                       ),
@@ -360,12 +363,14 @@ class _MessageDetailState extends State<MessageDetail> {
                                       Container(
                                         margin: const EdgeInsets.only(
                                             top: 16, bottom: 8),
-                                        child: const Text(
+                                        child: Text(
                                           "Title:",
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
-                                              color: Constant.textColor),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground),
                                         ),
                                       ),
                                       Container(
@@ -375,13 +380,15 @@ class _MessageDetailState extends State<MessageDetail> {
                                             controller:
                                                 interviewTitleController,
                                             decoration: InputDecoration(
-                                                contentPadding: const EdgeInsets.only(
-                                                    top: 8,
-                                                    left: 16,
-                                                    right: 16),
+                                                contentPadding:
+                                                    const EdgeInsets.only(
+                                                        top: 8,
+                                                        left: 16,
+                                                        right: 16),
                                                 filled: true,
-                                                fillColor:
-                                                    Constant.onPrimaryColor,
+                                                fillColor: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
                                                 hintText:
                                                     "Enter interview title...",
                                                 labelStyle: TextStyle(
@@ -390,28 +397,28 @@ class _MessageDetailState extends State<MessageDetail> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             12),
-                                                    borderSide: const BorderSide(
-                                                        color: Constant
-                                                            .secondaryColor,
+                                                    borderSide: BorderSide(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .secondary,
                                                         width: 1)),
                                                 focusedBorder: OutlineInputBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(
-                                                            12),
-                                                    borderSide: const BorderSide(
-                                                        color: Constant.secondaryColor,
-                                                        width: 1)),
-                                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Constant.secondaryColor, width: 1)))),
+                                                        BorderRadius.circular(12),
+                                                    borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)),
+                                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)))),
                                       ),
                                       Container(
                                         margin:
                                             const EdgeInsets.only(bottom: 8),
-                                        child: const Text(
+                                        child: Text(
                                           "Start time:",
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
-                                              color: Constant.textColor),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground),
                                         ),
                                       ),
                                       Container(
@@ -440,8 +447,9 @@ class _MessageDetailState extends State<MessageDetail> {
                                                         left: 16,
                                                         right: 16),
                                                 filled: true,
-                                                fillColor:
-                                                    Constant.onPrimaryColor,
+                                                fillColor: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
                                                 hintText: "DD/MM/YYYY HH:MM",
                                                 labelStyle: TextStyle(
                                                     color: Colors.grey[600]),
@@ -449,28 +457,29 @@ class _MessageDetailState extends State<MessageDetail> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             12),
-                                                    borderSide: const BorderSide(
-                                                        color: Constant
-                                                            .secondaryColor,
+                                                    borderSide: BorderSide(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .secondary,
                                                         width: 1)),
                                                 focusedBorder: OutlineInputBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             12),
-                                                    borderSide: const BorderSide(
-                                                        color: Constant.secondaryColor,
-                                                        width: 1)),
-                                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Constant.secondaryColor, width: 1)))),
+                                                    borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)),
+                                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)))),
                                       ),
                                       Container(
                                         margin:
                                             const EdgeInsets.only(bottom: 8),
-                                        child: const Text(
+                                        child: Text(
                                           "End time:",
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600,
-                                              color: Constant.textColor),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground),
                                         ),
                                       ),
                                       Container(
@@ -499,8 +508,9 @@ class _MessageDetailState extends State<MessageDetail> {
                                                         left: 16,
                                                         right: 16),
                                                 filled: true,
-                                                fillColor:
-                                                    Constant.onPrimaryColor,
+                                                fillColor: Theme.of(context)
+                                                    .colorScheme
+                                                    .onPrimary,
                                                 hintText: "DD/MM/YYYY HH:MM",
                                                 labelStyle: TextStyle(
                                                     color: Colors.grey[600]),
@@ -508,18 +518,17 @@ class _MessageDetailState extends State<MessageDetail> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             12),
-                                                    borderSide: const BorderSide(
-                                                        color: Constant
-                                                            .secondaryColor,
+                                                    borderSide: BorderSide(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .secondary,
                                                         width: 1)),
                                                 focusedBorder: OutlineInputBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             12),
-                                                    borderSide: const BorderSide(
-                                                        color: Constant.secondaryColor,
-                                                        width: 1)),
-                                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: Constant.secondaryColor, width: 1)))),
+                                                    borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)),
+                                                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1)))),
                                       ),
                                       Text(
                                         "Duration: 60 minutes",
@@ -535,12 +544,17 @@ class _MessageDetailState extends State<MessageDetail> {
                                                 style: ButtonStyle(
                                                     backgroundColor:
                                                         MaterialStateProperty
-                                                            .all<Color>(Constant
-                                                                .onPrimaryColor),
+                                                            .all<Color>(
+                                                                Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .onPrimary),
                                                     foregroundColor:
                                                         MaterialStateProperty
-                                                            .all<Color>(Constant
-                                                                .primaryColor)),
+                                                            .all<Color>(Theme
+                                                                    .of(context)
+                                                                .colorScheme
+                                                                .primary)),
                                                 onPressed: () {
                                                   interviewTitleController
                                                       .clear();
@@ -559,12 +573,17 @@ class _MessageDetailState extends State<MessageDetail> {
                                                 style: ButtonStyle(
                                                     backgroundColor:
                                                         MaterialStateProperty
-                                                            .all<Color>(Constant
-                                                                .primaryColor),
+                                                            .all<Color>(
+                                                                Theme.of(
+                                                                        context)
+                                                                    .colorScheme
+                                                                    .primary),
                                                     foregroundColor:
                                                         MaterialStateProperty
-                                                            .all<Color>(Constant
-                                                                .onPrimaryColor)),
+                                                            .all<Color>(Theme
+                                                                    .of(context)
+                                                                .colorScheme
+                                                                .onPrimary)),
                                                 onPressed: () {
                                                   scheduleInterview(
                                                       context,

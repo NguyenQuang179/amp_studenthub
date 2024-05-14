@@ -12,24 +12,25 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Constant.backgroundColor,
+          backgroundColor: Theme.of(context).colorScheme.background,
           toolbarHeight: 64,
-          title: const Text(
+          title: Text(
             'StudentHub',
             style: TextStyle(
-                color: Constant.primaryColor, fontWeight: FontWeight.bold),
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold),
           ),
           actions: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: CircleAvatar(
                 radius: 24,
-                backgroundColor: Constant.primaryColor,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 child: IconButton(
-                  icon: const FaIcon(
+                  icon: FaIcon(
                     FontAwesomeIcons.user,
                     size: 20,
-                    color: Constant.onPrimaryColor,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                   onPressed: () {},
                 ),
@@ -46,17 +47,17 @@ class WelcomeScreen extends StatelessWidget {
               Expanded(
                 child: Container(
                   alignment: Alignment.bottomCenter,
-                  child: const Text(
+                  child: Text(
                       "Easy way to recruit student for your real-world projects ",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          color: Constant.primaryColor,
+                          color: Theme.of(context).colorScheme.primary,
                           fontSize: 24,
                           fontWeight: FontWeight.w600)),
                 ),
               ),
               Container(
-                color: Constant.backgroundColor,
+                color: Theme.of(context).colorScheme.background,
                 margin: const EdgeInsets.symmetric(vertical: 72),
                 child: SvgPicture.asset(
                   'assets/welcome.svg',
@@ -77,8 +78,10 @@ class WelcomeScreen extends StatelessWidget {
                         style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12)),
-                            backgroundColor: Constant.primaryColor,
-                            foregroundColor: Constant.onPrimaryColor),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            foregroundColor:
+                                Theme.of(context).colorScheme.onPrimary),
                         child: const Text(
                           'Get Started!',
                           style: TextStyle(

@@ -230,26 +230,26 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
 
   getNotificationIcon(int typeNotifyFlag) {
     if (typeNotifyFlag == NotificationType.submitted) {
-      return const FaIcon(FontAwesomeIcons.bell,
-          color: Constant.onPrimaryColor);
+      return FaIcon(FontAwesomeIcons.bell,
+          color: Theme.of(context).colorScheme.onPrimary);
     }
     if (typeNotifyFlag == NotificationType.interview) {
-      return const FaIcon(FontAwesomeIcons.calendar,
-          color: Constant.onPrimaryColor);
+      return FaIcon(FontAwesomeIcons.calendar,
+          color: Theme.of(context).colorScheme.onPrimary);
     }
     if (typeNotifyFlag == NotificationType.offer) {
-      return const FaIcon(FontAwesomeIcons.clipboard,
-          color: Constant.onPrimaryColor);
+      return FaIcon(FontAwesomeIcons.clipboard,
+          color: Theme.of(context).colorScheme.onPrimary);
     }
     if (typeNotifyFlag == NotificationType.message) {
-      return const FaIcon(
+      return FaIcon(
         FontAwesomeIcons.envelope,
-        color: Constant.onPrimaryColor,
+        color: Theme.of(context).colorScheme.onPrimary,
       );
     }
     if (typeNotifyFlag == NotificationType.hired) {
-      return const FaIcon(FontAwesomeIcons.check,
-          color: Constant.onPrimaryColor);
+      return FaIcon(FontAwesomeIcons.check,
+          color: Theme.of(context).colorScheme.onPrimary);
     }
   }
 

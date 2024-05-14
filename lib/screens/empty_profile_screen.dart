@@ -1,8 +1,6 @@
-import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -42,10 +40,10 @@ class _EmptyProfileScreenState extends State<EmptyProfileScreen> {
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 24),
-                        child: const Text(
+                        child: Text(
                           'Not have corresponding profile\nPlease create your profile first',
                           style: TextStyle(
-                            color: Constant.secondaryColor,
+                            color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.w600,
                             fontSize: 20,
                           ),
@@ -70,8 +68,10 @@ class _EmptyProfileScreenState extends State<EmptyProfileScreen> {
                             style: TextButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
-                                backgroundColor: Constant.primaryColor,
-                                foregroundColor: Constant.onPrimaryColor),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.onPrimary),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

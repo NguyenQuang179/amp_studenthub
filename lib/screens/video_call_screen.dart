@@ -19,7 +19,7 @@ class VideoCallScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: Constant.backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: ZegoUIKitPrebuiltVideoConference(
           appID: Constant.appId,

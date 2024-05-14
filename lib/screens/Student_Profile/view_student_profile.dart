@@ -5,8 +5,6 @@ import 'package:amp_studenthub/configs/constant.dart';
 import 'package:amp_studenthub/models/student_profile.dart';
 import 'package:amp_studenthub/network/dio.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
-import 'package:amp_studenthub/routes/routes_constants.dart';
-import 'package:amp_studenthub/utilities/local_storage.dart';
 import 'package:amp_studenthub/widgets/auth_app_bar.dart';
 import 'package:dio/dio.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -16,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 import 'package:provider/provider.dart';
 
@@ -284,8 +281,8 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
       showDialog<Map<String, dynamic>>(
           context: context,
           builder: (context) => AlertDialog(
-                backgroundColor: Constant.backgroundColor,
-                surfaceTintColor: Constant.backgroundColor,
+                backgroundColor: Theme.of(context).colorScheme.background,
+                surfaceTintColor: Theme.of(context).colorScheme.background,
                 insetPadding: const EdgeInsets.symmetric(horizontal: 8),
                 title: Text(selectedLanguageIndex is int
                     ? "Edit Language"
@@ -346,8 +343,8 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
       showDialog<Map<String, dynamic>>(
           context: context,
           builder: (context) => AlertDialog(
-                backgroundColor: Constant.backgroundColor,
-                surfaceTintColor: Constant.backgroundColor,
+                backgroundColor: Theme.of(context).colorScheme.background,
+                surfaceTintColor: Theme.of(context).colorScheme.background,
                 insetPadding: const EdgeInsets.symmetric(horizontal: 8),
                 title: Text(selectedEducationIndex is int
                     ? "Edit Education"
@@ -417,8 +414,8 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
       showDialog<Map<String, dynamic>>(
           context: context,
           builder: (context) => AlertDialog(
-                backgroundColor: Constant.backgroundColor,
-                surfaceTintColor: Constant.backgroundColor,
+                backgroundColor: Theme.of(context).colorScheme.background,
+                surfaceTintColor: Theme.of(context).colorScheme.background,
                 insetPadding: const EdgeInsets.symmetric(horizontal: 8),
                 title: Text(selectedExperienceIndex is int
                     ? "Edit Experience:"
@@ -463,24 +460,29 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                           options: skillsetList,
                           disabledOptions: skillSetsController.selectedOptions,
                           hint: "Select skillset",
-                          hintStyle:
-                              TextStyle(fontSize: 16, color: Colors.grey[600]!),
+                          hintStyle: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).colorScheme.tertiary),
                           selectionType: SelectionType.multi,
-                          chipConfig: const ChipConfig(
+                          chipConfig: ChipConfig(
                               wrapType: WrapType.scroll,
                               spacing: 8,
                               runSpacing: 4,
                               radius: 8,
-                              backgroundColor: Constant.primaryColor,
-                              labelColor: Constant.onPrimaryColor,
-                              deleteIconColor: Constant.onPrimaryColor),
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              labelColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                              deleteIconColor:
+                                  Theme.of(context).colorScheme.onPrimary),
                           dropdownHeight: 160,
                           optionTextStyle: const TextStyle(fontSize: 16),
                           selectedOptionBackgroundColor: Colors.grey.shade200,
-                          selectedOptionTextColor: Constant.primaryColor,
-                          selectedOptionIcon: const Icon(
+                          selectedOptionTextColor:
+                              Theme.of(context).colorScheme.primary,
+                          selectedOptionIcon: Icon(
                             Icons.check_circle,
-                            color: Constant.primaryColor,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ],
@@ -608,22 +610,22 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
             child: isLoading
                 ? SizedBox(
                     height: MediaQuery.of(context).size.height * 0.75,
-                    child: const Center(
+                    child: Center(
                         child: SpinKitThreeBounce(
                             size: 32,
                             duration: Durations.extralong4,
-                            color: Constant.primaryColor)),
+                            color: Theme.of(context).colorScheme.primary)),
                   )
                 : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        const Center(
+                        Center(
                             child: Text(
                           "Student Profile",
                           style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w600,
-                              color: Constant.primaryColor),
+                              color: Theme.of(context).colorScheme.primary),
                         )),
                         Container(
                           margin: const EdgeInsets.only(top: 16, bottom: 8),
@@ -651,17 +653,24 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                 top: 8, left: 8, right: 8),
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                    color: Constant.primaryColor, width: 1)),
+                                borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    width: 1)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                    color: Constant.primaryColor, width: 2)),
+                                borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    width: 2)),
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                    color: Constant.secondaryColor, width: 1)),
-                            labelStyle: TextStyle(color: Colors.grey[600]),
+                                borderSide: BorderSide(
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    width: 1)),
+                            labelStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.tertiary),
                           ),
                           hint: const Text(
                             'Select Your Techstack',
@@ -711,9 +720,9 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 16, bottom: 8),
-                          child: const Row(
+                          child: Row(
                             children: [
-                              Text(
+                              const Text(
                                 'Skillset',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
@@ -723,7 +732,7 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
-                                    color: Colors.red),
+                                    color: Theme.of(context).colorScheme.error),
                               ),
                             ],
                           ),
@@ -740,23 +749,28 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                             options: skillsetList,
                             hint: "Select skillset",
                             hintStyle: TextStyle(
-                                fontSize: 16, color: Colors.grey[600]!),
+                                fontSize: 16,
+                                color: Theme.of(context).colorScheme.tertiary),
                             selectionType: SelectionType.multi,
-                            chipConfig: const ChipConfig(
+                            chipConfig: ChipConfig(
                                 wrapType: WrapType.scroll,
                                 spacing: 8,
                                 runSpacing: 4,
                                 radius: 8,
-                                backgroundColor: Constant.primaryColor,
-                                labelColor: Constant.onPrimaryColor,
-                                deleteIconColor: Constant.onPrimaryColor),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                                labelColor:
+                                    Theme.of(context).colorScheme.onPrimary,
+                                deleteIconColor:
+                                    Theme.of(context).colorScheme.onPrimary),
                             dropdownHeight: 300,
                             optionTextStyle: const TextStyle(fontSize: 16),
                             selectedOptionBackgroundColor: Colors.grey.shade200,
-                            selectedOptionTextColor: Constant.primaryColor,
-                            selectedOptionIcon: const Icon(
+                            selectedOptionTextColor:
+                                Theme.of(context).colorScheme.primary,
+                            selectedOptionIcon: Icon(
                               Icons.check_circle,
-                              color: Constant.primaryColor,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           )
                         else
@@ -765,7 +779,9 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                 vertical: 8, horizontal: 16),
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey[600]!),
+                              border: Border.all(
+                                  color:
+                                      Theme.of(context).colorScheme.tertiary),
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(12)),
                               color: Colors.transparent,
@@ -774,21 +790,26 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                               spacing: 8,
                               runSpacing: 4,
                               children: <Widget>[
-                                ..._controller.selectedOptions.map((skillset) =>
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 4),
-                                      child: Chip(
-                                        shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(8))),
-                                        label: Text(
-                                          skillset.label,
-                                          style: const TextStyle(
-                                              color: Constant.onPrimaryColor),
-                                        ),
-                                        backgroundColor: Constant.primaryColor,
-                                      ),
-                                    )),
+                                ..._controller.selectedOptions
+                                    .map((skillset) => Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 4),
+                                          child: Chip(
+                                            shape: const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(8))),
+                                            label: Text(
+                                              skillset.label,
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onPrimary),
+                                            ),
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                          ),
+                                        )),
                               ],
                             ),
                           ),
@@ -810,10 +831,14 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(8)),
-                                      side: const BorderSide(
-                                          color: Constant.primaryColor,
+                                      side: BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                           width: 1),
-                                      foregroundColor: Constant.primaryColor),
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                   onPressed: () async {
                                     final newLanguageObj =
                                         await openLanguageDialog(null);
@@ -857,7 +882,7 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                               "No Language Found",
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.grey[600],
+                                color: Theme.of(context).colorScheme.tertiary,
                               ),
                             ),
                           ),
@@ -957,10 +982,14 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(8)),
-                                      side: const BorderSide(
-                                          color: Constant.primaryColor,
+                                      side: BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                           width: 1),
-                                      foregroundColor: Constant.primaryColor),
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                   onPressed: () async {
                                     final newEducationObj =
                                         await openEducationDialog(null);
@@ -1009,7 +1038,7 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                               "No Education Found",
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.grey[600],
+                                color: Theme.of(context).colorScheme.tertiary,
                               ),
                             ),
                           ),
@@ -1121,10 +1150,14 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(8)),
-                                      side: const BorderSide(
-                                          color: Constant.primaryColor,
+                                      side: BorderSide(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                           width: 1),
-                                      foregroundColor: Constant.primaryColor),
+                                      foregroundColor: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                   onPressed: () async {
                                     final newExperienceObj =
                                         await openExperienceDialog(null);
@@ -1181,7 +1214,7 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                               "No Experience Found",
                               style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.grey[600],
+                                color: Theme.of(context).colorScheme.tertiary,
                               ),
                             ),
                           ),
@@ -1209,7 +1242,9 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                           Text(
                                             '${experience['startMonth']} - ${experience['endMonth']}',
                                             style: TextStyle(
-                                                color: Colors.grey[600]!),
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .tertiary),
                                           )
                                         ],
                                       ),
@@ -1306,7 +1341,9 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                           child: Text(
                                             "No Skillset Found",
                                             style: TextStyle(
-                                              color: Colors.grey[600],
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiary,
                                             ),
                                           ),
                                         ),
@@ -1317,7 +1354,9 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                         width: double.infinity,
                                         decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: Colors.grey[600]!),
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .tertiary),
                                           borderRadius: const BorderRadius.all(
                                               Radius.circular(12)),
                                           color: Colors.transparent,
@@ -1352,13 +1391,17 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                                                             'id']
                                                                         .toString() ==
                                                                     skillsetId)['name'],
-                                                                style: const TextStyle(
-                                                                    color: Constant
-                                                                        .onPrimaryColor),
+                                                                style: TextStyle(
+                                                                    color: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .onPrimary),
                                                               ),
                                                               backgroundColor:
-                                                                  Constant
-                                                                      .primaryColor,
+                                                                  Theme.of(
+                                                                          context)
+                                                                      .colorScheme
+                                                                      .primary,
                                                             ),
                                                           )
                                                         : Container())
@@ -1743,8 +1786,10 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                               style: TextButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12)),
-                                  backgroundColor: Constant.primaryColor,
-                                  foregroundColor: Constant.onPrimaryColor),
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.primary,
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.onPrimary),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -1758,10 +1803,12 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                     ),
                                   ),
                                   if (isSubmitting)
-                                    const SpinKitCircle(
+                                    SpinKitCircle(
                                         size: 20,
                                         duration: Durations.extralong4,
-                                        color: Constant.onPrimaryColor)
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary)
                                 ],
                               ),
                             )),
@@ -1780,9 +1827,13 @@ class _ViewStudentProfileState extends State<ViewStudentProfile> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(12)),
-                                    side: const BorderSide(
-                                        color: Constant.primaryColor, width: 2),
-                                    foregroundColor: Constant.primaryColor),
+                                    side: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        width: 2),
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.primary),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

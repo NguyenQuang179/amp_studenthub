@@ -101,24 +101,25 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Constant.backgroundColor,
+        backgroundColor: Theme.of(context).colorScheme.background,
         toolbarHeight: 56,
-        title: const Text(
+        title: Text(
           'Edit Profile',
           style: TextStyle(
-              color: Constant.primaryColor, fontWeight: FontWeight.bold),
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: CircleAvatar(
               radius: 24,
-              backgroundColor: Constant.primaryColor,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               child: IconButton(
-                icon: const FaIcon(
+                icon: FaIcon(
                   FontAwesomeIcons.user,
                   size: 20,
-                  color: Constant.onPrimaryColor,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
                 onPressed: () {
                   GoRouter.of(context).pushNamed(RouteConstants.switchAccount);
@@ -300,7 +301,7 @@ class _EditCompanyProfileState extends State<EditCompanyProfile> {
                 child: ElevatedButton.icon(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
-                          Constant.primaryColor)),
+                          Theme.of(context).colorScheme.primary)),
                   onPressed: () {
                     updateCompanyProfile(context);
                     context.pop(true);

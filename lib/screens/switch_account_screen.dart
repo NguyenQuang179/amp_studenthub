@@ -47,8 +47,8 @@ class _SwitchAccountScreenState extends State<SwitchAccountScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Constant.backgroundColor,
-          surfaceTintColor: Constant.backgroundColor,
+          backgroundColor: Theme.of(context).colorScheme.background,
+          surfaceTintColor: Theme.of(context).colorScheme.background,
           insetPadding: const EdgeInsets.symmetric(horizontal: 8),
           title: Text(AppLocalizations.of(context)!.changePassword),
           content: SizedBox(
