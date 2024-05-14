@@ -340,7 +340,7 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                       Container(
                         margin: const EdgeInsets.only(top: 24),
                         child: const Text(
-                          "Welcome, Quang!\nYour job list is empty",
+                          'Your job list is empty',
                           style: TextStyle(
                             color: Constant.secondaryColor,
                             fontWeight: FontWeight.w600,

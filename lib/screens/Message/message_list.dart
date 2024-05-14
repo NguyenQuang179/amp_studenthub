@@ -5,6 +5,7 @@ import 'package:amp_studenthub/screens/Message/message_item.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -128,12 +129,12 @@ class _MessageListState extends State<MessageList> {
                           fontWeight: FontWeight.w600,
                           color: Constant.primaryColor),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     TextButton(
                         onPressed: () {
                           context.pushNamed(RouteConstants.activeInterviewList);
                         },
-                        child: Text("Active Interview")),
+                        child: const Text("Active Interview")),
                   ],
                 )),
             isLoading
@@ -144,28 +145,55 @@ class _MessageListState extends State<MessageList> {
                             duration: Durations.extralong4,
                             color: Constant.primaryColor)),
                   )
-                : Expanded(
-                    child: ListView.builder(
-                    itemCount: messagesList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final message = messagesList[index];
-                      final isCurrentUser = message["sender"]["id"] ==
-                          Provider.of<UserProvider>(context, listen: false)
-                              .userInfo['id'];
-                      final receiverId = isCurrentUser
-                          ? message["receiver"]["id"]
-                          : message["sender"]["id"];
-                      return MessageItem(
-                          messageReceiver: isCurrentUser
-                              ? message["receiver"]["fullname"]
-                              : message["sender"]["fullname"],
-                          message: message["content"],
-                          receiverPosition: message["project"]["title"],
-                          onClick: () =>
-                              checkDetail(receiverId, message["project"]["id"]),
-                          isSaved: false);
-                    },
-                  )),
+                : messagesList.isEmpty
+                    ? Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: SvgPicture.asset(
+                                'assets/empty.svg',
+                                height: 320,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 24),
+                              child: const Text(
+                                'Your message list is empty',
+                                style: TextStyle(
+                                  color: Constant.secondaryColor,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 20,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    : Expanded(
+                        child: ListView.builder(
+                        itemCount: messagesList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final message = messagesList[index];
+                          final isCurrentUser = message["sender"]["id"] ==
+                              Provider.of<UserProvider>(context, listen: false)
+                                  .userInfo['id'];
+                          final receiverId = isCurrentUser
+                              ? message["receiver"]["id"]
+                              : message["sender"]["id"];
+                          return MessageItem(
+                              messageReceiver: isCurrentUser
+                                  ? message["receiver"]["fullname"]
+                                  : message["sender"]["fullname"],
+                              message: message["content"],
+                              receiverPosition: message["project"]["title"],
+                              onClick: () => checkDetail(
+                                  receiverId, message["project"]["id"]),
+                              isSaved: false);
+                        },
+                      )),
           ],
         )),
       ),

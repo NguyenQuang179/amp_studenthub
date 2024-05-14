@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:amp_studenthub/models/user.dart';
 import 'package:amp_studenthub/providers/signup_role_provider.dart';
 import 'package:amp_studenthub/providers/user_provider.dart';
 import 'package:amp_studenthub/routes/routes_constants.dart';
@@ -18,6 +19,7 @@ import 'package:amp_studenthub/screens/account_settings.dart';
 import 'package:amp_studenthub/screens/bottom_navbar_scaffold/company_bottom_navbar.dart';
 import 'package:amp_studenthub/screens/company_dashboard_screen.dart';
 import 'package:amp_studenthub/screens/edit_company_profile.dart';
+import 'package:amp_studenthub/screens/empty_profile_screen.dart';
 import 'package:amp_studenthub/screens/home_screen.dart';
 import 'package:amp_studenthub/screens/job_details_screen.dart';
 import 'package:amp_studenthub/screens/login_page.dart';
@@ -116,9 +118,18 @@ class AppRouter {
                 final userProvider =
                     Provider.of<UserProvider>(context, listen: false);
                 final userRole = userProvider.userRole;
+                final User userInfo = User.fromJson(userProvider.userInfo);
+                print(userInfo.company);
+                print(userInfo.student);
+                print(userInfo.company == null);
+                print(userInfo.student == null);
                 return userRole == "Student"
-                    ? const MaterialPage(child: StudentDashboard())
-                    : const MaterialPage(child: CompanyDashboardScreen());
+                    ? userInfo.student != null
+                        ? const MaterialPage(child: StudentDashboard())
+                        : const MaterialPage(child: EmptyProfileScreen())
+                    : userInfo.company != null
+                        ? const MaterialPage(child: CompanyDashboardScreen())
+                        : const MaterialPage(child: EmptyProfileScreen());
               },
             ),
             GoRoute(

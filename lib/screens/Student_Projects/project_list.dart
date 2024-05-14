@@ -115,18 +115,22 @@ class _ProjectListState extends State<ProjectList> {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        setState(() {
-          isLoading = true;
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = true;
+          });
+        }
       }
     });
   }
 
   Future<void> _handleScrollEnd() async {
     if (isLoading) {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
       await loadMoreProjects();
     }
   }
@@ -136,9 +140,11 @@ class _ProjectListState extends State<ProjectList> {
 
     final dio = Dio();
     try {
-      setState(() {
-        isLoading = true;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
 
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       // Get access token from provider
@@ -161,16 +167,20 @@ class _ProjectListState extends State<ProjectList> {
         newProjects.add(companyProject);
       }
       print("SUCCESS");
-      setState(() {
-        companyProjectsList.addAll(newProjects);
-      });
+      if (mounted) {
+        setState(() {
+          companyProjectsList.addAll(newProjects);
+        });
+      }
       print(companyProjectsList.length);
     } on DioException catch (e) {
       // Handle DioException
     } finally {
-      setState(() {
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
