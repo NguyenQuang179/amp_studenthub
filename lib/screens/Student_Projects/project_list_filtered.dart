@@ -14,6 +14,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProjectListFiltered extends StatefulWidget {
   const ProjectListFiltered({super.key});
@@ -299,7 +300,7 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                       fillColor: Theme.of(context).colorScheme.background,
                       prefixIcon: const Icon(Icons.search),
                       prefixStyle: const TextStyle(),
-                      hintText: "Search for job...",
+                      hintText: AppLocalizations.of(context)!.searchForJob,
                       labelStyle: TextStyle(
                           color: Theme.of(context).colorScheme.tertiary),
                       border: OutlineInputBorder(
@@ -542,7 +543,7 @@ class _ProjectListFilteredState extends State<ProjectListFiltered> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 child: Text(
-                  "Search Result:",
+                  "${AppLocalizations.of(context)!.searchResult}:",
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,

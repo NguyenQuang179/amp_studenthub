@@ -15,6 +15,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NotificationListScreen extends StatefulWidget {
   const NotificationListScreen({super.key});
@@ -334,7 +335,7 @@ class _NotificationListScreenState extends State<NotificationListScreen> {
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 16),
                   child: Text(
-                    "Notifications: ",
+                    "${AppLocalizations.of(context)!.notification}: ",
                     style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w600,

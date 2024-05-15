@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../configs/constant.dart';
 
 class CompanyNavbarScaffold extends StatefulWidget {
@@ -157,12 +157,14 @@ class _CompanyNavbarScaffoldState extends State<CompanyNavbarScaffold> {
             : 0,
         onDestinationSelected: (value) => {navigateTab(context, value)},
         destinations: [
-          const NavigationDestination(
-              icon: FaIcon(FontAwesomeIcons.house), label: "Home"),
+          NavigationDestination(
+              icon: const FaIcon(FontAwesomeIcons.house),
+              label: AppLocalizations.of(context)!.home),
           const NavigationDestination(
               icon: FaIcon(FontAwesomeIcons.solidFolder), label: "Dashboard"),
-          const NavigationDestination(
-              icon: FaIcon(FontAwesomeIcons.solidEnvelope), label: "Message"),
+          NavigationDestination(
+              icon: const FaIcon(FontAwesomeIcons.solidEnvelope),
+              label: AppLocalizations.of(context)!.message),
           NavigationDestination(
               icon: notificationCount > 0
                   ? Stack(
@@ -193,7 +195,7 @@ class _CompanyNavbarScaffoldState extends State<CompanyNavbarScaffold> {
                       ],
                     )
                   : const FaIcon(FontAwesomeIcons.solidBell),
-              label: "Notification"),
+              label: AppLocalizations.of(context)!.notification),
         ],
       ),
     );

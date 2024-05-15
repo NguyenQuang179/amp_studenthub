@@ -2,6 +2,7 @@ import 'package:amp_studenthub/providers/student_project_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SearchProjectModal extends StatefulWidget {
   const SearchProjectModal({super.key});
@@ -109,7 +110,7 @@ class _SearchProjectModalState extends State<SearchProjectModal> {
                     controller: controller,
                     onSubmitted: (String value) => handleSubmit(context, value),
                     decoration: InputDecoration(
-                      hintText: 'Search...',
+                      hintText: AppLocalizations.of(context)!.searchForJob,
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: controller.text.isNotEmpty
                           ? IntrinsicWidth(

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProjectDetail extends StatefulWidget {
   final String id;
@@ -152,7 +153,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
                 height: 40,
               ),
               Text(
-                "Project Detail",
+                AppLocalizations.of(context)!.projectDetails,
                 style: TextStyle(
                     fontSize: 20,
                     color: Theme.of(context).colorScheme.secondary),
@@ -165,35 +166,37 @@ class _ProjectDetailState extends State<ProjectDetail> {
               Divider(
                 color: Theme.of(context).colorScheme.primary,
               ),
-              const Text("Students are expecting:"),
+              Text(AppLocalizations.of(context)!.studentsAreExpecting),
               Text("- ${companyProject.description}"),
               Divider(
                 color: Theme.of(context).colorScheme.primary,
               ),
-              Text("Created:",
+              Text(AppLocalizations.of(context)!.createdAt,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.primary)),
               Text("- ${companyProject.createdAt}"),
-              Text("Duration:",
+              Text(AppLocalizations.of(context)!.projectScope,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.primary)),
               Text("- ${companyProject.projectScopeFlag}"),
-              Text("Available Slots:",
+              Text(AppLocalizations.of(context)!.availableSlots,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.primary)),
-              Text("- ${companyProject.countHired} Students"),
-              Text("Total Slots:",
+              Text(
+                  "- ${companyProject.countHired} ${AppLocalizations.of(context)!.roleStudent}"),
+              Text(AppLocalizations.of(context)!.totalSlots,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.primary)),
-              Text("- ${companyProject.countProposals}s Students"),
+              Text(
+                  "- ${companyProject.countProposals}s ${AppLocalizations.of(context)!.roleStudent}"),
               const SizedBox(
                 height: 40,
               ),
@@ -218,7 +221,10 @@ class _ProjectDetailState extends State<ProjectDetail> {
                             },
                           );
                         },
-                        child: const Text("Apply"),
+                        child: Text(
+                          AppLocalizations.of(context)!.applyBtn,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -247,7 +253,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
                             ? const CircularProgressIndicator() // Show loading indicator if loading
                             : companyProject.isFavorite
                                 ? const Text("Unsave")
-                                : const Text("Save"),
+                                : Text(AppLocalizations.of(context)!.saveBtn),
                       ),
                     ),
                     Flexible(
@@ -259,7 +265,7 @@ class _ProjectDetailState extends State<ProjectDetail> {
                             foregroundColor: MaterialStateProperty.all<Color>(
                                 Theme.of(context).colorScheme.primary)),
                         onPressed: () => GoRouter.of(context).pop('/'),
-                        child: const Text("Return"),
+                        child: Text(AppLocalizations.of(context)!.returnBtn),
                       ),
                     ),
                   ],

@@ -12,6 +12,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
@@ -129,7 +130,7 @@ class _StudentDashboardState extends State<StudentDashboard>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Your Projects',
+                      AppLocalizations.of(context)!.yourProjects,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 24,

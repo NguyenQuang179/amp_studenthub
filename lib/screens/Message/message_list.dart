@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MessageList extends StatefulWidget {
   const MessageList({super.key});
@@ -123,7 +124,7 @@ class _MessageListState extends State<MessageList> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Messages: ",
+                      "${AppLocalizations.of(context)!.message}: ",
                       style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.w600,

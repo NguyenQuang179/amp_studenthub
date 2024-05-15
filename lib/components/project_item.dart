@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProjectItem extends StatefulWidget {
   final int id;
@@ -134,12 +135,13 @@ class _ProjectItemState extends State<ProjectItem> {
                         Container(
                             margin: const EdgeInsets.only(bottom: 8),
                             child: Text(
-                              "Proposals: $jobProposalNums",
+                              "${AppLocalizations.of(context)!.proposals} $jobProposalNums",
                               style: TextStyle(
                                   color:
                                       Theme.of(context).colorScheme.tertiary),
                             )),
-                        Text("Created at $jobCreatedDate",
+                        Text(
+                            "${AppLocalizations.of(context)!.createdAt} $jobCreatedDate",
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.tertiary)),

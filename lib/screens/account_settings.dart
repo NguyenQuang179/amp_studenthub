@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountSettings extends StatefulWidget {
   const AccountSettings({super.key});
@@ -15,7 +16,7 @@ class AccountSettings extends StatefulWidget {
 
 class _AccountSettingsState extends State<AccountSettings> {
   List<String> localesOptions = ['en', 'vi'];
-  Map<String, String> localeObj = {'en': 'English', 'vi': "Vietnamese"};
+  Map<String, String> localeObj = {'en': 'English', 'vi': "Tiếng Việt"};
 
   String? selectedLocales = "en";
 
@@ -47,7 +48,7 @@ class _AccountSettingsState extends State<AccountSettings> {
                       width: double.infinity,
                       margin: const EdgeInsets.only(bottom: 16),
                       child: Text(
-                        "Settings:",
+                        '${AppLocalizations.of(context)!.settings}:',
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w600,
@@ -55,11 +56,11 @@ class _AccountSettingsState extends State<AccountSettings> {
                       )),
                   Container(
                     margin: const EdgeInsets.only(bottom: 8),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Text(
-                          'Language:',
-                          style: TextStyle(
+                          AppLocalizations.of(context)!.language,
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ],
@@ -135,11 +136,11 @@ class _AccountSettingsState extends State<AccountSettings> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 16, bottom: 8),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Text(
-                          'Theme:',
-                          style: TextStyle(
+                          AppLocalizations.of(context)!.theme,
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       ],

@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/company_dashboard_project.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CompanyDashboardScreen extends StatefulWidget {
   const CompanyDashboardScreen({super.key});
@@ -241,7 +242,7 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
                   width: double.infinity,
                   margin: const EdgeInsets.only(bottom: 16),
                   child: Text(
-                    "Your Jobs: ",
+                    AppLocalizations.of(context)!.yourProjects,
                     style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.w600,

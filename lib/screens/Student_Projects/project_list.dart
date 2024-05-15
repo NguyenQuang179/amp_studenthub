@@ -11,6 +11,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProjectList extends StatefulWidget {
   const ProjectList({super.key});
@@ -24,12 +25,6 @@ class _ProjectListState extends State<ProjectList> {
   static const perPage = 10;
   int page = 1;
   late List<CompanyProject> companyProjectsList = [];
-  List<String> projectScopeList = [
-    "Less than 1 months",
-    "1-3 months",
-    "3-6 months",
-    "More than 6 months"
-  ];
 
   get dio => null;
   // checkDetail({id = String}) {
@@ -191,6 +186,12 @@ class _ProjectListState extends State<ProjectList> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> projectScopeList = [
+      (AppLocalizations.of(context)!.lessThan1),
+      (AppLocalizations.of(context)!.scope1to3),
+      (AppLocalizations.of(context)!.scope3to6),
+      (AppLocalizations.of(context)!.moreThan6)
+    ];
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
@@ -229,7 +230,8 @@ class _ProjectListState extends State<ProjectList> {
                             fillColor: Theme.of(context).colorScheme.background,
                             prefixIcon: const Icon(Icons.search),
                             prefixStyle: const TextStyle(),
-                            hintText: "Search for job...",
+                            hintText:
+                                AppLocalizations.of(context)!.searchForJob,
                             labelStyle: TextStyle(
                                 color: Theme.of(context).colorScheme.tertiary),
                             border: OutlineInputBorder(
